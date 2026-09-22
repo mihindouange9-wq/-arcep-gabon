@@ -1,0 +1,1136 @@
+{
+ "institution": {
+  "sigle": "ARCEP",
+  "pays": "Gabon",
+  "nom": "Autorité de Régulation des Communications Électroniques et des Postes",
+  "statut": "Autorité administrative indépendante de la République gabonaise",
+  "fondation": "Ordonnance n°000008/PR/2012 du 13 février 2012, ratifiée par la loi n°006/2012 du 13 août 2012",
+  "presentation": "L’Autorité de Régulation des Communications Électroniques et des Postes (ARCEP) de la République gabonaise est une Autorité administrative indépendante. Elle est créée par l’Ordonnance n°000008/PR/2012 du 13 février 2012 et ratifiée par la loi n° 006/2012 du 13 août 2012 qui abroge le décret n° 0116/PR/MCEN et confère à l’ARCEP la qualité d’« Autorité » en lieu et place d’« Agence », de nouvelles missions et une organisation adaptées au fonctionnement d’une autorité.",
+  "adresse": "Kalikak, BP. 50 000 — Libreville, Gabon",
+  "telephones": [
+   "(+241) 011 44 68 11",
+   "(+241) 011 44 68 12"
+  ],
+  "email": "arcep@arcep.ga",
+  "numeroCourt": "1331",
+  "source": "https://www.arcep.ga/"
+ },
+ "conseil": {
+  "titre": "Conseil de Régulation",
+  "texte": "Le Conseil de Régulation, organe délibérant et de direction de l’Autorité, est investi de l’ensemble des prérogatives dévolues à ladite Autorité par les textes en vigueur. Il peut déléguer certaines de ses prérogatives à son Président ou au Secrétariat Exécutif.",
+  "composition": "Le Conseil de Régulation comprend sept (7) membres nommés par décret pris en Conseil des Ministres avec un mandat de quatre ans renouvelable une fois. Le Président du Conseil veille d’une part à l’application des délibérations du Conseil, et exerce les pouvoirs de représentation de l’Autorité tout en administrant les services de l’Autorité, d’autre part."
+ },
+ "president": {
+  "titre": "Mot du Président",
+  "accroche": "Connecter le Gabon au monde.",
+  "paragraphes": [
+   "Bienvenue sur le site officiel de l’Autorité de Régulation des Communications Électroniques et des Postes (ARCEP) Gabon. Ce portail est l’expression de notre engagement à faire du secteur des télécommunications et des services postaux un levier de développement, d’inclusion et d’innovation permettant de connecter le Gabon au monde.",
+   "À l’heure où le numérique transforme nos modes de vie et redéfinit les interactions sociales et économiques, notre mission est de garantir un environnement concurrentiel, équitable et transparent. Nous œuvrons pour promouvoir l’accès à des services de communication de qualité, accessibles et sécurisés, tout en accompagnant les innovations technologiques et les nouveaux services numériques."
+  ],
+  "axes": [
+   {
+    "titre": "Service universel",
+    "texte": "Le développement du service universel, visant à connecter les populations dans les zones rurales du Gabon."
+   },
+   {
+    "titre": "Fréquences",
+    "texte": "La gestion des fréquences radioélectriques et une réglementation conforme aux standards internationaux, afin de garantir une utilisation optimale des ressources en fréquences."
+   },
+   {
+    "titre": "Ressources",
+    "texte": "La gestion saine des ressources financières, essentielle pour assurer la pérennité de l’Institution et une régulation efficace."
+   },
+   {
+    "titre": "Management",
+    "texte": "Un management orthodoxe et efficace, gage d’un climat social apaisé."
+   }
+  ]
+ },
+ "chiffres": [
+  {
+   "valeur": 330.83,
+   "affichage": "330,83",
+   "unite": "milliards de FCFA",
+   "libelle": "Chiffre d’affaires global du secteur des communications électroniques",
+   "decimales": 2,
+   "id": "chi-mud13ez33b99"
+  },
+  {
+   "valeur": 5544403,
+   "affichage": "5 544 403",
+   "unite": "abonnements",
+   "libelle": "Nombre d’abonnements dans le secteur des communications électroniques",
+   "decimales": 0,
+   "id": "chi-mud13ez3df95"
+  },
+  {
+   "valeur": 176.52,
+   "affichage": "176,52",
+   "unite": "%",
+   "libelle": "Taux de pénétration du mobile",
+   "decimales": 2,
+   "id": "chi-mud13ez31c8f"
+  },
+  {
+   "valeur": 38,
+   "affichage": "38",
+   "unite": "%",
+   "libelle": "Part du chiffre d’affaires d’internet dans le chiffre d’affaires global du secteur",
+   "decimales": 0,
+   "id": "chi-mud13ez397ab"
+  }
+ ],
+ "chiffresSource": "Source : Observatoire des marchés ARCEP 2024",
+ "missions": [
+  {
+   "num": "01",
+   "cle": "general",
+   "titre": "Mission d’ordre général",
+   "lien": "https://www.arcep.ga/pages/detail_mission/1",
+   "resume": "Éclairer la décision publique et accompagner la tutelle du secteur.",
+   "points": [
+    "Émettre des avis sur toutes questions du secteur des communications électroniques et des postes.",
+    "Assister les ministères responsables dans l’exercice de leurs pouvoirs de tutelle sur les services publics personnalisés opérant dans le secteur des communications électroniques et des postes."
+   ]
+  },
+  {
+   "num": "02",
+   "cle": "investigation",
+   "titre": "Mission d’investigation",
+   "lien": "https://www.arcep.ga/pages/detail_mission/2",
+   "resume": "Contrôler, prévenir et sanctionner les manquements des opérateurs.",
+   "points": [
+    "Veiller au respect par les opérateurs des dispositions contenues dans les licences, autorisations, agréments et cahiers de charges, et sanctionner ou faire sanctionner les contrevenants.",
+    "Prévenir et sanctionner les pratiques anticoncurrentielles.",
+    "Veiller au traitement équitable des consommateurs et en sanctionner les violations.",
+    "Veiller au respect des stipulations contractuelles entre les opérateurs, en prévenir les conflits et en sanctionner les manquements.",
+    "Émettre des avis sur toute opération de cession ou de rachat de parts sociales entre les opérateurs.",
+    "Veiller au respect par les opérateurs des obligations et interdictions liées au caractère personnel et non cessible de la licence, et en sanctionner les violations."
+   ]
+  },
+  {
+   "num": "03",
+   "cle": "juridique",
+   "titre": "Mission d’ordre juridique",
+   "lien": "https://www.arcep.ga/pages/detail_mission/3",
+   "resume": "Préparer le droit du secteur et veiller à son application.",
+   "points": [
+    "Préparer les études et projets de textes relatifs au secteur des communications électroniques et des postes, de sa propre initiative ou à la demande du Gouvernement.",
+    "Veiller au respect par les opérateurs de leurs obligations résultant de la réglementation communautaire, des accords internationaux, de la législation et de la réglementation nationale applicables, et en sanctionner les violations."
+   ]
+  },
+  {
+   "num": "04",
+   "cle": "technique",
+   "titre": "Mission technique",
+   "lien": "https://www.arcep.ga/pages/detail_mission/4",
+   "resume": "Encadrer les réseaux, les autorisations et la collecte d’informations.",
+   "points": [
+    "Délivrer les accords préalables aux exploitants des réseaux ouverts au public dûment autorisés par les textes en vigueur, nécessaires à l’exercice de leur droit de passage dans le domaine public et des servitudes sur les propriétés privées.",
+    "Veiller à l’accomplissement par les opérateurs des formalités relatives à l’obtention des autorisations ou déclarations liées à l’exercice des activités du secteur.",
+    "Recueillir toutes les informations utiles relatives aux activités des opérateurs aux fins de régulation."
+   ]
+  },
+  {
+   "num": "05",
+   "cle": "economique",
+   "titre": "Mission économique",
+   "lien": "https://www.arcep.ga/pages/detail_mission/5",
+   "resume": "Surveiller les mouvements capitalistiques du secteur.",
+   "points": [
+    "S’assurer que les changements de contrôle direct ou indirect issus des cessions ou d’achats de parts sociales ne se transforment en cessions de licences déguisées, et sanctionner les auteurs."
+   ]
+  }
+ ],
+ "categories": [
+  {
+   "cle": "lois",
+   "nom": "Lois",
+   "lien": "https://www.arcep.ga/pages/detail_reglementation/1"
+  },
+  {
+   "cle": "ordonnances",
+   "nom": "Ordonnances",
+   "lien": "https://www.arcep.ga/pages/detail_reglementation/2"
+  },
+  {
+   "cle": "decrets",
+   "nom": "Décrets",
+   "lien": "https://www.arcep.ga/pages/detail_reglementation/3"
+  },
+  {
+   "cle": "arretes",
+   "nom": "Arrêtés",
+   "lien": "https://www.arcep.ga/pages/detail_reglementation/4"
+  },
+  {
+   "cle": "deliberations",
+   "nom": "Délibérations",
+   "lien": "https://www.arcep.ga/pages/detail_reglementation/5"
+  },
+  {
+   "cle": "decisions",
+   "nom": "Décisions",
+   "lien": "https://www.arcep.ga/pages/detail_reglementation/6"
+  },
+  {
+   "cle": "baremes",
+   "nom": "Barèmes",
+   "lien": "https://www.arcep.ga/pages/detail_reglementation/7"
+  },
+  {
+   "cle": "formulaires",
+   "nom": "Formulaires",
+   "lien": "https://www.arcep.ga/pages/detail_reglementation/8"
+  },
+  {
+   "cle": "homologations",
+   "nom": "Équipements homologués",
+   "lien": "https://www.arcep.ga/pages/detail_reglementation/9"
+  }
+ ],
+ "documents": [
+  {
+   "categorie": "lois",
+   "nom": "Lois",
+   "annee": "2005",
+   "titre": "030/2005 - Loi Portant ratification de l'ordonnance N°004-TER/PR/2005",
+   "lien": "https://www.arcep.ga/uploads/reglementation/lois/030--2005.pdf",
+   "id": "doc-mu7i0jr2d304"
+  },
+  {
+   "categorie": "lois",
+   "nom": "Lois",
+   "annee": "2005",
+   "titre": "029/2005 - Loi Portant ratification de l'Ordonnance n°004-BIS/PR/2005",
+   "lien": "https://www.arcep.ga/uploads/reglementation/lois/029--2005.pdf",
+   "id": "doc-mu7i0jr2b570"
+  },
+  {
+   "categorie": "lois",
+   "nom": "Lois",
+   "annee": "2001",
+   "titre": "004/2001 - Loi portant réorganisation du secteur de la poste et des télécommunications",
+   "lien": "https://www.arcep.ga/uploads/reglementation/lois/004--2001.pdf",
+   "id": "doc-mu7i0jr26597"
+  },
+  {
+   "categorie": "lois",
+   "nom": "Lois",
+   "annee": "2001",
+   "titre": "005/2001 - Loi portant réglementations du secteur des télécommunications",
+   "lien": "https://www.arcep.ga/uploads/reglementation/lois/005--2001.pdf",
+   "id": "doc-mu7i0jr2fe94"
+  },
+  {
+   "categorie": "ordonnances",
+   "nom": "Ordonnances",
+   "annee": "2014",
+   "titre": "Ordonnance n°006/PR/2014 Modifiant certaines dispositions de la loi n°005/2001 du 27 juin 2001 portant réglementation du secteur des Télécommunications en République Gabonaise",
+   "lien": "https://www.arcep.ga/uploads/reglementation/ordonnances/Ordonnancen°006-PR-2014.pdf",
+   "id": "doc-mu7i0jr238fa"
+  },
+  {
+   "categorie": "ordonnances",
+   "nom": "Ordonnances",
+   "annee": "2012",
+   "titre": "Ordonnance n°0000008/PR/2012 du 13 février 2012 portant création et organisation de l'ARCEP",
+   "lien": "https://www.arcep.ga/uploads/reglementation/ordonnances/Ordonnancen0000008PR2012.pdf",
+   "id": "doc-mu7i0jr2c51f"
+  },
+  {
+   "categorie": "ordonnances",
+   "nom": "Ordonnances",
+   "annee": "2005",
+   "titre": "Ordonnance n°004 BIS /PR/2005 Portant modification de certaines dispositions de la loi n°004/2001 du 27 juin 2001 portant réorganisation du secteur des Postes et du secteur des Télécommunications en République gabonaise",
+   "lien": "https://www.arcep.ga/uploads/reglementation/ordonnances/Ordonnance004Bis-PR-2005.pdf",
+   "id": "doc-mu7i0jr2fc80"
+  },
+  {
+   "categorie": "ordonnances",
+   "nom": "Ordonnances",
+   "annee": "2002",
+   "titre": "Ordonnance n° 004 TER/PR/2002 Portant modification de certaines dispositions de la loi n°005/2001 du 27 juin 2001 portant réglementation du secteur des Télécommunications en République Gabonaise",
+   "lien": "https://www.arcep.ga/uploads/reglementation/ordonnances/Ordonnance004TER.pdf",
+   "id": "doc-mu7i0jr27183"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2024",
+   "titre": "ARCEP_PCR_SE_DSIN_DJ_Decret-082PR_15052024_VF",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/ARCEP_PCR_SE_DSIN_DJ_Decret-082PR_15052024_VF.pdf",
+   "id": "doc-mu7i0jr227e7"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2015",
+   "titre": "Décret N°0355 /PR/MENP portant attribution d'une licence d'opérateur d'infrastructures",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/Décretn°0355.pdf",
+   "id": "doc-mu7i0jr3473c"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2015",
+   "titre": "Décret N°0356 /PR/MENP portant approbation de la convention de délégation de service public",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/Décretn°0356-PR-MENP.pdf",
+   "id": "doc-mu7i0jr3f014"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2015",
+   "titre": "Décret N°0145/PR/MENP portant attribution d'une licence d'établissement et d'exploitation d'un réseau de téléphonie cellulaire mobile de 3 eme et 4eme Génération à la société GABON TELECOM S.A",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/Décretn°0145.pdf",
+   "id": "doc-mu7i0jr32c74"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2015",
+   "titre": "Décret N°0144 /PR/MENP portant attribution d'une licence d'établissement et d'exploitation d'un réseau de téléphonie cellulaire mobile du 3eme et 4 eme Génération à société AIRTEL GABON S.A",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/Décretn°0144.pdf",
+   "id": "doc-mu7i0jr3a5bf"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2015",
+   "titre": "Décret N°0083/PR portant promulgation de la loi n°006/PR/2014 du 20 août 2014 modifiant certaines dispositions de la loi n° 005/2001 du 27 juin 2001 portant réglementation du secteur des Télécommunications en République Gabonaise",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/Décretn°0083-PR-du30-01-15.pdf",
+   "id": "doc-mu7i0jr38973"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2012",
+   "titre": "Décret portant promulgation de la loi n°006/2012 portant ratification de l’ordonnance n°0000008/PR/2012",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/decret-0309.pdf",
+   "id": "doc-mu7i0jr34edd"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2011",
+   "titre": "Décret portant promulgation de la loi n°029/2005 du 11 août 2005",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/decret01106.pdf",
+   "id": "doc-mu7i0jr3df39"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2006",
+   "titre": "084/PR/MCPTNTI - Décret relatif aux droits, redevances et contributions applicables aux opérateurs de télécommunications",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/084--PR--MCPTNTI.pdf",
+   "id": "doc-mu7i0jr3c523"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2005",
+   "titre": "1081/PR/MPT - Décret portant approbation de la convention de délégation de service publique",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/1081--PR--MPT.pdf",
+   "id": "doc-mu7i0jr32eab"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2005",
+   "titre": "0544/PR/MPT - Décret fixant les modalités de mise en oeuvre, de financement et de gestion du fond spécial du service universel",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/0544--PR--MPT.pdf",
+   "id": "doc-mu7i0jr3638e"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2005",
+   "titre": "0540/PR/MPT - Décret fixant les modalités d'interconnexion et du partage des infrastructures",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/0540--PR--MPT.pdf",
+   "id": "doc-mu7i0jr3b242"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2005",
+   "titre": "0008/PR/MPT - Decret fixant les modalités d'établissement et de gestion du plan de numérotation",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/0008--PR--MPT.pdf",
+   "id": "doc-mu7i0jr324dd"
+  },
+  {
+   "categorie": "decrets",
+   "nom": "Décrets",
+   "annee": "2005",
+   "titre": "Décret portant promulgation de la loi n°030/2005 portant ratification de l'ordonnance N°004 TER/PR/2005",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decrets/1120--PR--MPT.pdf",
+   "id": "doc-mu7i0jr34829"
+  },
+  {
+   "categorie": "arretes",
+   "nom": "Arrêtés",
+   "annee": "2024",
+   "titre": "ARCEP_PCR_SE_DSIN_DJ_Arrete000027MCPTI-CAB_15052024_VF",
+   "lien": "https://www.arcep.ga/uploads/reglementation/arretes/ARCEP_PCR_SE_DSIN_DJ_Arrete000027MCPTI-CAB_15052024_VF.pdf",
+   "id": "doc-mu7i0jr32ab5"
+  },
+  {
+   "categorie": "arretes",
+   "nom": "Arrêtés",
+   "annee": "2011",
+   "titre": "Arrêté 000064 portant abrogation des arrêtés N19 et 359/MCPTNTI/CAB des 28 août et 24 septembre 2009 portant installation et mise en exploitation des équipements de contrôle des statistiques des communications téléphoniques internationales",
+   "lien": "https://www.arcep.ga/uploads/reglementation/arretes/Arreten000064-MCPEN-CAB.pdf",
+   "id": "doc-mu7i0jr3b876"
+  },
+  {
+   "categorie": "arretes",
+   "nom": "Arrêtés",
+   "annee": "2010",
+   "titre": "Arrêté 025 Relatif à la réglementation de l'implantation des stations Radioélectriques en République Gabonaise",
+   "lien": "https://www.arcep.ga/uploads/reglementation/arretes/Arreten025-MCPEN-CAB-2010.pdf",
+   "id": "doc-mu7i0jr3c0c0"
+  },
+  {
+   "categorie": "arretes",
+   "nom": "Arrêtés",
+   "annee": "2009",
+   "titre": "Arrêté 0359/MCPTNTI/Cab, portant installation et mise en exploitation des équipements de contrôle des statistiques des communications téléphoniques internationales",
+   "lien": "https://www.arcep.ga/uploads/reglementation/arretes/Arreten359_MCPTNTI-Cab.pdf",
+   "id": "doc-mu7i0jr35a5a"
+  },
+  {
+   "categorie": "arretes",
+   "nom": "Arrêtés",
+   "annee": "2009",
+   "titre": "Arrêté 0019 portant exploitation et mise en exploitation des équipements de contrôle des statistiques des communications téléphoniques internationales",
+   "lien": "https://www.arcep.ga/uploads/reglementation/arretes/Arreten0019-MCPTNTI-CAB.pdf",
+   "id": "doc-mu7i0jr3171b"
+  },
+  {
+   "categorie": "deliberations",
+   "nom": "Délibérations",
+   "annee": "2015",
+   "titre": "Déliberation N° 031 /ARCEP/2015 relevant Gabon Telecom SA de sa mission de fourniture de service universel des télécommunications et de sont exemption à la contribution au fonds spécial du service universel",
+   "lien": "https://www.arcep.ga/uploads/reglementation/deliberations/Délibn°031.pdf",
+   "id": "doc-mu7i0jr31128"
+  },
+  {
+   "categorie": "deliberations",
+   "nom": "Délibérations",
+   "annee": "2015",
+   "titre": "Déliberation N° 008 /ARCEP/2015 portant encadrement des tarifs plafonds d'interconnexion sur le marché des télécommuncations en R. Gabonaise pour le premier semestre de l'année 2015",
+   "lien": "https://www.arcep.ga/uploads/reglementation/deliberations/Délibn°008.pdf",
+   "id": "doc-mu7i0jr32002"
+  },
+  {
+   "categorie": "deliberations",
+   "nom": "Délibérations",
+   "annee": "2015",
+   "titre": "Déliberation N° 007 /ARCEP/2015 portant reconduction jusqu'au 30 juin 2015 de la déliberation n°176/ARCEP/PCR/2014 portant désignation des opérateurs exercant une influence significative sur le marché des télécommunications en R. Gabonaise pour l'année 2014",
+   "lien": "https://www.arcep.ga/uploads/reglementation/deliberations/Délibn°007.pdf",
+   "id": "doc-mu7i0jr30444"
+  },
+  {
+   "categorie": "deliberations",
+   "nom": "Délibérations",
+   "annee": "2012",
+   "titre": "Délibération n° 0017 portant sanction de la société Airtel Gabon",
+   "lien": "https://www.arcep.ga/uploads/reglementation/deliberations/delioberation179.pdf",
+   "id": "doc-mu7i0jr38541"
+  },
+  {
+   "categorie": "deliberations",
+   "nom": "Délibérations",
+   "annee": "2011",
+   "titre": "Délibération n° 0025 portant avis conforme à la demande d’attribution d’une licence d’établissement et d’exploitation d’un réseau WIMAX",
+   "lien": "https://www.arcep.ga/uploads/reglementation/deliberations/deliberation0025.pdf",
+   "id": "doc-mu7i0jr3bd6e"
+  },
+  {
+   "categorie": "deliberations",
+   "nom": "Délibérations",
+   "annee": "2010",
+   "titre": "Délibération n° 000027 Relative à la mise à jour de l’observatoire",
+   "lien": "https://www.arcep.ga/uploads/reglementation/deliberations/deliberation0000427.pdf",
+   "id": "doc-mu7i0jr3478c"
+  },
+  {
+   "categorie": "decisions",
+   "nom": "Décisions",
+   "annee": "2012",
+   "titre": "Décision N111/PCR/ARCEP/2012 Portant annulation de l'Autorisation N 0530P/ARCEP/2011 du 18 nov 2011 délivrée à Airtel Gabon S.A. pour l'implantation d'une station radioélectrique au quartier \"PK7\"",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decisions/décision111.pdf",
+   "id": "doc-mu7i0jr34c4a"
+  },
+  {
+   "categorie": "decisions",
+   "nom": "Décisions",
+   "annee": "2009",
+   "titre": "Décision N 005609 portant désignation des opérateurs exerçant une influence significative sur le marché des télécommunications...",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decisions/Decision-portant.pdf",
+   "id": "doc-mu7i0jr340e3"
+  },
+  {
+   "categorie": "decisions",
+   "nom": "Décisions",
+   "annee": "2009",
+   "titre": "Décision N 005709 fixant les tarifs d'interconnexion sur le marché des télécommunications au Gabon",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decisions/Decision-fixant.pdf",
+   "id": "doc-mu7i0jr3e785"
+  },
+  {
+   "categorie": "decisions",
+   "nom": "Décisions",
+   "annee": "2009",
+   "titre": "Décision 008703 /ARTEL/PCRT/2009portant attribution d'un autre préfixe à AIRTEL GABON GABON.",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decisions/Decision008703ARTEL2009.pdf",
+   "id": "doc-mu7i0jr35cb3"
+  },
+  {
+   "categorie": "decisions",
+   "nom": "Décisions",
+   "annee": "2009",
+   "titre": "Décision 002403 /ARTEL/PCRT/2009portant attribution d'un autre prefixe à USAN GABON",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decisions/Decision008703ARTEL2009.pdf",
+   "id": "doc-mu7i0jr308d2"
+  },
+  {
+   "categorie": "decisions",
+   "nom": "Décisions",
+   "annee": "2004",
+   "titre": "Décision 000554 PCR/ARTEL/04 portant procédure d'établissement d'uns station radioélectrique de télécommunications en République gabonaise",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decisions/Decision000554PCRARTEL04.pdf",
+   "id": "doc-mu7i0jr355b9"
+  },
+  {
+   "categorie": "decisions",
+   "nom": "Décisions",
+   "annee": "2004",
+   "titre": "Décision 005/ARTEL/AUDIT Portant mise en demeure au titre du non respect par Télécel Gabon des engagements contractuels contenu dans la licence de déploiement du réseau GSM sur le territoire gabonais",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decisions/005--ARTEL--AUDIT.pdf",
+   "id": "doc-mu7i0jr340ef"
+  },
+  {
+   "categorie": "decisions",
+   "nom": "Décisions",
+   "annee": "2004",
+   "titre": "Décision 007/ARTEL/AUDIT Portant mise en demeure au titre du non respect par Celtel Gabon des engagements contractuels contenu dans la licence de déploiement du réseau GSM sur le territoire gabonais",
+   "lien": "https://www.arcep.ga/uploads/reglementation/decisions/007--ARTEL--AUDIT.pdf",
+   "id": "doc-mu7i0jr35bb0"
+  },
+  {
+   "categorie": "baremes",
+   "nom": "Barèmes",
+   "annee": "2011",
+   "titre": "Barème des redevances",
+   "lien": "https://www.arcep.ga/uploads/reglementation/baremes/bareme-redevance.pdf",
+   "id": "doc-mu7i0jr376db"
+  },
+  {
+   "categorie": "baremes",
+   "nom": "Barèmes",
+   "annee": "2011",
+   "titre": "Frais de pénalités2011",
+   "lien": "https://www.arcep.ga/uploads/reglementation/baremes/penalites2011.pdf",
+   "id": "doc-mu7i0jr3054c"
+  },
+  {
+   "categorie": "baremes",
+   "nom": "Barèmes",
+   "annee": "2011",
+   "titre": "Tableau autorisations ou déclarations 2011",
+   "lien": "https://www.arcep.ga/uploads/reglementation/baremes/autorisations2011.pdf",
+   "id": "doc-mu7i0jr32a9e"
+  },
+  {
+   "categorie": "baremes",
+   "nom": "Barèmes",
+   "annee": "",
+   "titre": "Redevances et contributions liées au licences",
+   "lien": "https://www.arcep.ga/uploads/reglementation/baremes/licences-annexe.pdf",
+   "id": "doc-mu7i0jr3533f"
+  },
+  {
+   "categorie": "baremes",
+   "nom": "Barèmes",
+   "annee": "",
+   "titre": "Annexe autorisations",
+   "lien": "https://www.arcep.ga/uploads/reglementation/baremes/Annexe-autorisations.pdf",
+   "id": "doc-mu7i0jr30e94"
+  },
+  {
+   "categorie": "baremes",
+   "nom": "Barèmes",
+   "annee": "",
+   "titre": "Les montants des redevances et les frais de dossiers 2008 sont détaillés",
+   "lien": "https://www.arcep.ga/uploads/reglementation/baremes/annexe4.pdf",
+   "id": "doc-mu7i0jr3fd7e"
+  },
+  {
+   "categorie": "baremes",
+   "nom": "Barèmes",
+   "annee": "",
+   "titre": "Les montants des redevances et contributions liées aux licences 2011",
+   "lien": "https://www.arcep.ga/uploads/reglementation/baremes/redevanceslice2011.pdf",
+   "id": "doc-mu7i0jr39ba2"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2026",
+   "titre": "Demande d'autorisation d'établissement et d'exploitation d'un réseau privé de communications électroniques",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/FORMULAIREDERESEAUDECOMMUNICATIONSELECTRONIQUES_26012026.pdf",
+   "id": "doc-mu7i0jr33930"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande d'attribution d'un Code ISPC",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE D&#039;ATTRIBUTION D&#039;UN CODE ISPC.pdf",
+   "id": "doc-mu7i0jr31495"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande d'autorisation d'exploitation Station Radio Electrique (SRE) à bord d'un Aéronef",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE D&#039;AUTORISATION D&#039;EXPLOITATION D&#039;UNE STATION RADIO ELECTRIQUE A BORD D&#039;UN AERONEF.pdf",
+   "id": "doc-mu7i0jr3a4fe"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande d’autorisation d’Installateur / Distributeur / Sous distributeur d’équipements et d'infrastructures de communications électroniques",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE D&#039;AUTORISATION D&#039;INSTALLATEUR_DISTRIBUTEUR_SOUS-DISTRIBUTEUR D&#039;EQUIPEMENTS ET D&#039;INFRASTRUCTURES DE COMMUNICATIONS ELECTRONIQUES.pdf",
+   "id": "doc-mu7i0jr3ea5f"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande de numéro d'identification mobile maritime (MMSI) de station radioélectrique de navire",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE DE NUMERO D&#039;IDENTIFICATION MOBILE MARITIME POUR STATIONS RADIOELECTRIQUES DE NAVIRE.pdf",
+   "id": "doc-mu7i0jr30957"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande d'autorisation pour l'implantation d'une station radioélectrique",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE_D&#039;AUTORISATION_POUR_L&#039;IMPLANTATION_D&#039;UNE_STATION_RADIO_ELECTRIQUE.pdf",
+   "id": "doc-mu7i0jr355dc"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande d'attribution de Code USSD",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE_D&#039;ATTRIBUTION_DE_CODES_USSD.pdf",
+   "id": "doc-mu7i0jr339cb"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande d'autorisation d'exploitation d'une Station Radio Electrique (SRE) à bord d'un Navire",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE D&#039;AUTORISATION D&#039;EXPLOITATION D&#039;UNE STATION RADIO ELECTRIQUE A BORD D&#039;UN NAVIRE.pdf",
+   "id": "doc-mu7i0jr3aa85"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande de Bloc de Numéros (PQ)",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE DE BLOC DE NUMEROS (PQ).pdf",
+   "id": "doc-mu7i0jr31050"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande d'attribution d'un Numéro Court",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE D&#039;ATTRIBUTION D&#039;UN NUMERO COURT.pdf",
+   "id": "doc-mu7i0jr3e062"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Demande d'attribution d'un Numéro Court de Service d'Urgences",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/DEMANDE D&#039;ATTRIBUTION D&#039;UN NUMERO COURT DE SERVICE D&#039;URGENCE.pdf",
+   "id": "doc-mu7i0jr3b047"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "2025",
+   "titre": "Formulaire de déclaration des activités relevant du Régime Déclaratif",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/NouveauDossier/Formulaire de déclaration des activités relevant du Régime Déclaratif.pdf",
+   "id": "doc-mu7i0jr3be4b"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "",
+   "titre": "Formulaire de demande d'Autorisation Spéciale d'Importation d'équipements de Télécommunications (ASI)",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/FormulairededemandedeASI.pdf",
+   "id": "doc-mu7i0jr30a65"
+  },
+  {
+   "categorie": "formulaires",
+   "nom": "Formulaires",
+   "annee": "",
+   "titre": "Formulaire de demande d'homologation de materiels de telecommunication",
+   "lien": "https://www.arcep.ga/uploads/reglementation/formulaires/formulaire16.pdf",
+   "id": "doc-mu7i0jr3f8b3"
+  },
+  {
+   "categorie": "homologations",
+   "nom": "Équipements homologués",
+   "annee": "2020",
+   "titre": "Equipements Homologués (Août 2020)",
+   "lien": "https://www.arcep.ga/uploads/reglementation/equipements/Bddhomologationaout2020_1.pdf",
+   "id": "doc-mu7i0jr3c8c1"
+  }
+ ],
+ "observatoire": [
+  {
+   "cle": "internet",
+   "nom": "Internet",
+   "publications": [
+    {
+     "titre": "Tableau de bord Internet du 1er trimestre 2026",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet 2026-1.pdf",
+     "trimestre": "T1",
+     "annee": "2026",
+     "id": "obs-mud13ez2fa3b"
+    },
+    {
+     "titre": "Tableau de bord Internet du 4eme trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet 2025-4.pdf",
+     "trimestre": "T4",
+     "annee": "2025",
+     "id": "obs-mud13ez23d4b"
+    },
+    {
+     "titre": "Tableau de bord Internet du 3eme trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet2025-3Corrigé.pdf",
+     "trimestre": "T3",
+     "annee": "2025",
+     "id": "obs-mud13ez28b0a"
+    },
+    {
+     "titre": "Tableau de bord Internet du 2eme trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet2025-2.pdf",
+     "trimestre": "T2",
+     "annee": "2025",
+     "id": "obs-mud13ez2b278"
+    },
+    {
+     "titre": "Tableau de bord Internet du 1er trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet 2025-1.pdf",
+     "trimestre": "T1",
+     "annee": "2025",
+     "id": "obs-mud13ez2072a"
+    },
+    {
+     "titre": "Tableau de bord Internet du 4eme trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet2024-4.pdf",
+     "trimestre": "T4",
+     "annee": "2024",
+     "id": "obs-mud13ez2bc94"
+    },
+    {
+     "titre": "Tableau de bord Internet du 3eme trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet2024-3.pdf",
+     "trimestre": "T3",
+     "annee": "2024",
+     "id": "obs-mud13ez250b5"
+    },
+    {
+     "titre": "Tableau de bord Internet du 2eme trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet2024-2.pdf",
+     "trimestre": "T2",
+     "annee": "2024",
+     "id": "obs-mud13ez283a2"
+    },
+    {
+     "titre": "Tableau de bord internet du 1er trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet-2024-1.pdf",
+     "trimestre": "T1",
+     "annee": "2024",
+     "id": "obs-mud13ez290ec"
+    },
+    {
+     "titre": "Tableau de bord internet du 4eme trimestre 2023",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet 2023-4.pdf",
+     "trimestre": "T4",
+     "annee": "2023",
+     "id": "obs-mud13ez2f45f"
+    },
+    {
+     "titre": "Tableau de bord internet du 3ème trimestre 2023",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet2023-3.pdf",
+     "trimestre": "T3",
+     "annee": "2023",
+     "id": "obs-mud13ez26cf7"
+    },
+    {
+     "titre": "Tableau de bord internet du 2ème trimestre 2023",
+     "lien": "https://www.arcep.ga/uploads/observatoires/internet/Internet2023-2.pdf",
+     "trimestre": "T2",
+     "annee": "2023",
+     "id": "obs-mud13ez20e13"
+    }
+   ]
+  },
+  {
+   "cle": "fixe",
+   "nom": "Fixe",
+   "publications": [
+    {
+     "titre": "Tableau de bord Fixe du 1er trimestre 2026",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe 2026-1.pdf",
+     "trimestre": "T1",
+     "annee": "2026",
+     "id": "obs-mud13ez2a77e"
+    },
+    {
+     "titre": "Tableau de bord Fixe du 4eme trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe 2025-4.pdf",
+     "trimestre": "T4",
+     "annee": "2025",
+     "id": "obs-mud13ez228f4"
+    },
+    {
+     "titre": "Tableau de bord Fixe du 3eme trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe2025-3.pdf",
+     "trimestre": "T3",
+     "annee": "2025",
+     "id": "obs-mud13ez2a1e8"
+    },
+    {
+     "titre": "Tableau de bord Fixe du 2eme trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe2025-2.pdf",
+     "trimestre": "T2",
+     "annee": "2025",
+     "id": "obs-mud13ez259cb"
+    },
+    {
+     "titre": "Tableau de bord Fixe du 1er trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe 2025-1.pdf",
+     "trimestre": "T1",
+     "annee": "2025",
+     "id": "obs-mud13ez296c8"
+    },
+    {
+     "titre": "Tableau de bord Fixe du 4eme trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe2024-4.pdf",
+     "trimestre": "T4",
+     "annee": "2024",
+     "id": "obs-mud13ez22f9a"
+    },
+    {
+     "titre": "Tableau de bord Fixe du 3eme trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe2024-3.pdf",
+     "trimestre": "T3",
+     "annee": "2024",
+     "id": "obs-mud13ez24e99"
+    },
+    {
+     "titre": "Tableau de bord Fixe du 2eme trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe2024-2.pdf",
+     "trimestre": "T2",
+     "annee": "2024",
+     "id": "obs-mud13ez27dfa"
+    },
+    {
+     "titre": "Tableau de bord téléphonie fixe du 1er trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe 2024-1.pdf",
+     "trimestre": "T1",
+     "annee": "2024",
+     "id": "obs-mud13ez24891"
+    },
+    {
+     "titre": "Tableau de bord téléphonie fixe du 4eme trimestre 2023",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe 2023-4.pdf",
+     "trimestre": "T4",
+     "annee": "2023",
+     "id": "obs-mud13ez2481d"
+    },
+    {
+     "titre": "Tableau de bord téléphonie fixe du 3ème trimestre 2023",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe2023-3.pdf",
+     "trimestre": "T3",
+     "annee": "2023",
+     "id": "obs-mud13ez2cf65"
+    },
+    {
+     "titre": "Tableau de bord téléphonie fixe du 2ème trimestre 2023",
+     "lien": "https://www.arcep.ga/uploads/observatoires/fixe/Fixe2023-2.pdf",
+     "trimestre": "T2",
+     "annee": "2023",
+     "id": "obs-mud13ez2c302"
+    }
+   ]
+  },
+  {
+   "cle": "mobile",
+   "nom": "Mobile",
+   "publications": [
+    {
+     "titre": "Tableau de bord Mobile du 1er trimestre 2026",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile 2026-1.pdf",
+     "trimestre": "T1",
+     "annee": "2026",
+     "id": "obs-mud13ez20f14"
+    },
+    {
+     "titre": "Tableau de bord Mobile du 4eme trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile 2025-4.pdf",
+     "trimestre": "T4",
+     "annee": "2025",
+     "id": "obs-mud13ez24155"
+    },
+    {
+     "titre": "Tableau de bord Mobile du 3eme trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile 2025-3.pdf",
+     "trimestre": "T3",
+     "annee": "2025",
+     "id": "obs-mud13ez29a91"
+    },
+    {
+     "titre": "Tableau de bord Mobile du 2eme trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile 2025-2.pdf",
+     "trimestre": "T2",
+     "annee": "2025",
+     "id": "obs-mud13ez2ed7f"
+    },
+    {
+     "titre": "Tableau de bord Mobile du 1er trimestre 2025",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile 2025-1.pdf",
+     "trimestre": "T1",
+     "annee": "2025",
+     "id": "obs-mud13ez2c87e"
+    },
+    {
+     "titre": "Tableau de bord Mobile du 4eme trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile2024-4.pdf",
+     "trimestre": "T4",
+     "annee": "2024",
+     "id": "obs-mud13ez2cc03"
+    },
+    {
+     "titre": "Tableau de bord Mobile du 3eme trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile 2024-3.pdf",
+     "trimestre": "T3",
+     "annee": "2024",
+     "id": "obs-mud13ez2d0bc"
+    },
+    {
+     "titre": "Tableau de bord Mobile du 2eme trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile2024-2.pdf",
+     "trimestre": "T2",
+     "annee": "2024",
+     "id": "obs-mud13ez2c9c6"
+    },
+    {
+     "titre": "Tableau de bord téléphonie mobile du 1er trimestre 2024",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile 2024-1.pdf",
+     "trimestre": "T1",
+     "annee": "2024",
+     "id": "obs-mud13ez20c7f"
+    },
+    {
+     "titre": "Tableau de bord téléphonie mobile du 4eme trimestre 2023",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile 2023-4.pdf",
+     "trimestre": "T4",
+     "annee": "2023",
+     "id": "obs-mud13ez3f6fe"
+    },
+    {
+     "titre": "Tableau de bord téléphonie mobile du 3ème trimestre 2023",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile2023-3.pdf",
+     "trimestre": "T3",
+     "annee": "2023",
+     "id": "obs-mud13ez38a0d"
+    },
+    {
+     "titre": "Tableau de bord téléphonie mobile du 2ème trimestre 2023",
+     "lien": "https://www.arcep.ga/uploads/observatoires/mobile/Mobile2023-2.pdf",
+     "trimestre": "T2",
+     "annee": "2023",
+     "id": "obs-mud13ez3472f"
+    }
+   ]
+  }
+ ],
+ "actualites": [
+  {
+   "id": "120",
+   "titre": "30 août – Journée commémorative de la Libération",
+   "date": "dimanche 30 août 2026",
+   "lien": "https://www.arcep.ga/pages/detail_actu/120",
+   "image": "/assets/actus/120.jpg",
+   "statut": "publie",
+   "dateIso": "2026-08-30"
+  },
+  {
+   "id": "119",
+   "titre": "Activation du numéro court 1331 : l’ARCEP renforce le dialogue avec les opérateurs et les consommateurs",
+   "date": "vendredi 21 août 2026",
+   "lien": "https://www.arcep.ga/pages/detail_actu/119",
+   "image": "/assets/actus/119.jpg",
+   "statut": "publie",
+   "dateIso": "2026-08-21"
+  },
+  {
+   "id": "118",
+   "titre": "17 août - Bonne Fête de l’Indépendance",
+   "date": "lundi 17 août 2026",
+   "lien": "https://www.arcep.ga/pages/detail_actu/118",
+   "image": "/assets/actus/118.jpg",
+   "statut": "publie",
+   "dateIso": "2026-08-17"
+  },
+  {
+   "id": "117",
+   "titre": "Bonne Fête de l’Assomption",
+   "date": "samedi 15 août 2026",
+   "lien": "https://www.arcep.ga/pages/detail_actu/117",
+   "image": "/assets/actus/117.jpg",
+   "statut": "publie",
+   "dateIso": "2026-08-15"
+  },
+  {
+   "id": "116",
+   "titre": "9 Août - Journée du Drapeau",
+   "date": "dimanche 09 août 2026",
+   "lien": "https://www.arcep.ga/pages/detail_actu/116",
+   "image": "/assets/actus/116.jpg",
+   "statut": "publie",
+   "dateIso": "2026-08-09"
+  },
+  {
+   "id": "115",
+   "titre": "Le Président du Conseil de Régulation de l’ARCEP prend une part active au Forum du SMSI 2026 et au Sommet « L’Intelligence Artificielle au service du bien social » à Genève",
+   "date": "vendredi 24 juillet 2026",
+   "lien": "https://www.arcep.ga/pages/detail_actu/115",
+   "image": "/assets/actus/115.jpg",
+   "statut": "publie",
+   "dateIso": "2026-07-24"
+  },
+  {
+   "id": "114",
+   "titre": "L’ARCEP Gabon à Lagos pour l’intégration numérique africaine : cap sur le One Africa Network",
+   "date": "vendredi 03 juillet 2026",
+   "lien": "https://www.arcep.ga/pages/detail_actu/114",
+   "image": "/assets/actus/114.jpg",
+   "statut": "publie",
+   "dateIso": "2026-07-03"
+  },
+  {
+   "id": "113",
+   "titre": "Clôture Africa Internet Summit 2026 : le Sommet s’achève sur une feuille de route pour l’avenir de l’Internet en Afrique",
+   "date": "lundi 29 juin 2026",
+   "lien": "https://www.arcep.ga/pages/detail_actu/113",
+   "image": "/assets/actus/113.jpg",
+   "statut": "publie",
+   "dateIso": "2026-06-29"
+  },
+  {
+   "id": "112",
+   "titre": "Africa Internet Summit 2026 : le Gabon porte sa vision de la souveraineté numérique.",
+   "date": "mercredi 24 juin 2026",
+   "lien": "https://www.arcep.ga/pages/detail_actu/112",
+   "image": "/assets/actus/112.jpg",
+   "statut": "publie",
+   "dateIso": "2026-06-24"
+  }
+ ],
+ "faq": [
+  {
+   "q": "Qu'est-ce que l'ARCEP ?",
+   "r": "L’ARCEP c’est L’Autorité de Régulation des communications Electroniques et des Postes",
+   "id": "faq-mud13ez353f0"
+  },
+  {
+   "q": "Quelle est la mission de l'ARCEP ?",
+   "r": "L’Autorité de régulation des communications électroniques et des postes (ARCEP) est une autorité administrative indépendante chargée de réguler, contrôler et suivre les activités des exploitants et opérateurs exerçant dans le secteur des communications électroniques et des postes au Gabon.",
+   "id": "faq-mud13ez3c5e4"
+  },
+  {
+   "q": "Qu'est-ce que la troisième génération(3G) ?",
+   "r": "La troisième génération (3G) désigne une génération de normes de téléphonie mobile. Elle est représentée principalement par les normes Universal Mobile Telecommunications System (UMTS) et CDMA2000, permettant des débits (de 2 à 42 Mb/s définis par la dernière génération des réseaux UMTS : l’HSPA+ DC) qui sont bien plus rapides qu’avec la génération précédente, par exemple le GSM. Les premières applications grand public de la 3G sont l’accès à Internet, le visionnage de vidéos, voire d’émissions de télévision et la visiophonie.",
+   "id": "faq-mud13ez3a05a"
+  },
+  {
+   "q": "Qu'est-ce que la quatrième génération(4G) ?",
+   "r": "En télécommunications, 4G est la 4e génération des standards pour la téléphonie mobile. Succédant à la 2G et la 3G, elle permet le \" très haut débit mobile \", c’est-à-dire des transmissions de données à des débits théoriques supérieurs à 100 Mb/s, voire supérieurs à 1 Gb/s (débit minimum défini par l’UIT pour les spécifications IMT-Advanced (en)). En pratique, les débits sont de l’ordre de quelques dizaines de Mb/s selon le nombre d’utilisateurs, puisque la bande passante est partagée entre les terminaux actifs des utilisateurs présents dans une même cellule radio.",
+   "id": "faq-mud13ez3f9cc"
+  },
+  {
+   "q": "Qu'est-ce que la qualité de service (QoS) ?",
+   "r": "Le terme QoS (acronyme de \" Quality of Service \", en français \" Qualité de Service \") désigne la capacité à fournir un service (notamment un support de communication) conforme à des exigences en matière de temps de réponse et de bande passante.",
+   "id": "faq-mud13ez37673"
+  }
+ ],
+ "partenaires": [
+  {
+   "sigle": "UPU",
+   "nom": "Union postale universelle",
+   "secteur": "Postes",
+   "lien": "https://www.upu.int/fr/Accueil"
+  },
+  {
+   "sigle": "UPAP",
+   "nom": "Union panafricaine des postes",
+   "secteur": "Postes",
+   "lien": "https://www.upap-papu.africa/fr/"
+  },
+  {
+   "sigle": "UIT",
+   "nom": "Union internationale des télécommunications",
+   "secteur": "Communications",
+   "lien": "https://www.itu.int/fr/Pages/default.aspx"
+  },
+  {
+   "sigle": "URT",
+   "nom": "Union des radiodiffusions et télévisions",
+   "secteur": "Communications",
+   "lien": ""
+  },
+  {
+   "sigle": "ARTAC",
+   "nom": "Association des régulateurs de télécommunications d’Afrique centrale",
+   "secteur": "Communications",
+   "lien": ""
+  },
+  {
+   "sigle": "FRATEL",
+   "nom": "Réseau francophone de la régulation des télécommunications",
+   "secteur": "Coopération",
+   "lien": "https://www.arcep.ga/fratel/"
+  }
+ ],
+ "directions": [
+  "Secrétariat Exécutif",
+  "Secrétariat Exécutif Adjoint 1",
+  "Secrétariat Exécutif Adjoint 2",
+  "Direction des Ressources Humaines et des Systèmes d’Informations",
+  "Direction du Budget et de la Comptabilité",
+  "Direction de l’Audit Interne",
+  "Direction Juridique",
+  "Direction de la Régulation",
+  "Direction des Ressources Rares et des Infrastructures Haut-Débit",
+  "Direction des Homologations et de la Qualité des Réseaux",
+  "Direction de la Recherche, du Développement, de l’Innovation, des Affaires Internationales et des Études",
+  "Direction des Systèmes d’Interconnexion et des Plateformes",
+  "Direction du Développement du Service Universel"
+ ],
+ "pages": {},
+ "reglages": {},
+ "listes": {}
+}

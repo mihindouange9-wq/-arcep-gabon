@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8"><title>Encodeur</title>
+<script>
+async function encoder(source, largeurCible, debit) {
+  const v = document.createElement('video');
+  v.muted = true; v.playsInline = true; v.src = source;
+  await new Promise((res, rej) => { v.onloadedmetadata = res; v.onerror = () => rej(new Error('vidéo illisible')); });
+  const k = Math.min(1, largeurCible / v.videoWidth);
+  const c = document.createElement('canvas');
+  c.width = Math.round(v.videoWidth * k / 2) * 2;
+  c.height = Math.round(v.videoHeight * k / 2) * 2;
+  const x = c.getContext('2d');
+  const type = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+  const flux = c.captureStream(25);
+  const rec = new MediaRecorder(flux, { mimeType: type, videoBitsPerSecond: debit });
+  const morceaux = [];
+  rec.ondataavailable = (e) => e.data.size && morceaux.push(e.data);
+  const fini = new Promise((res) => (rec.onstop = res));
+  rec.start(200);
+  let dessin = true;
+  const boucle = () => { if (!dessin) return; x.drawImage(v, 0, 0, c.width, c.height); requestAnimationFrame(boucle); };
+  v.currentTime = 0; await v.play(); boucle();
+  await new Promise((res) => (v.onended = res));
+  dessin = false; rec.stop(); await fini;
+  const blob = new Blob(morceaux, { type: 'video/webm' });
+  const buf = new Uint8Array(await blob.arrayBuffer());
+  let s = ''; for (let i = 0; i < buf.length; i += 8192) s += String.fromCharCode.apply(null, buf.subarray(i, i + 8192));
+  return { base64: btoa(s), duree: v.duration, largeur: c.width, hauteur: c.height };
+}
+</script>

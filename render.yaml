@@ -1,0 +1,23 @@
+# ARCEP Gabon — plan de déploiement Render.
+# Sur render.com : New → Blueprint → ce dépôt. Render lit ce fichier et crée le service,
+# la variable d'environnement et le disque persistant.
+services:
+  - type: web
+    name: arcep-gabon
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: ""
+    startCommand: node outils/deploiement/render.mjs
+    healthCheckPath: /robots.txt
+    envVars:
+      - key: ARCEP_SECURISE
+        value: "1"
+      - key: ARCEP_DISQUE
+        value: /var/data
+      - key: NODE_VERSION
+        value: "22"
+    disk:
+      name: arcep-donnees
+      mountPath: /var/data
+      sizeGB: 2

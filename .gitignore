@@ -1,0 +1,18 @@
+# Comptes, historique, demandes : jamais dans un dépôt
+donnees/comptes.json
+donnees/historique/
+donnees/demandes.jsonl
+donnees/*.tmp
+
+# Fichiers téléversés en production
+public/assets/medias/
+public/assets/documents/
+
+# Références et relecture
+recherche/
+outils/captures/
+sources/
+
+# Système
+.DS_Store
+Thumbs.db
