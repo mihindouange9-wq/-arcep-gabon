@@ -61,10 +61,37 @@ demo.votre-domaine.ga {
 4. Ouvrir `/admin`, créer le premier compte, renseigner l'adresse publique dans les réglages.
 5. Sauvegarder régulièrement `donnees/`, `public/assets/medias/`, `public/assets/documents/`.
 
+## Nom de domaine
+
+Le site doit répondre sous une adresse à lui, avec un certificat HTTPS.
+
+1. **Choisir le nom.** Le domaine définitif est `arcep.ga`, propriété de l'Autorité : au
+   moment du basculement, c'est l'ARCEP qui fera pointer son domaine vers l'hébergement
+   (voir l'étape 4, à faire depuis le compte de son registrar). Pour la présentation, prendre
+   un nom à vous : `arcep-gabon.com`, `arcepgabon.com` ou un sous-domaine d'un domaine que
+   vous possédez déjà (`arcep.votre-agence.com`).
+2. **Acheter le nom** chez un registrar (OVH, Gandi, Namecheap, Cloudflare Registrar : de
+   10 à 15 € par an pour un `.com`). Les `.ga` se réservent auprès des registrars accrédités
+   par le registre gabonais.
+3. **Déclarer le domaine sur Render** : service `arcep-gabon` → « Settings » → « Custom
+   Domains » → « Add ». Render affiche l'enregistrement DNS à créer.
+4. **Créer l'enregistrement DNS** chez le registrar (zone DNS du domaine) :
+   - pour un sous-domaine (`www.arcep-gabon.com`) : un enregistrement `CNAME` vers
+     `arcep-gabon-xxxx.onrender.com` ;
+   - pour le domaine nu (`arcep-gabon.com`) : l'enregistrement `A` ou `ALIAS` que Render
+     indique. Render redirige le nu vers `www` si on le lui demande.
+   La propagation prend de quelques minutes à quelques heures.
+5. **HTTPS** : Render obtient et renouvelle le certificat automatiquement dès que le DNS
+   pointe vers lui. Rien à installer.
+6. **Dans l'administration** : « Réglages et SEO » → « Adresse publique du site » =
+   `https://www.arcep-gabon.com`, puis, le jour de la mise en service, cocher
+   « Autoriser l'indexation ». Les adresses canoniques, le plan du site et les cartes de
+   partage utilisent cette adresse.
+7. **Sur un serveur virtuel** (option B), le même DNS pointe vers l'adresse IP du serveur
+   (`A`), et Caddy obtient le certificat seul.
+
 ## Dans les deux cas
 
-- Le domaine `arcep.ga` appartient à l'Autorité : pour la présentation, employer un
-  sous-domaine à vous ou l'adresse fournie par la plateforme.
 - Le formulaire de contact enregistre les demandes dans `donnees/demandes.jsonl` sans
   envoyer de courriel.
 - Après une modification du site, refaire la vidéo de l'iPhone :

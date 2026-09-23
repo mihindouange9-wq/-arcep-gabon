@@ -16,7 +16,7 @@ const PAS = Number(option('pas', 900));
 
 const PAGES = [
   ['accueil', '/'], ['autorite', '/autorite'], ['missions', '/missions'], ['observatoire', '/observatoire'],
-  ['reglementation', '/reglementation'], ['actualites', '/actualites'], ['article', '/actualites/119'],
+  ['reglementation', '/reglementation'], ['actualites', '/actualites'], ['article', '/actualites/115'],
   ['consommateurs', '/consommateurs'], ['contact', '/contact'], ['introuvable', '/page-inexistante'],
   ['mentions', '/mentions-legales'], ['admin', '/admin'], ['ecran', '/?ecran=1'],
 ];

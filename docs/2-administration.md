@@ -28,7 +28,7 @@ passe ».
 |---|---|
 | **Tableau de bord** | compteurs, brouillons et publications programmées à suivre, versions conservées et restauration |
 | **Pages** | les titres et textes d'habillage de chaque page ; un champ vide revient au texte de départ |
-| **Actualités** | créer, modifier, supprimer ; visuel téléversé ou choisi ; chapeau, corps, rubrique ; **brouillon**, **publication**, **programmation** à une date ; **aperçu** d'un brouillon |
+| **Actualités** | créer, modifier, supprimer ; visuel téléversé ou choisi ; chapeau, corps (texte simple ou HTML restreint : titres, listes, gras, liens, images), rubrique ; **brouillon**, **publication**, **programmation** à une date ; **aperçu** d'un brouillon |
 | **Réglementation** | les textes : intitulé, description, catégorie, année, date, PDF téléversé ou lien |
 | **Observatoire** | les tableaux de bord : titre, marché, année, trimestre, PDF ou lien |
 | **FAQ** | questions, réponses, thème, ordre |

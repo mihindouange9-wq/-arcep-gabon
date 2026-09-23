@@ -6,8 +6,16 @@ import { RUBRIQUES, actualitesPubliees } from './vues/base.mjs';
 
 const PAGE_MAX = 200;
 
+/* L'adresse d'origine des contenus repris (champ « source ») est une donnée de travail :
+   elle n'est pas publiée. */
+const sansSource = (v) => {
+  if (Array.isArray(v)) return v.map(sansSource);
+  if (v && typeof v === 'object') { const o = {}; for (const [k, x] of Object.entries(v)) if (k !== 'source') o[k] = sansSource(x); return o; }
+  return v;
+};
+
 const json = (reponse, charge, { statut = 200, cache = 300 } = {}) => {
-  const corps = JSON.stringify(charge, null, 1);
+  const corps = JSON.stringify(sansSource(charge), null, 1);
   reponse.writeHead(statut, {
     'content-type': 'application/json; charset=utf-8',
     'cache-control': `public, max-age=${cache}`,
@@ -28,7 +36,7 @@ export async function servirApi(chemin, url, reponse) {
   if (chemin === '/api' || chemin === '/api/') {
     return json(reponse, {
       nom: 'Interface de données ARCEP Gabon',
-      note: 'Contenus repris du site officiel arcep.ga. Lecture seule.',
+      note: 'Les contenus publiés par l’Autorité. Lecture seule.',
       routes: [
         { chemin: '/api/contenus', description: 'La totalité des contenus publiés' },
         { chemin: '/api/rubriques', description: 'Les rubriques du site et le volume de chacune' },

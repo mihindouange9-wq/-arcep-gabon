@@ -63,13 +63,27 @@ const csp = (encadrable) => [
 ].join('; ');
 
 const securite = (encadrable = false) => ({
-  'content-security-policy': csp(encadrable),
+  'content-security-policy': csp(encadrable) + (SECURISE ? '; upgrade-insecure-requests' : ''),
   'x-content-type-options': 'nosniff',
   'x-frame-options': encadrable ? 'SAMEORIGIN' : 'DENY',
   'referrer-policy': 'strict-origin-when-cross-origin',
   'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=()',
   'cross-origin-opener-policy': 'same-origin',
+  'cross-origin-resource-policy': 'same-origin',
+  ...(SECURISE ? { 'strict-transport-security': 'max-age=31536000; includeSubDomains' } : {}),
 });
+
+/* Derrière un serveur frontal, l'adresse du visiteur est dans l'en-tête que ce frontal pose ;
+   on ne la lit que si l'exploitant le déclare (ARCEP_PROXY=1), sinon n'importe qui pourrait
+   la forger pour contourner les limitations. */
+const PROXY = process.env.ARCEP_PROXY === '1';
+const adresseDe = (requete) => {
+  if (PROXY) {
+    const xff = String(requete.headers['x-forwarded-for'] || '').split(',')[0].trim();
+    if (xff) return xff;
+  }
+  return requete.socket.remoteAddress || '';
+};
 
 /* ======================= OUTILS ======================= */
 const html = (reponse, corps, statut = 200, { cache = 'no-cache', encadrable = false, indexable = false } = {}) => {
@@ -129,7 +143,10 @@ async function calculerVersions() {
 
 /* ======================= FICHIERS STATIQUES ======================= */
 async function servirFichier(cheminUrl, url, reponse, tete) {
-  const cible = resolve(join(PUBLIC, normalize(decodeURIComponent(cheminUrl))));
+  let decode;
+  try { decode = decodeURIComponent(cheminUrl); } catch { return false; }   // adresse mal formée : introuvable
+  if (/[\u0000-\u001f]/.test(decode)) return false;
+  const cible = resolve(join(PUBLIC, normalize(decode)));
   if (relative(PUBLIC, cible).startsWith('..')) return false;   // jamais hors de public/
   let info;
   try { info = await stat(cible); } catch { return false; }
@@ -150,7 +167,10 @@ async function servirFichier(cheminUrl, url, reponse, tete) {
     'x-content-type-options': 'nosniff',
     'content-length': info.size,
     'last-modified': info.mtime.toUTCString(),
+    ...(SECURISE ? { 'strict-transport-security': 'max-age=31536000; includeSubDomains' } : {}),
   };
+  /* Un PDF ou un SVG servi tel quel ne doit pas pouvoir exécuter de script dans l'origine. */
+  if (type === 'application/pdf' || type === 'image/svg+xml') entetes['content-security-policy'] = "default-src 'none'; style-src 'unsafe-inline'";
   if (type === 'application/pdf') entetes['content-disposition'] = 'inline';
   reponse.writeHead(200, entetes);
   if (tete) return reponse.end(), true;
@@ -173,6 +193,11 @@ async function enregistrerDemande(champs, adresse) {
 }
 
 const demandesRecentes = new Map();
+/* Ménage périodique : les adresses qui n'ont plus rien envoyé depuis une heure sont oubliées. */
+setInterval(() => {
+  const maintenant = Date.now();
+  for (const [adresse, liste] of demandesRecentes) if (!liste.some((t) => maintenant - t < 3600_000)) demandesRecentes.delete(adresse);
+}, 15 * 60 * 1000).unref();
 function tropDeDemandes(adresse) {
   const maintenant = Date.now();
   const liste = (demandesRecentes.get(adresse) || []).filter((t) => maintenant - t < 3600_000);
@@ -255,7 +280,7 @@ async function router(requete, reponse) {
         return;
       }
     }
-    return servirAdmin({ chemin, url, requete, reponse, corpsForm, fichiers, securise: SECURISE, entetes: securite() });
+    return servirAdmin({ chemin, url, requete, reponse, corpsForm, fichiers, securise: SECURISE, entetes: securite(), adresse: adresseDe(requete) });
   }
 
   /* --- fichiers du site --- */
@@ -277,7 +302,7 @@ async function router(requete, reponse) {
 
   /* --- formulaire de contact --- */
   if (chemin === '/contact' && methode === 'POST') {
-    const adresse = requete.socket.remoteAddress || '';
+    const adresse = adresseDe(requete);
     let champs = {};
     try { champs = formulaire(await lireCorps(requete)); }
     catch { reponse.writeHead(413, securite()); return reponse.end('Requête trop volumineuse'); }
@@ -337,8 +362,8 @@ async function router(requete, reponse) {
    triable : on les pose, une fois, pour que l'administration puisse les désigner et que
    les pages puissent trier. Rien d'autre n'est touché. */
 async function preparerDonnees() {
-  let pose = 0;
-  await modifier((D) => {
+  const completer = (D) => {
+    let pose = 0;
     for (const a of D.actualites) {
       if (!a.id) { a.id = identifiant('act'); pose++; }
       if (!a.statut) { a.statut = 'publie'; pose++; }
@@ -348,12 +373,13 @@ async function preparerDonnees() {
     for (const m of D.observatoire) for (const p of m.publications) if (!p.id) { p.id = identifiant('obs'); pose++; }
     for (const f of D.faq) if (!f.id) { f.id = identifiant('faq'); pose++; }
     for (const c of D.chiffres) if (!c.id) { c.id = identifiant('chi'); pose++; }
-    if (!D.pages) { D.pages = {}; pose++; }
-    if (!D.reglages) { D.reglages = {}; pose++; }
-    if (!D.listes) { D.listes = {}; pose++; }
+    for (const cle of ['pages', 'reglages', 'listes']) if (!D[cle]) { D[cle] = {}; pose++; }
     return pose;
-  }, 'preparation');
-  return pose;
+  };
+  /* On n'écrit — et on ne journalise — que s'il manque réellement quelque chose : un
+     simple redémarrage ne doit pas ajouter une copie à l'historique. */
+  if (!completer(structuredClone(await lire()))) return 0;
+  return modifier(completer, 'preparation');
 }
 
 const serveur = createServer((requete, reponse) => {

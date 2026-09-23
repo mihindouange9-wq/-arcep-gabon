@@ -184,10 +184,11 @@ export function fermerSessionsDe(identifiant) {
   for (const [jeton, s] of sessions) if (s.compte.identifiant === identifiant) sessions.delete(jeton);
 }
 
-/* Ménage périodique des sessions expirées. */
+/* Ménage périodique des sessions expirées et des tentatives anciennes. */
 setInterval(() => {
   const maintenant = Date.now();
   for (const [jeton, s] of sessions) if (maintenant > s.expire) sessions.delete(jeton);
+  for (const [cle, t] of tentatives) if (maintenant - t.depuis > REGLAGES.fenetreTentatives) tentatives.delete(cle);
 }, 15 * 60 * 1000).unref();
 
 /* ======================= COOKIES ======================= */
@@ -201,9 +202,13 @@ export function lireCookies(entete = '') {
   return sortie;
 }
 
+/* Derrière un HTTPS, le cookie porte le préfixe __Host- : le navigateur refuse alors qu'il
+   soit posé par un autre hôte ou sans l'attribut Secure. */
+export const nomCookie = (securise) => (securise ? '__Host-' : '') + REGLAGES.cookie;
+
 export function cookieSession(jeton, securise) {
   const parts = [
-    `${REGLAGES.cookie}=${jeton}`,
+    `${nomCookie(securise)}=${jeton}`,
     'Path=/',
     'HttpOnly',
     'SameSite=Strict',
@@ -214,7 +219,7 @@ export function cookieSession(jeton, securise) {
 }
 
 export function cookieEfface(securise) {
-  const parts = [`${REGLAGES.cookie}=`, 'Path=/', 'HttpOnly', 'SameSite=Strict', 'Max-Age=0'];
+  const parts = [`${nomCookie(securise)}=`, 'Path=/', 'HttpOnly', 'SameSite=Strict', 'Max-Age=0'];
   if (securise) parts.push('Secure');
   return parts.join('; ');
 }

@@ -116,12 +116,13 @@ barre de défilement ni défilement lissé.
 
 ## Origine des contenus
 
-Toutes les informations proviennent du site officiel <https://www.arcep.ga/>, aspiré puis
-trié par la chaîne `outils/contenu/`. **Rien n'est inventé** : ni chiffre, ni date, ni
-texte réglementaire, ni nom, ni coordonnée. Les graphiques ne représentent que des données
-publiées : nombre de textes par catégorie, tableaux de bord par trimestre et par marché,
-indicateurs de l'Observatoire. Les titres et phrases d'habillage sont déclarés dans
-`serveur/schema.mjs` et modifiables depuis l'administration.
+Les contenus ont été repris une fois du site officiel de l'Autorité par
+`outils/contenu/importer-arcep.mjs` : quatre-vingt-treize actualités avec leur texte, leur
+visuel et leurs images, soixante-trois textes réglementaires et trente-cinq tableaux de
+bord avec leur PDF, les missions, les chiffres, les coordonnées. **Rien n'est inventé** et
+**rien ne renvoie vers l'ancien site** : tout est servi ici. Les visuels lourds ont été
+réencodés par `outils/contenu/optimiser-images.mjs`. Les titres et phrases d'habillage
+sont déclarés dans `serveur/schema.mjs` et modifiables depuis l'administration.
 
 ---
 

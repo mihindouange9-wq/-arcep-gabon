@@ -7,6 +7,7 @@ import {
   actualitesPubliees, visuelActualite, dateLisible,
 } from './base.mjs';
 import { couvertureObservatoire, repartitionDocuments, jauge, onde } from './graphiques.mjs';
+import { corpsArticle } from '../html.mjs';
 import { texte as T, liste as L, reglages } from '../schema.mjs';
 
 const tel = (t) => `tel:${String(t).replace(/[^\d+]/g, '')}`;
@@ -53,7 +54,7 @@ function dialogueMission(mi) {
     <h2 class="titre-3" id="mission-${e(mi.cle)}-titre">${e(mi.titre)}</h2>
     <p class="chapo">${e(mi.resume)}</p>
     <ul class="points">${mi.points.map((p) => `<li>${e(p)}</li>`).join('')}</ul>
-    <p><a class="lien" href="${lien(mi.lien)}" target="_blank" rel="noopener">Texte de référence sur arcep.ga ${icone('diag')}</a></p>
+    <p><a class="lien" href="/missions#${e(mi.cle)}">La mission en détail ${icone('fleche')}</a></p>
   </div>
 </dialog>`;
 }
@@ -434,7 +435,7 @@ ${D.missions.map((mi, i) => `
       <p class="badge">Mission</p>
       <h2 class="titre-2" data-reveler="lignes">${e(mi.titre)}</h2>
       <p class="chapo" data-reveler>${e(mi.resume)}</p>
-      <p data-reveler><a class="lien" href="${lien(mi.lien)}" target="_blank" rel="noopener">Texte de référence sur arcep.ga ${icone('diag')}</a></p>
+      <p class="mesure" data-reveler>${mi.points.length} attribution${mi.points.length > 1 ? 's' : ''}</p>
     </div>
     <ul class="points points--grands" data-serie>${mi.points.map((p) => `<li>${e(p)}</li>`).join('')}</ul>
   </div>
@@ -638,7 +639,6 @@ ${entete({ titre: T(D, 'actualites', 'heroTitre'), chapo: T(D, 'actualites', 'he
       ${publiees.map((a) => `<li data-annee="${e((a.dateIso || '').slice(0, 4))}" data-rubrique="${e(a.rubrique || '')}" data-titre="${e((a.titre + ' ' + (a.chapeau || '')).toLowerCase())}"${retenu(a) && a !== une ? '' : ' hidden'}>${carteActualite(a)}</li>`).join('')}
       <li class="vide" data-vide${filtrees.length ? ' hidden' : ''}>Aucune actualité ne correspond à cette recherche.</li>
     </ul>
-    <p class="suite" data-reveler><a class="lien" href="https://www.arcep.ga/actualites" target="_blank" rel="noopener">Archives complètes sur arcep.ga ${icone('diag')}</a></p>
   </div>
 </section>`;
 
@@ -646,10 +646,11 @@ ${entete({ titre: T(D, 'actualites', 'heroTitre'), chapo: T(D, 'actualites', 'he
     description: 'Actualités de l’ARCEP Gabon : communications officielles et participations internationales.' });
 }
 
-export function article(D, a, { ecran = false } = {}) {
+export function article(D, a, { ecran = false, apercu = false } = {}) {
   const publiees = actualitesPubliees(D);
   const autres = publiees.filter((x) => x.id !== a.id).slice(0, 3);
   const corps = `
+${apercu ? '<p class="apercu-bandeau" role="status">Aperçu — cet article est tel qu’il paraîtra ; il n’est pas encore publié.</p>' : ''}
 <article class="article-page">
   <section class="section entete entete--article" data-scene="graphite" data-tonalite="sombre">
     <span class="trame" aria-hidden="true"></span>
@@ -663,8 +664,7 @@ export function article(D, a, { ecran = false } = {}) {
   <section class="section article-page-corps" data-scene="blanc" data-tonalite="clair">
     <div class="cadre cadre--etroit">
       ${a.image ? `<figure class="article-page-visuel" data-reveler="masque"><img src="${lien(a.image)}" alt="${e(a.alt || '')}" decoding="async"></figure>` : ''}
-      ${a.corps ? `<div class="prose prose--grande" data-reveler>${paragraphes(a.corps)}</div>` : ''}
-      ${a.lien ? `<p class="article-page-source" data-reveler><a class="bouton bouton--contour" href="${lien(a.lien)}" target="_blank" rel="noopener">Lire l’article sur arcep.ga ${icone('diag')}</a></p>` : ''}
+      ${a.corps ? `<div class="prose prose--grande prose--article" data-reveler>${corpsArticle(a.corps, paragraphes)}</div>` : ''}
     </div>
   </section>
   ${autres.length ? `

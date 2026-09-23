@@ -206,7 +206,6 @@ function pied(D, R) {
           <li><a href="/reglementation?categorie=formulaires">Formulaires</a></li>
           <li><a href="/observatoire">Tableaux de bord</a></li>
           <li><a href="/api">Interface de données</a></li>
-          <li><a href="https://www.arcep.ga/" target="_blank" rel="noopener">Site officiel arcep.ga</a></li>
         </ul>
       </div>
       <div>

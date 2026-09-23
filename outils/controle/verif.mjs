@@ -32,7 +32,7 @@ const PAGES = [
   ['observatoire', '/observatoire'],
   ['reglementation', '/reglementation'],
   ['actualites', '/actualites'],
-  ['article', '/actualites/119'],
+  ['article', '/actualites/115'],
   ['consommateurs', '/consommateurs'],
   ['contact', '/contact'],
   ['mentions', '/mentions-legales'],

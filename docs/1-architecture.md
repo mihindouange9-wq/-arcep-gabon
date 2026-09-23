@@ -44,6 +44,9 @@ navigation, filtres, formulaires, administration.
 
 Tout ce qui sort des vues est échappé (`e()` dans `vues/base.mjs`). Les adresses passent
 par `lien()`, qui n'accepte que `http`, `https`, `mailto`, `tel` et les chemins relatifs.
+Le corps d'un article peut porter un HTML restreint (`serveur/html.mjs` : paragraphes,
+titres, listes, gras, italique, liens, images du site) ; il est nettoyé à l'écriture et de
+nouveau au rendu, balise par balise, attribut par attribut.
 Les graphiques (`vues/graphiques.mjs`) sont des SVG construits à partir des données du
 document : nombre de textes par catégorie, matrice trimestres × marchés, jauges.
 
@@ -85,10 +88,20 @@ en mode `?ecran=1` au format du 17 Pro Max (440 × 956 points, 1,5 pixel par poi
 barre de défilement, la fait défiler lentement, puis encode les images en VP9 par WebCodecs.
 Le fichier JSON voisin donne le début de chaque page ; la vidéo ne joue que dans le champ.
 
+## L'autonomie
+
+Le site ne dépend plus de l'ancien : `outils/contenu/importer-arcep.mjs` a rapatrié, une
+fois, toutes les actualités (texte, visuels de couverture, images intégrées) et tous les
+PDF de la réglementation et de l'Observatoire dans `public/assets/`. Aucune page ne
+renvoie vers arcep.ga ; l'adresse d'origine de chaque contenu est conservée dans un champ
+`source`, jamais affiché.
+
 ## La sécurité
 
 | | |
 |---|---|
+| Derrière un frontal | `ARCEP_PROXY=1` fait lire l'adresse du visiteur dans `X-Forwarded-For` ; sans ce réglage l'en-tête est ignoré, sinon n'importe qui pourrait le forger. `ARCEP_SECURISE=1` ajoute HSTS, `upgrade-insecure-requests`, l'attribut `Secure` et le préfixe `__Host-` du cookie. |
+| Fichiers servis | un PDF ou un SVG reçoit sa propre politique de sécurité (`default-src 'none'`) : rien de ce qu'il contient ne s'exécute dans l'origine du site. Une adresse mal formée répond 404, jamais 500. |
 | Mots de passe | `scrypt` (N=16384, r=8, p=1, 64 octets), sel par compte, comparaison à temps constant, dérivation même sans compte trouvé. |
 | Comptes | deux rôles ; il reste toujours au moins un administrateur ; un changement de rôle ou de mot de passe clôt les sessions du compte. |
 | Sessions | jeton aléatoire en mémoire, expiration glissante de huit heures, cookie `HttpOnly`, `SameSite=Strict`, `Secure` derrière un HTTPS. |

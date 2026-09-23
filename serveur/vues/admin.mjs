@@ -231,8 +231,7 @@ ${messages(message, erreur)}
   <div class="formulaire-principal">
     <p class="champ"><label for="titre">Titre</label><input id="titre" name="titre" type="text" required maxlength="300" value="${e(a.titre)}"></p>
     <p class="champ"><label for="chapeau">Chapeau</label><textarea id="chapeau" name="chapeau" rows="3" maxlength="2000" data-compte="chapeau-compte">${e(a.chapeau || '')}</textarea><span class="aide" id="chapeau-compte"></span></p>
-    <p class="champ"><label for="corps">Corps de l’article</label><textarea id="corps" name="corps" rows="14" maxlength="20000" data-compte="corps-compte">${e(a.corps || '')}</textarea><span class="aide" id="corps-compte">Une ligne vide sépare deux paragraphes.</span></p>
-    <p class="champ"><label for="lien">Lien vers l’article officiel (facultatif)</label><input id="lien" name="lien" type="url" maxlength="500" value="${e(a.lien)}" placeholder="https://www.arcep.ga/…"></p>
+    <p class="champ"><label for="corps">Corps de l’article</label><textarea id="corps" name="corps" rows="16" maxlength="40000" data-compte="corps-compte">${e(a.corps || '')}</textarea><span class="aide" id="corps-compte">Texte simple (une ligne vide sépare deux paragraphes) ou HTML restreint : p, h2, h3, ul, ol, li, strong, em, a, img. Tout le reste est retiré.</span></p>
   </div>
   <div class="formulaire-cote">
     <fieldset class="bloc">

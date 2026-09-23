@@ -1,8 +1,10 @@
 # Contrôles
 
-Huit outils de contrôle, sans dépendance, et un outil de fabrication (la vidéo de l'iPhone :
-`node outils/charte/video-iphone.mjs`, quelques minutes). Le serveur doit tourner pour les
-six premiers et pour la vidéo.
+Huit outils de contrôle, sans dépendance, et deux outils de fabrication : la vidéo de
+l'iPhone (`node outils/charte/video-iphone.mjs`, quelques minutes, serveur lancé) et
+l'import des contenus de l'ancien site (`node outils/contenu/importer-arcep.mjs`, serveur
+arrêté, à ne relancer que pour reprendre de nouveaux articles). Le serveur doit tourner
+pour les six premiers contrôles.
 
 ```
 node serveur/index.mjs                                   # dans un terminal

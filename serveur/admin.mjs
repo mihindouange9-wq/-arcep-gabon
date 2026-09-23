@@ -7,13 +7,14 @@ import { join } from 'node:path';
 import { lire, modifier, ecrire, historique, identifiant, chemin as chemins } from './base.mjs';
 import {
   aucunCompte, creerCompte, verifier, ouvrirSession, session, fermerSession, fermerSessionsDe,
-  lireCookies, cookieSession, cookieEfface, csrfValide, REGLAGES, ROLES,
+  lireCookies, cookieSession, cookieEfface, csrfValide, nomCookie, ROLES,
   listerComptes, supprimerCompte, changerRole, changerMotDePasse, reinitialiserMotDePasse,
 } from './auth.mjs';
 import * as V from './vues/admin.mjs';
 import * as Medias from './medias.mjs';
 import { PAGES, LISTES, REGLAGES_DEFAUT } from './schema.mjs';
 import { dateIso } from './vues/base.mjs';
+import { nettoyer, contientHtml } from './html.mjs';
 import * as Pages from './vues/pages.mjs';
 
 let ENTETES = {};
@@ -36,11 +37,11 @@ const adresseValide = (v) => {
 const champ = (f, cle, max = 4000) => String(f[cle] || '').trim().slice(0, max);
 const dateValide = (v) => !v || /^\d{4}-\d{2}-\d{2}$/.test(v);
 
-export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fichiers = [], securise, entetes = {} }) {
+export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fichiers = [], securise, entetes = {}, adresse = '' }) {
   ENTETES = entetes;
   const cookies = lireCookies(requete.headers.cookie || '');
-  const s = session(cookies[REGLAGES.cookie]);
-  const adresse = requete.socket.remoteAddress || '';
+  const s = session(cookies[nomCookie(securise)]);
+  adresse = adresse || requete.socket.remoteAddress || '';
   const methode = requete.method;
   const message = url.searchParams.get('message') || '';
 
@@ -67,7 +68,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, '/admin', { 'set-cookie': cookieSession(jeton, securise) });
   }
   if (chemin === '/admin/deconnexion' && methode === 'POST') {
-    fermerSession(cookies[REGLAGES.cookie]);
+    fermerSession(cookies[nomCookie(securise)]);
     return versLa(reponse, '/admin', { 'set-cookie': cookieEfface(securise) });
   }
 
@@ -483,7 +484,6 @@ function validerActualite(f) {
   if (!champ(f, 'titre', 300)) return 'Le titre est obligatoire.';
   if (!dateValide(champ(f, 'dateIso', 10)) || !champ(f, 'dateIso', 10)) return 'La date est obligatoire, au format AAAA-MM-JJ.';
   if (!dateValide(champ(f, 'publierLe', 10))) return 'La date de publication doit être au format AAAA-MM-JJ.';
-  if (!adresseValide(f.lien)) return 'Le lien doit commencer par https:// ou par une barre oblique.';
   if (!adresseValide(f.image)) return 'Le visuel doit être un chemin du site ou une adresse https.';
   if (!['publie', 'brouillon'].includes(f.statut)) return 'Statut inconnu.';
   return '';
@@ -499,8 +499,8 @@ function actualiteDepuis(f) {
   const iso = champ(f, 'dateIso', 10);
   return {
     titre: champ(f, 'titre', 300), dateIso: iso, date: dateFrancaise(iso),
-    lien: champ(f, 'lien', 500), image: champ(f, 'image', 500), alt: champ(f, 'alt', 200),
-    chapeau: champ(f, 'chapeau', 2000), corps: champ(f, 'corps', 20000), rubrique: champ(f, 'rubrique', 60),
+    image: champ(f, 'image', 500), alt: champ(f, 'alt', 200),
+    chapeau: champ(f, 'chapeau', 2000), corps: contientHtml(f.corps) ? nettoyer(String(f.corps || '')).slice(0, 40000) : champ(f, 'corps', 40000), rubrique: champ(f, 'rubrique', 60),
     statut: f.statut, publierLe: champ(f, 'publierLe', 10),
   };
 }

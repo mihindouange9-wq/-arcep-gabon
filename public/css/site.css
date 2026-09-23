@@ -272,6 +272,18 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .article-page-corps .cadre { display: grid; gap: 2rem; }
 .article-page-visuel { border-radius: var(--rayon-3); overflow: hidden; box-shadow: var(--ombre-2); margin-top: calc(-1 * var(--section) - 2rem); position: relative; z-index: 3; background: var(--gris-chaud); }
 .article-page-visuel img { width: 100%; height: auto; }
+.prose--article h2, .prose--article h3, .prose--article h4 { font-family: var(--sans); margin: 1.8em 0 .6em; letter-spacing: -.02em; line-height: 1.15; }
+.prose--article h2 { font-size: var(--t-4); }
+.prose--article h3 { font-size: var(--t-3); }
+.prose--article h4 { font-size: var(--t-corps); font-weight: 650; }
+.prose--article ul, .prose--article ol { margin: 1em 0 1.2em 1.4em; display: grid; gap: .4em; }
+.prose--article ul { list-style: disc; }
+.prose--article ol { list-style: decimal; }
+.prose--article blockquote { margin: 1.4em 0; padding-left: 1.2em; border-left: 1px solid var(--accent); color: var(--texte-2); font-style: italic; }
+.prose--article img { margin: 1.6em 0; border-radius: var(--rayon-2); width: 100%; height: auto; }
+.prose--article a { color: var(--accent); text-decoration: underline; text-underline-offset: .18em; }
+.prose--article a:hover { color: var(--texte); }
+.apercu-bandeau { position: fixed; left: 50%; bottom: 1rem; transform: translateX(-50%); z-index: 650; max-width: calc(100% - 2rem); padding: .7rem 1.1rem; border-radius: var(--rayon-rond); background: var(--jaune); color: var(--encre); font-size: var(--t-1); font-weight: 600; box-shadow: var(--ombre-2); }
 .articles--trois { margin-top: 0; }
 
 /* =========================================================================================
