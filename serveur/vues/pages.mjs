@@ -501,14 +501,14 @@ ${entete({ titre: T(D, 'observatoire', 'heroTitre'), chapo: T(D, 'observatoire',
     <ul class="publications" data-liste>
       ${toutes.map((p) => `
       <li class="publication" data-marche="${e(p.marche)}" data-annee="${e(p.annee)}"${retenu(p) ? '' : ' hidden'}>
-        <a class="publication-lien" href="${lien(p.lien)}" target="_blank" rel="noopener" data-curseur="ouvrir">
+        ${p.fichier || p.lien ? `<a class="publication-lien" href="${lien(p.fichier || p.lien)}" target="_blank" rel="noopener" data-curseur="ouvrir">` : '<span class="publication-lien publication-lien--vide">'}
           <span class="publication-periode"><b class="tabulaire">${e(p.annee)}</b><i>${e(p.trimestre)}</i></span>
           <span class="publication-corps">
             <span class="badge">${e(p.marcheNom)}</span>
             <span class="publication-titre">${e(p.titre)}</span>
           </span>
-          <span class="publication-action">${icone('document')}<span>PDF</span></span>
-        </a>
+          <span class="publication-action">${p.fichier || p.lien ? icone('document') + '<span>PDF</span>' : '<span>Document en attente</span>'}</span>
+        ${p.fichier || p.lien ? '</a>' : '</span>'}
       </li>`).join('')}
       <li class="vide" data-vide${filtrees.length ? ' hidden' : ''}>Aucun tableau de bord ne correspond à ces filtres.</li>
     </ul>

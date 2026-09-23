@@ -401,6 +401,9 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .publication-corps, .texte-corps { display: grid; gap: .35rem; }
 .publication-titre, .texte-titre { font-weight: 500; font-size: var(--t-2); line-height: 1.4; transition: color var(--d-2); }
 .publication-lien:hover .publication-titre { color: var(--accent); }
+.publication-lien--vide { cursor: default; }
+.publication-lien--vide:hover { background: transparent; }
+.publication-lien--vide .publication-action { color: var(--texte-2); font-weight: 500; }
 .texte-description { font-family: var(--serif); font-size: var(--t-2); color: var(--texte-2); line-height: 1.5; }
 .publication-action, .texte-actions { display: inline-flex; align-items: center; gap: .5rem; }
 .publication-action { font-size: var(--t-1); font-weight: 600; color: var(--accent); }

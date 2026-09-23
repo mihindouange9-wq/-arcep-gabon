@@ -40,8 +40,8 @@ export function couvertureObservatoire(D) {
     <span class="couverture-marche" role="rowheader">${e(m.nom)}</span>
     ${colonnes.map((c) => {
       const p = cases.get(`${m.cle}|${c}`);
-      return p
-        ? `<a class="couverture-case" role="cell" href="${lien(p.lien)}" target="_blank" rel="noopener" data-infobulle="${e(p.titre)}" aria-label="${e(p.titre)}"><i></i></a>`
+      return p && (p.fichier || p.lien)
+        ? `<a class="couverture-case" role="cell" href="${lien(p.fichier || p.lien)}" target="_blank" rel="noopener" data-infobulle="${e(p.titre)}" aria-label="${e(p.titre)}"><i></i></a>`
         : `<span class="couverture-case couverture-case--vide" role="cell" aria-label="Non publié"><i></i></span>`;
     }).join('')}
   </div>`).join('')}
