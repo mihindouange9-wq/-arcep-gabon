@@ -2,7 +2,7 @@
    Ouvre une page dans Chrome sans interface, la fait défiler à une position donnée, puis
    évalue une expression et rapporte le résultat avec les exceptions rencontrées.
 
-   node outils/controle/sonde.mjs /chemin [--largeur 1440] [--y 2000] [--expr "document.title"] */
+   node outils/controle/sonde.mjs /chemin [--largeur 1440] [--y 2000] [--expr "document.title"] [--capture sortie.png] */
 import { spawn } from 'node:child_process';
 import { setTimeout as attendre } from 'node:timers/promises';
 
@@ -13,6 +13,7 @@ const BASE = 'http://127.0.0.1:4310';
 const largeur = Number(option('largeur', 1440));
 const y = Number(option('y', 0));
 const expr = option('expr', 'document.title');
+const capture = option('capture', '');
 
 const port = 9400 + Math.floor(Math.random() * 400);
 const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
@@ -42,6 +43,12 @@ await attendre(4500);
 await evaluer(`window.scrollTo(0, ${y})`);
 for (let i = 0; i < 5; i++) { await envoyer('Page.captureScreenshot', { format: 'png' }); await attendre(200); }
 console.log('résultat :', JSON.stringify(await evaluer(expr), null, 1));
+if (capture) {
+  await attendre(600);
+  const { data } = (await envoyer('Page.captureScreenshot', { format: 'png' })).result;
+  await (await import('node:fs/promises')).writeFile(capture, Buffer.from(data, 'base64'));
+  console.log('capture :', capture);
+}
 if (journal.length) console.log('journal :\n  ' + journal.join('\n  '));
 try { ws.close(); } catch { /* fermé */ }
 chrome.kill();

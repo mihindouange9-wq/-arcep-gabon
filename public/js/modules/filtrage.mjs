@@ -17,6 +17,9 @@ export function demarrerFiltrage() {
     const champ = QS('[data-recherche]', form);
     const filtres = QSA('[data-filtre]', form);
     const une = QS('.actualites-composition--page', racine);
+    const parPage = Number(liste.dataset.page) || 0;
+    const plus = QS('[data-plus]', racine);
+    let limite = parPage;
     const uneHref = une ? QS('a', une)?.getAttribute('href') : null;
     const etat = {};
     for (const f of filtres) if (f.hasAttribute('aria-current')) etat[f.dataset.filtre] = f.dataset.valeur;
@@ -39,6 +42,12 @@ export function demarrerFiltrage() {
       }
       if (une) une.hidden = !parDefaut;
       if (parDefaut && une) retenus += 1;
+      /* Une longue liste se dévoile par pages : les entrées au-delà de la limite attendent. */
+      if (parPage) {
+        let visibles = 0;
+        for (const el of entrees) { if (el.hidden) continue; visibles += 1; if (visibles > limite) el.hidden = true; }
+        if (plus) plus.hidden = visibles <= limite;
+      }
       if (vide) vide.hidden = retenus > 0;
       if (compte) {
         if (!compte.dataset.mot) compte.dataset.mot = compte.textContent.replace(/^\d+\s*/, '').replace(/(s|x)$/, '').replace(/(s|x) de bord$/, ' de bord');
@@ -63,11 +72,13 @@ export function demarrerFiltrage() {
         ev.preventDefault();
         const cle = f.dataset.filtre;
         etat[cle] = (f.tagName === 'BUTTON' && etat[cle] === f.dataset.valeur) ? '' : f.dataset.valeur;
+        limite = parPage;
         appliquer();
         if (f.tagName !== 'BUTTON') defilerVers(liste, -140);
       });
     }
-    if (champ) champ.addEventListener('input', () => { clearTimeout(minuterie); minuterie = setTimeout(appliquer, 120); });
+    if (champ) champ.addEventListener('input', () => { clearTimeout(minuterie); limite = parPage; minuterie = setTimeout(appliquer, 120); });
+    if (plus) plus.querySelector('button').addEventListener('click', () => { limite += parPage; appliquer(); });
     form.addEventListener('submit', (ev) => { ev.preventDefault(); appliquer(); });
     appliquer();
   }

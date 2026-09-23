@@ -12,6 +12,7 @@ import { demarrerMissions } from './modules/missions.mjs';
 import { demarrerMots } from './modules/mots.mjs';
 import { demarrerEcran } from './modules/ecran.mjs';
 import { demarrerFiltrage } from './modules/filtrage.mjs';
+import { demarrerDocuments } from './modules/documents.mjs';
 import { demarrerPied } from './modules/pied.mjs';
 
 /* Les découpes typographiques mesurent les lignes : elles attendent les caractères. */
@@ -28,4 +29,5 @@ demarrerMissions();
 demarrerMots();
 demarrerEcran();
 demarrerFiltrage();
+demarrerDocuments();
 demarrerPied();

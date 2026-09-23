@@ -384,6 +384,20 @@ dialog.dialogue::backdrop { background: rgba(6, 12, 24, .62); backdrop-filter: b
 .dialogue-fermer { position: absolute; top: 1rem; right: 1rem; width: 2.75rem; height: 2.75rem; border-radius: var(--rayon-rond); display: grid; place-items: center; background: color-mix(in srgb, var(--texte) 6%, transparent); transition: background var(--d-2), transform var(--d-2) var(--e-sortie); }
 .dialogue-fermer:hover { background: color-mix(in srgb, var(--texte) 12%, transparent); transform: rotate(90deg); }
 
+/* ---- Lecteur de documents ---- */
+dialog.dialogue--document { width: min(96vw, 1180px); height: min(92vh, 1100px); max-height: none; border-radius: var(--rayon-2); }
+.lecteur { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100%; }
+.lecteur-tete { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem 1rem .8rem 1.4rem; border-bottom: 1px solid var(--filet-2); }
+.lecteur-titre { font-weight: 600; font-size: var(--t-2); line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.lecteur-actions { display: flex; align-items: center; gap: .5rem; flex: none; }
+.lecteur-fermer { width: 2.5rem; height: 2.5rem; border-radius: var(--rayon-rond); display: grid; place-items: center; background: color-mix(in srgb, var(--texte) 6%, transparent); transition: background var(--d-2), transform var(--d-2) var(--e-sortie); }
+.lecteur-fermer:hover { background: color-mix(in srgb, var(--texte) 12%, transparent); transform: rotate(90deg); }
+.lecteur-cadre { width: 100%; height: 100%; border: 0; background: var(--gris-froid, #e6ebee); }
+@media (max-width: 720px) {
+  dialog.dialogue--document { width: 100vw; height: 100dvh; max-width: none; border-radius: 0; }
+  .lecteur-actions .bouton span, .lecteur-actions [data-telecharger] { display: none; }
+}
+
 /* ---- Infobulle (title accessible rendu en attribut) ---- */
 [data-infobulle] { position: relative; }
 [data-infobulle]::after {

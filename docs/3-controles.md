@@ -1,6 +1,6 @@
 # Contrôles
 
-Huit outils de contrôle, sans dépendance, et deux outils de fabrication : la vidéo de
+Neuf outils de contrôle, sans dépendance, et deux outils de fabrication : la vidéo de
 l'iPhone (`node outils/charte/video-iphone.mjs`, quelques minutes, serveur lancé) et
 l'import des contenus de l'ancien site (`node outils/contenu/importer-arcep.mjs`, serveur
 arrêté, à ne relancer que pour reprendre de nouveaux articles). Le serveur doit tourner
@@ -9,9 +9,10 @@ pour les six premiers contrôles.
 ```
 node serveur/index.mjs                                   # dans un terminal
 node outils/controle/verif.mjs                           # console, débordement, révélations, contraste
+node outils/controle/verif-liens.mjs                     # chaque lien du site répond, aucun renvoi vers l’ancien site
 node outils/controle/verif-admin.mjs [--captures]        # cycle complet de l'administration
 node outils/controle/captures.mjs [--pages accueil,…]    # planches de relecture, bureau et mobile
-node outils/controle/sonde.mjs /chemin --y 2000 --expr "…"   # une expression évaluée dans la page
+MSYS_NO_PATHCONV=1 node outils/controle/sonde.mjs /chemin --y 2000 --expr "…"   # une expression évaluée dans la page (Git Bash convertit /chemin sans ce préfixe)
 node outils/controle/poids.mjs [/chemin] [--largeur 390] # poids et temps de chargement
 node outils/controle/verif-polices.mjs                   # couverture des caractères
 node outils/controle/verif-css.mjs                       # classes et variables orphelines
@@ -25,6 +26,12 @@ crible : exceptions et erreurs de console, ressources en échec ; **débordement
 horizontal** à neuf largeurs de 360 à 1920 pixels ; **révélations** — après un défilement
 complet, rien de ce qui porte un état d'entrée ne doit être resté invisible ou décalé ;
 **contraste** de chaque texte sur son fond réel, au seuil WCAG applicable à sa taille.
+
+## `verif-liens.mjs` — les liens
+
+Parcourt le site depuis l'accueil, page après page (606 adresses au 23 septembre 2026 : 287
+pages, 319 fichiers), et vérifie que tout répond 200, qu'aucun lien n'est vide et qu'aucun
+ne renvoie vers l'ancien site. Les domaines externes rencontrés sont listés pour relecture.
 
 ## `verif-admin.mjs` — l'administration
 

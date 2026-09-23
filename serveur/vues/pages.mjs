@@ -635,10 +635,11 @@ ${entete({ titre: T(D, 'actualites', 'heroTitre'), chapo: T(D, 'actualites', 'he
     </form>
     <p class="compte-resultats mesure" data-compte aria-live="polite">${filtrees.length} publication${filtrees.length > 1 ? 's' : ''}</p>
     ${une ? `<div class="actualites-composition actualites-composition--page">${carteActualite(une, { grande: true })}</div>` : ''}
-    <ul class="articles" data-liste data-serie>
+    <ul class="articles" data-liste data-serie data-page="12">
       ${publiees.map((a) => `<li data-annee="${e((a.dateIso || '').slice(0, 4))}" data-rubrique="${e(a.rubrique || '')}" data-titre="${e((a.titre + ' ' + (a.chapeau || '')).toLowerCase())}"${retenu(a) && a !== une ? '' : ' hidden'}>${carteActualite(a)}</li>`).join('')}
       <li class="vide" data-vide${filtrees.length ? ' hidden' : ''}>Aucune actualité ne correspond à cette recherche.</li>
     </ul>
+    <p class="suite" data-plus hidden><button class="bouton bouton--contour" type="button">Afficher plus d’actualités</button></p>
   </div>
 </section>`;
 

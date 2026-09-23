@@ -83,9 +83,10 @@ donnees/
 charte/             la charte de marque (PDF, PPTX, planches, masters du logo)
 docs/               audit, architecture, administration, contrôles, direction artistique
 outils/
-  contenu/          chaîne d'extraction des contenus depuis arcep.ga, polices
+  contenu/          import des contenus de l'ancien site, allègement des visuels, polices
   charte/           charte de marque, image de partage, vidéo de l'iPhone
-  controle/         vérification du rendu, de l'administration, du poids, hygiène du code
+  controle/         vérification des pages, des liens, de l'administration, du poids, hygiène du code
+  deploiement/      démarrage sur Render (disque persistant)
   captures/         planches de relecture
 recherche/          pages du site officiel telles qu'aspirées, pour référence
 sources/            documents fournis par le client

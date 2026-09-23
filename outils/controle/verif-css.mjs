@@ -45,6 +45,7 @@ const POSEES = new Map([
   ['article-visuel', 'passée en argument à visuelActualite()'],
   ['visuel-interieur', 'rendue par visuelActualite() pour un article sans visuel'],
   ['connecte', 'posée sur body de l’administration'],
+  ['dialogue--document', 'créée par documents.mjs avec le lecteur de PDF'],
   ['pastille--programme', 'composée à partir de l’état de l’actualité dans vues/admin.mjs'],
   ['pastille--publie', 'composée à partir de l’état de l’actualité dans vues/admin.mjs'],
   ['pastille--brouillon', 'composée à partir de l’état de l’actualité dans vues/admin.mjs'],
