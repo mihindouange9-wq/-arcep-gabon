@@ -1,12 +1,4 @@
-/* ARCEP Gabon — caractères auto-hébergés.
-
-   Fichier produit par outils/contenu/polices.mjs. Ne pas modifier à la main : relancer
-   l'outil. Les fichiers vivent dans public/assets/polices/ et sont servis avec un cache
-   d'un mois, leur contenu ne changeant jamais sous le même nom.
-
-   « font-display: swap » affiche immédiatement la fonte de repli et permute dès que la
-   fonte définitive est prête : le texte d'une autorité publique ne doit jamais rester
-   invisible en attendant un fichier. */
+/* Polices auto-hébergées. Fichier généré par outils/contenu/polices.mjs, ne pas modifier à la main. */
 
 @font-face {
   font-family: "Archivo";

@@ -1,12 +1,13 @@
-/* Extrait les couleurs réellement présentes dans le logo officiel : quantification des pixels
-   opaques, puis regroupement des teintes voisines. La palette de la charte est ainsi mesurée,
-   pas estimée. node outils/charte/palette-logo.mjs [fichier] */
+// Couleurs dominantes du logo : pixels opaques quantifiés, teintes voisines regroupées. Écrit charte/palette-logo.json.
+// node outils/charte/palette-logo.mjs [fichier]
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const SOURCE = process.argv[2] || 'charte/img/master-logo-couleur.png';
 const port = 9110 + Math.floor(Math.random() * 200);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=C:/Users/mihin/AppData/Local/Temp/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
+const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let wsUrl; for (let i = 0; i < 40 && !wsUrl; i++) { await sleep(250); try { const l = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); wsUrl = l.find((t) => t.type === 'page')?.webSocketDebuggerUrl; } catch {} }
 const ws = new WebSocket(wsUrl); await new Promise((r) => (ws.onopen = r));
@@ -61,7 +62,7 @@ const expr = `new Promise((res) => {
 const brut = (await send('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true })).result?.result?.value;
 const teintes = JSON.parse(brut || '[]');
 
-/* Conversion en quadrichromie, pour la partie impression de la charte */
+// conversion CMJN indicative (partie impression de la charte)
 const cmjn = ([r, v, b]) => {
   const R = r / 255, V = v / 255, B = b / 255;
   const n = 1 - Math.max(R, V, B);

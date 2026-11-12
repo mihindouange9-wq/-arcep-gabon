@@ -1,10 +1,9 @@
-/* ARCEP Gabon — sonde.
-   Ouvre une page dans Chrome sans interface, la fait défiler à une position donnée, puis
-   évalue une expression et rapporte le résultat avec les exceptions rencontrées.
-
-   node outils/controle/sonde.mjs /chemin [--largeur 1440] [--y 2000] [--expr "document.title"] [--capture sortie.png] */
+// Ouvre une page en Chrome headless, défile à une position, évalue une expression et affiche le résultat et les exceptions.
+// node outils/controle/sonde.mjs /chemin [--largeur 1440] [--y 2000] [--expr "document.title"] [--capture sortie.png]
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { setTimeout as attendre } from 'node:timers/promises';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const args = process.argv.slice(2);
 const chemin = args.find((a) => a.startsWith('/')) || '/';
@@ -16,9 +15,9 @@ const expr = option('expr', 'document.title');
 const capture = option('capture', '');
 
 const port = 9400 + Math.floor(Math.random() * 400);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
+const chrome = spawn(CHROME, [
   '--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', '--no-default-browser-check', '--disable-extensions',
-  `--remote-debugging-port=${port}`, `--user-data-dir=${process.env.TEMP || 'C:/Temp'}/chrome-sonde-${port}`, '--window-size=1440,900', 'about:blank',
+  `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-sonde-${port}`, '--window-size=1440,900', 'about:blank',
 ], { stdio: 'ignore' });
 let cible = null;
 for (let i = 0; i < 60 && !cible; i++) { await attendre(250); try { cible = (await (await fetch(`http://127.0.0.1:${port}/json`)).json()).find((t) => t.type === 'page'); } catch { /* attente */ } }

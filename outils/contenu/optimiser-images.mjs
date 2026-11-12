@@ -1,16 +1,13 @@
-/* ARCEP Gabon — allègement des visuels.
-   Les images reprises de l'ancien site étaient parfois des captures PNG de plusieurs
-   mégaoctets. Chaque visuel de public/assets/actus/ plus lourd que la limite, ou plus large
-   que 1600 pixels, est rechargé dans Chrome, redimensionné et réencodé en JPEG ; le
-   document de contenus est mis à jour si le nom change. Un fichier n'est remplacé que si le
-   résultat est plus léger.
-
-   node outils/contenu/optimiser-images.mjs [--limite 350] [--largeur 1600] [--qualite 82] */
+// Réencode en JPEG (canvas Chrome) les visuels de public/assets/actus/ trop lourds ou trop larges, et répercute
+// les renommages dans donnees/arcep.json. Un fichier n'est remplacé que si le résultat est plus léger.
+// node outils/contenu/optimiser-images.mjs [--limite 350] [--largeur 1600] [--qualite 82]
+import { tmpdir } from 'node:os';
 import { readdir, stat, readFile, writeFile, unlink } from 'node:fs/promises';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as attendre } from 'node:timers/promises';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const args = process.argv.slice(2);
 const option = (nom, defaut) => { const i = args.indexOf('--' + nom); return i >= 0 ? Number(args[i + 1]) : defaut; };
@@ -22,9 +19,9 @@ const DOSSIER = join(RACINE, 'public', 'assets', 'actus');
 const FICHIER = join(RACINE, 'donnees', 'arcep.json');
 
 const port = 9400 + Math.floor(Math.random() * 400);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
+const chrome = spawn(CHROME, [
   '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--disable-extensions', '--allow-file-access-from-files',
-  `--remote-debugging-port=${port}`, `--user-data-dir=${process.env.TEMP || 'C:/Temp'}/chrome-images-${port}`, 'about:blank',
+  `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-images-${port}`, 'about:blank',
 ], { stdio: 'ignore' });
 let cible = null;
 for (let i = 0; i < 60 && !cible; i++) { await attendre(250); try { cible = (await (await fetch(`http://127.0.0.1:${port}/json`)).json()).find((t) => t.type === 'page'); } catch { /* attente */ } }
@@ -35,8 +32,8 @@ ws.onmessage = (m) => { const t = JSON.parse(m.data); if (t.id && attentes.has(t
 const envoyer = (method, params = {}) => new Promise((ok) => { const id = ++n; attentes.set(id, ok); ws.send(JSON.stringify({ id, method, params })); });
 const evaluer = async (e) => { const r = await envoyer('Runtime.evaluate', { expression: e, returnByValue: true, awaitPromise: true, timeout: 120000 }); if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description || 'erreur'); return r.result?.result?.value; };
 await envoyer('Page.enable'); await envoyer('Runtime.enable');
-/* Une page vierge ne peut pas lire le disque : on part d'une page locale. */
-const PAGE = join(process.env.TEMP || 'C:/Temp', 'arcep-images.html');
+// about:blank ne peut pas lire file:// : on part d'une page locale
+const PAGE = join(tmpdir(), 'arcep-images.html');
 await writeFile(PAGE, '<!doctype html><meta charset="utf-8"><title>Images</title>', 'utf8');
 await envoyer('Page.navigate', { url: 'file:///' + PAGE.replace(/\\/g, '/') });
 await attendre(500);
@@ -65,7 +62,7 @@ for (const nom of (await readdir(DOSSIER)).sort()) {
 try { ws.close(); } catch { /* fermé */ }
 chrome.kill();
 
-/* Les références du document suivent les renommages. */
+// renommages répercutés dans le document
 if (renommages.size) {
   let texte = JSON.stringify(D, null, 1);
   for (const [a, b] of renommages) texte = texte.split(a).join(b);

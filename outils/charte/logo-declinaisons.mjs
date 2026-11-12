@@ -1,8 +1,9 @@
-/* Produit les déclinaisons monochromes de la signature à partir de la couche alpha du logo.
-   Aucune retouche à la main : la forme reste exactement celle du logo officiel, seule la
-   couleur de remplissage change. node outils/charte/logo-declinaisons.mjs */
+// Déclinaisons monochromes du logo à partir de sa couche alpha : la forme reste celle du logo officiel, seule la couleur change.
+// node outils/charte/logo-declinaisons.mjs
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const SOURCE = 'public/assets/logo-arcep-blanc.png';   // silhouette pleine, fond transparent
 const SORTIES = [
@@ -13,7 +14,7 @@ const SORTIES = [
 ];
 
 const port = 9050 + Math.floor(Math.random() * 200);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=C:/Users/mihin/AppData/Local/Temp/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
+const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let wsUrl; for (let i = 0; i < 40 && !wsUrl; i++) { await sleep(250); try { const l = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); wsUrl = l.find((t) => t.type === 'page')?.webSocketDebuggerUrl; } catch {} }
 const ws = new WebSocket(wsUrl); await new Promise((r) => (ws.onopen = r));
@@ -25,7 +26,7 @@ const base64 = readFileSync(SOURCE).toString('base64');
 mkdirSync('charte/img', { recursive: true });
 
 for (const { nom, couleur } of SORTIES) {
-  /* On peint la couleur puis on la découpe par la silhouette : le tracé reste intact. */
+  // source-in : la couleur est découpée par la silhouette
   const expr = `new Promise((res) => {
     const i = new Image();
     i.onload = () => {

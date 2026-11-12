@@ -1,12 +1,10 @@
-/* ARCEP Gabon — planches de relecture.
-   Attend le serveur, appelle chaque page pour vérifier son code de réponse, puis pilote
-   Chrome sans interface pour capturer chaque page à plusieurs positions de défilement,
-   en bureau et en mobile, et assemble une planche par page dans outils/captures/.
-
-   node outils/controle/captures.mjs [base] [--pages accueil,missions] [--pas 900] */
+// Planches de relecture : chaque page capturée à plusieurs positions de défilement, bureau et mobile, assemblée en grille
+// dans outils/captures/. node outils/controle/captures.mjs [base] [--pages accueil,missions] [--pas 900] [--tablette]
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { setTimeout as attendre } from 'node:timers/promises';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const args = process.argv.slice(2);
 const BASE = args.find((a) => a.startsWith('http')) || 'http://127.0.0.1:4310';
@@ -23,7 +21,7 @@ const PAGES = [
 const TABLETTE = args.includes('--tablette');
 const choisies = option('pages', '') ? PAGES.filter(([n]) => option('pages', '').split(',').includes(n)) : PAGES;
 
-/* ---- 1. le serveur répond ---- */
+// 1. le serveur répond
 for (let essai = 0; essai < 40; essai++) {
   try { await fetch(BASE + '/robots.txt'); break; } catch { await attendre(250); }
   if (essai === 39) { console.error('serveur injoignable sur ' + BASE); process.exit(1); }
@@ -35,11 +33,11 @@ for (const [nom, chemin] of PAGES) {
   console.log(`  ${String(r.status).padEnd(4)} ${nom.padEnd(15)} ${(corps.length / 1024).toFixed(0).padStart(4)} Ko`);
 }
 
-/* ---- 2. Chrome ---- */
+// 2. Chrome
 async function ouvrirChrome() {
   const port = 9400 + Math.floor(Math.random() * 400);
-  const profil = `${process.env.TEMP || 'C:/Temp'}/chrome-relecture-${port}-${Date.now()}`;
-  const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
+  const profil = `${tmpdir()}/chrome-relecture-${port}-${Date.now()}`;
+  const chrome = spawn(CHROME, [
     '--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', '--no-default-browser-check',
     '--disable-extensions', '--autoplay-policy=no-user-gesture-required',
     `--remote-debugging-port=${port}`, `--user-data-dir=${profil}`, '--window-size=1440,900', 'about:blank',
@@ -101,7 +99,7 @@ async function planche(nom, chemin, largeur, hauteur, suffixe) {
     if (images.length >= 14) break;
   }
   const erreurs = journal.filter((l) => !(chemin === '/page-inexistante' && /404/.test(l)));
-  /* Assemblage en grille dans une page vierge. */
+  // assemblage en grille dans une page vierge
   await cdp.envoyer('Emulation.setDeviceMetricsOverride', { width: 1600, height: 1200, deviceScaleFactor: 1, mobile: false });
   await cdp.envoyer('Page.navigate', { url: 'about:blank' });
   await attendre(300);

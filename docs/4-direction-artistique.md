@@ -1,4 +1,4 @@
-# Direction artistique — ARCEP Gabon
+# Direction artistique
 
 ## L'idée
 
@@ -6,13 +6,12 @@ L'ARCEP est l'institution qui tient le spectre, les réseaux et les postes d'un 
 raconte ce mouvement : **du territoire vers le monde**. Chaque grande partie de la page
 d'accueil est une atmosphère chromatique, et le défilement fait glisser le visiteur de la
 forêt (vert profond) vers le ciel (bleu électrique) puis vers la lumière (or, puis blanc).
-Les trois couleurs du logo cessent d'être des aplats : elles deviennent des climats.
+Les trois couleurs du logo servent d'ambiances de scène plutôt que d'aplats.
 
 Le vocabulaire graphique vient des réseaux : nœuds et liaisons, grilles de coordonnées,
-tracés de signal, pulsations. Toujours en fond, toujours retenu. Les visuels sont réels :
+tracés de signal, pulsations, toujours en arrière-plan. Les visuels sont réels :
 l'actualité à la une dans le hero, les données publiées dans les graphiques, le site
-mobile filmé dans le téléphone. Le Gabon est présent par ses données, ses textes, ses
-visuels officiels et la lumière chaude de la palette.
+mobile filmé dans le téléphone.
 
 ## Palette
 
@@ -100,10 +99,10 @@ flou) et servent de coutures entre les scènes.
 
 | Rôle | Famille | Pourquoi |
 |---|---|---|
-| Éditoriale (titres, chiffres, hero, mots-clés) | **Archivo**, variable, graisse 100–900 et chasse 62–125 | Une grotesque de presse au dessin ferme ; la chasse étendue donne aux grands mots une autorité institutionnelle sans recourir à une fonte à la mode |
+| Éditoriale (titres, chiffres, hero, mots-clés) | **Archivo**, variable, graisse 100–900 et chasse 62–125 | Une grotesque de presse au dessin ferme ; la chasse étendue donne aux grands mots une autorité institutionnelle sans caractère décoratif |
 | Institutionnelle (navigation, corps, formulaires, données) | **Archivo** en chasse normale, 400–600 | Une seule famille sans-serif : cohérence et poids réduit |
 | Prose (paragraphes longs, chapeaux, citations) | **Source Serif 4**, 400 et italique | Héritée de la charte : le serif porte la lecture longue et la voix institutionnelle |
-| Mesure (dates, références, unités, tabulaires) | **IBM Plex Mono** 400–500 | Héritée de la charte, réservée aux données, jamais en costume |
+| Mesure (dates, références, unités, tabulaires) | **IBM Plex Mono** 400–500 | Héritée de la charte, réservée aux données |
 
 Échelle fluide : `--t-0` 0,75 rem … `--t-7` clamp(3 rem, 1,6 rem + 6 vw, 6,4 rem). Interlignage
 0,96 à 1,06 sur les titres, 1,6 à 1,68 sur la prose. Crénage négatif plafonné à −0,04 em. Chiffres tabulaires
@@ -144,6 +143,6 @@ Maquette construite en CSS : proportions 78 × 163,4 mm, écran 440 × 956 pt au
 Dynamic Island, barre d'état, reflets par dégradés coniques, ombre portée longue et douce.
 L'écran joue une **vidéo du site mobile**, filmée en mode `?ecran=1` à 440 × 956 points
 (1,5 pixel par point), sans barre de défilement, qui défile lentement de l'accueil au
-contact : le vrai responsive, exactement comme sur l'appareil.
+contact.
 Pendant la phase collante, le défilement de la page fait défiler le contenu du téléphone et
 enchaîne six pages du site ; le climat de la scène glisse du vert forêt au blanc.

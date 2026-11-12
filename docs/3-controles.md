@@ -1,116 +1,53 @@
 # Contrôles
 
-Neuf outils de contrôle, sans dépendance, et deux outils de fabrication : la vidéo de
-l'iPhone (`node outils/charte/video-iphone.mjs`, quelques minutes, serveur lancé) et
-l'import des contenus de l'ancien site (`node outils/contenu/importer-arcep.mjs`, serveur
-arrêté, à ne relancer que pour reprendre de nouveaux articles). Le serveur doit tourner
-pour les six premiers contrôles.
+Huit outils de contrôle sans dépendance, plus deux outils de fabrication : la vidéo de l'iPhone (`node outils/charte/video-iphone.mjs`, serveur lancé) et l'import des contenus de l'ancien site (`node outils/contenu/importer-arcep.mjs`, serveur arrêté, à ne relancer que pour de nouveaux articles). Le serveur doit tourner pour les six premiers.
 
 ```
-node serveur/index.mjs                                   # dans un terminal
+node serveur/index.mjs
 node outils/controle/verif.mjs                           # console, débordement, révélations, contraste
-node outils/controle/verif-liens.mjs                     # chaque lien du site répond, aucun renvoi vers l’ancien site
+node outils/controle/verif-liens.mjs                     # crawl : tout répond 200, aucun lien vers l'ancien site
 node outils/controle/verif-admin.mjs [--captures]        # cycle complet de l'administration
-node outils/controle/captures.mjs [--pages accueil,…]    # planches de relecture, bureau et mobile
-MSYS_NO_PATHCONV=1 node outils/controle/sonde.mjs /chemin --y 2000 --expr "…"   # une expression évaluée dans la page (Git Bash convertit /chemin sans ce préfixe)
+node outils/controle/captures.mjs [--pages accueil,…]    # planches bureau et mobile
+MSYS_NO_PATHCONV=1 node outils/controle/sonde.mjs /chemin --y 2000 --expr "…"   # évalue une expression dans une page
 node outils/controle/poids.mjs [/chemin] [--largeur 390] # poids et temps de chargement
 node outils/controle/verif-polices.mjs                   # couverture des caractères
 node outils/controle/verif-css.mjs                       # classes et variables orphelines
-node outils/controle/verif-nul.mjs [--corriger]          # octets NUL
 ```
 
-## `verif.mjs` — le rendu servi
+Sous Git Bash, `MSYS_NO_PATHCONV=1` est nécessaire devant `sonde.mjs /chemin`, sinon le shell convertit le chemin.
 
-Pilote Chrome sans interface par le protocole de débogage et passe les douze pages au
-crible : exceptions et erreurs de console, ressources en échec ; **débordement
-horizontal** à neuf largeurs de 360 à 1920 pixels ; **révélations** — après un défilement
-complet, rien de ce qui porte un état d'entrée ne doit être resté invisible ou décalé ;
-**contraste** de chaque texte sur son fond réel, au seuil WCAG applicable à sa taille.
+## `verif.mjs`
 
-## `verif-liens.mjs` — les liens
+Pilote Chrome headless par CDP sur les douze pages : exceptions et erreurs console, ressources en échec ; débordement horizontal à neuf largeurs de 360 à 1920 px ; état final des révélations après un défilement complet (rien ne doit rester invisible ou décalé) ; contraste de chaque texte sur son fond réel, au seuil WCAG correspondant à sa taille.
 
-Parcourt le site depuis l'accueil, page après page (606 adresses au 23 septembre 2026 : 287
-pages, 319 fichiers), et vérifie que tout répond 200, qu'aucun lien n'est vide et qu'aucun
-ne renvoie vers l'ancien site. Les domaines externes rencontrés sont listés pour relecture.
+## `verif-liens.mjs`
 
-## `verif-admin.mjs` — l'administration
+Parcourt le site depuis l'accueil (environ 600 URL : pages et fichiers) et vérifie que tout répond 200, qu'aucun lien n'est vide et qu'aucun ne pointe vers l'ancien site. Les domaines externes rencontrés sont listés.
 
-Crée un compte de relecture, parcourt tous les écrans, puis joue un cycle sur chaque type
-de contenu : actualité en brouillon avec visuel téléversé, invisible sur le site, aperçu,
-programmation, publication, page d'article, suppression ; texte avec PDF téléversé, faux
-PDF refusé, médiathèque qui signale l'usage ; catégorie, tableau de bord, question,
-indicateur ; textes de page ; réglages, robots.txt, sitemap.xml ; compte rédacteur et
-ses refus ; restauration d'une version. Le document de contenus est remis dans son état
-de départ, les fichiers téléversés effacés, le compte supprimé.
+## `verif-admin.mjs`
 
-## `captures.mjs` — les planches
+Crée un compte de test, parcourt tous les écrans, puis joue un cycle sur chaque type de contenu : actualité en brouillon avec visuel téléversé (invisible côté public), aperçu, programmation, publication, page d'article, suppression ; texte avec PDF téléversé, faux PDF refusé, médiathèque qui signale l'usage ; catégorie, tableau de bord, question, indicateur ; textes de page ; réglages, robots.txt, sitemap.xml ; compte rédacteur et ses refus ; restauration d'une version. Le document de contenus est remis dans son état initial, les fichiers téléversés effacés, le compte supprimé.
 
-Une planche par page et par largeur (1440 et 390) : la page capturée tous les 900 pixels
-de défilement, assemblée en grille dans `outils/captures/`. C'est la relecture visuelle.
+## `captures.mjs`
 
-## `poids.mjs` — la performance
+Une planche par page et par largeur (1440 et 390) : capture tous les 900 px de défilement, assemblée en grille dans `outils/captures/`.
 
-Sans Lighthouse sur ce poste, la mesure de référence : chaque ressource, son type et sa
-taille, le total, le premier rendu, le DOM prêt, le chargement complet. Repères au
-22 septembre 2026, accueil, cache désactivé : 964 Ko en 34 fichiers, dont 215 Ko de
-caractères et 179 Ko de scripts ; premier rendu sous 750 ms sur la machine de
-développement. La vidéo de l'iPhone (12,5 Mo, 93 s) n'est chargée qu'à l'approche de sa
-scène, jamais au chargement de la page.
+## `poids.mjs`
 
----
+Chaque ressource, son type et sa taille, le total, le premier rendu, le DOM prêt, le chargement complet. Ordre de grandeur sur l'accueil, cache désactivé : un peu moins de 1 Mo en 34 fichiers, dont 215 Ko de polices et 179 Ko de scripts. La vidéo de l'iPhone (12,5 Mo) n'est chargée qu'à l'approche de sa scène.
 
-# Pièges rencontrés, et ce qu'ils ont appris
+## Notes techniques
 
-## Un élément épinglé qui contient une iframe se recharge
+**Pin ScrollTrigger et iframe.** ScrollTrigger épingle en déplaçant l'élément dans un espaceur, et le remet en place à chaque refresh. Déplacer un nœud qui contient une iframe la recharge, et le refresh déclenché par ce rechargement entre en collision avec le premier (« The node to be removed is no longer a child of this node »). Les scènes longues utilisent donc `position: sticky`, la section porte le défilement et ScrollTrigger ne fait que lire la progression. L'ancêtre doit rogner avec `overflow: clip`, pas `overflow: hidden`, qui crée un conteneur de défilement et annule le sticky.
 
-ScrollTrigger épingle en déplaçant l'élément dans un espaceur, et le remet en place à
-chaque recalcul. Déplacer un nœud qui contient une iframe recharge l'iframe, et le
-recalcul provoqué par ce rechargement est entré en collision avec le premier : « The node
-to be removed is no longer a child of this node ». **Les scènes longues sont collées par
-`position: sticky`** et la section, plus haute, porte le défilement ; ScrollTrigger ne fait
-que lire la progression. Corollaire : l'ancêtre doit rogner avec `overflow: clip`, pas
-`overflow: hidden`, qui créerait un conteneur de défilement et annulerait le collage.
+**Page encadrée.** Le mode `?ecran=1` est le seul encadrable : `frame-src 'self'` sur la page qui encadre et `frame-ancestors 'self'` sur la page encadrée.
 
-## La page qui s'encadre elle-même
+**`svg { display: block }` et `hidden`.** La feuille d'icônes est un `<svg hidden>`. Une règle `svg { display: block }` l'emporte sur le style UA de `hidden`. Chaque feuille pose `[hidden] { display: none !important; }`.
 
-L'accueil affiche le site dans un téléphone. Il faut `frame-src 'self'` sur la page qui
-encadre **et** `frame-ancestors 'self'` sur la page encadrée — pas `'none'` sur l'une des
-deux. Les réponses en mode `?ecran=1` sont les seules encadrables.
+**Contraste et dégradés.** `getComputedStyle().backgroundColor` est transparent pour une section dont le fond est un dégradé. Chaque section pose sa couleur de surface en `background-color` sous son `background-image`, ce que la sonde lit.
 
-## `svg { display: block }` rend visible ce qui est `hidden`
+**SplitText et polices.** Découper un titre avant le chargement de la police mesure les lignes de la police de repli. Le point d'entrée attend `document.fonts.ready` (au plus 1,2 s).
 
-La feuille d'icônes est un `<svg hidden>`. Une règle `svg { display: block }` l'emporte
-sur le style d'agent utilisateur de `hidden`, et la feuille occupait 150 pixels en haut de
-chaque page. **`[hidden] { display: none !important; }`** est posé dans chaque feuille.
+**Headless et animations.** Chrome headless ne rend rien tant qu'aucune capture n'est demandée ; les transitions restent à leur état initial. Chaque pas de défilement est suivi d'une capture jetée. La séquence d'entrée du hero dure environ 4 s, les outils l'attendent avant de mesurer.
 
-## Une mesure de contraste ne voit pas les dégradés
-
-`getComputedStyle().backgroundColor` est transparent pour une section dont le fond est un
-dégradé : la sonde remontait jusqu'au fond du corps de page et signalait du texte sombre
-sur du noir. **Chaque section pose sa couleur de surface en `background-color` sous son
-`background-image`** : l'outil, comme un navigateur sans dégradé, lit la vraie teinte.
-
-## SplitText avant les caractères
-
-Découper un titre en lignes avant que la fonte soit chargée mesure les lignes de la fonte
-de repli. Le point d'entrée attend `document.fonts.ready` (au plus 1,2 s) avant de lancer
-les modules.
-
-## En mode « headless », rien ne s'anime tant qu'on ne capture pas
-
-Chrome sans interface ne produit aucune image tant qu'on ne lui en demande pas. Chaque pas
-de défilement est suivi d'une capture jetée. La séquence d'entrée du hero dure quatre
-secondes : les outils l'attendent avant de mesurer.
-
-## Le sélecteur le plus spécifique reprend la main
-
-Chaque usage nomme la teinte qui convient à son fond ; une bascule automatique clair/sombre
-par la cascade serait reprise par le sélecteur le plus spécifique. Les scènes posent des
-variables, les composants les consomment.
-
-## Les séquences d'échappement survivent mal aux détours par la console
-
-Une expression régulière écrite depuis un script shell a perdu son antislash (`/s+/` au
-lieu de `/\s+/`) et les fichiers de polices ont reçu un nom avec espace. Les outils
-s'écrivent avec un éditeur, pas par redirection ; `verif-nul.mjs` détecte les octets de
-contrôle.
+**Cascade.** Les scènes posent des variables, les composants les consomment. Pas de bascule clair/sombre automatique par sélecteur, qui serait reprise par le sélecteur le plus spécifique.

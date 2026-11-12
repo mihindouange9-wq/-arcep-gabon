@@ -1,6 +1,5 @@
-/* Extrait les données réelles du site officiel (recherche/html/*.html) vers donnees/arcep.json.
-   Aucune information n'est inventée : titres, dates, textes et liens proviennent du site ARCEP.
-   node outils/contenu/build-data.mjs */
+// Extrait les données de l'ancien site (recherche/html/*.html) vers recherche/extrait.json : réglementation, observatoire, actualités, FAQ.
+// node outils/contenu/build-data.mjs
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
 const lire = (n) => (existsSync(`recherche/html/${n}.html`) ? readFileSync(`recherche/html/${n}.html`, 'utf8') : '');
@@ -13,7 +12,7 @@ const decode = (s) => s
   .replace(/&#\d+;/g, ' ')
   .replace(/\s+/g, ' ').trim();
 
-/* ---------- Réglementation : titre, année, lien du document ---------- */
+// Réglementation : titre, année, lien du document
 const CATS = [
   ['lois', 'Lois', 'reg1'], ['ordonnances', 'Ordonnances', 'reg2'], ['decrets', 'Décrets', 'reg3'],
   ['arretes', 'Arrêtés', 'reg4'], ['deliberations', 'Délibérations', 'reg5'], ['decisions', 'Décisions', 'reg6'],
@@ -45,7 +44,7 @@ for (const [cle, nom, fichier] of CATS) {
   }
 }
 
-/* ---------- Observatoire : tableaux de bord par marché ---------- */
+// Observatoire : tableaux de bord par marché
 const OBS = [['internet', 'Internet', 'obs1'], ['fixe', 'Fixe', 'obs2'], ['mobile', 'Mobile', 'obs3']];
 const observatoire = OBS.map(([cle, nom, fichier]) => {
   const html = lire(fichier);
@@ -58,7 +57,7 @@ const observatoire = OBS.map(([cle, nom, fichier]) => {
   return { cle, nom, publications };
 });
 
-/* ---------- Actualités : date, titre, lien, chapeau ---------- */
+// Actualités : date, titre, lien, chapeau
 const actualites = [];
 {
   const html = lire('actualites');
@@ -82,7 +81,7 @@ for (const a of actualites) {
   if (trouve && !a.image) a.image = 'https://www.arcep.ga/' + trouve;
 }
 
-/* ---------- Foire aux questions ---------- */
+// Foire aux questions
 const faq = [];
 {
   const html = lire('faqs');

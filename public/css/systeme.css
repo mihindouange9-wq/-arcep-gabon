@@ -1,18 +1,8 @@
-/* ARCEP Gabon — design system.
+/* Design system : jetons, scènes, primitives, en-tête, menu, pied. Les pages sont dans site.css. */
 
-   Jetons, primitives et habillage commun à toutes les pages publiques. Les pages elles-mêmes
-   vivent dans site.css, l'administration dans admin.css.
-
-   Principe : le site est un voyage chromatique du territoire vers le monde. Chaque scène a
-   son climat (vert forêt, bleu profond, or, blanc) ; les jetons ci-dessous fournissent les
-   nuances, les dégradés et les surfaces qui le rendent possible sans qu'aucune couleur ne
-   domine l'ensemble. */
-
-/* =========================================================================================
-   JETONS
-   ========================================================================================= */
+/* Jetons */
 :root {
-  /* ---- Verts ---- */
+  /* Verts */
   --vert-foret: #0a2a1a;
   --vert-profond: #0f3d25;
   --vert: #175b31;
@@ -21,7 +11,7 @@
   --vert-lumineux: #6fd39a;
   --vert-pale: #dff1e6;
 
-  /* ---- Bleus ---- */
+  /* Bleus */
   --bleu-nuit: #0a1428;
   --bleu-profond: #12244a;
   --bleu: #182e55;
@@ -30,7 +20,7 @@
   --bleu-electrique: #3fa9f5;
   --bleu-pale: #dbe9f5;
 
-  /* ---- Jaunes ---- */
+  /* Jaunes */
   --jaune-profond: #86620f;
   --jaune-dore: #c9982a;
   --jaune: #e2b336;
@@ -38,7 +28,7 @@
   --jaune-lumineux: #f6dc8a;
   --jaune-pale: #fbf1cf;
 
-  /* ---- Neutres ---- */
+  /* Neutres */
   --blanc: #ffffff;
   --blanc-casse: #f7f6f1;
   --gris-chaud: #eeeae1;
@@ -47,7 +37,7 @@
   --noir-doux: #121417;
   --encre: #16191c;
 
-  /* ---- Dégradés nommés ---- */
+  /* Dégradés */
   --degrade-foret: linear-gradient(160deg, var(--vert-foret) 0%, var(--vert-profond) 55%, var(--vert-emeraude) 130%);
   --degrade-emeraude-bleu: linear-gradient(170deg, var(--vert-profond) 0%, #14454a 45%, var(--bleu-profond) 100%);
   --degrade-bleu-electrique: linear-gradient(165deg, var(--bleu-profond) 0%, #1a4a80 60%, var(--bleu-tech) 130%);
@@ -55,7 +45,7 @@
   --degrade-graphite-bleu: linear-gradient(180deg, var(--graphite) 0%, var(--bleu-profond) 100%);
   --degrade-or-blanc: linear-gradient(180deg, var(--jaune-pale) 0%, var(--blanc-casse) 100%);
 
-  /* ---- Surfaces courantes (redéfinies par chaque scène) ---- */
+  /* Surfaces, redéfinies par chaque scène */
   --surface: var(--blanc-casse);
   --surface-2: var(--blanc);
   --texte: var(--encre);
@@ -71,7 +61,7 @@
   --bouton-fond-2: var(--encre);
   --selection: var(--jaune-lumineux);
 
-  /* ---- Typographie ---- */
+  /* Typographie */
   --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
   --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
@@ -86,35 +76,31 @@
   --t-6: clamp(2.3rem, 1.5rem + 3.4vw, 4rem);
   --t-7: clamp(3rem, 1.6rem + 6vw, 6.4rem);
 
-  /* ---- Rythme ---- */
+  /* Rythme */
   --cadre: 1440px;
   --marge: clamp(1.25rem, 4vw, 4.5rem);
   --gap: clamp(1.25rem, 2.4vw, 2.5rem);
   --section: clamp(5rem, 10vw, 9rem);
   --chrome: 5rem;
 
-  /* ---- Formes ---- */
+  /* Formes */
   --rayon-1: 6px;
   --rayon-2: 14px;
   --rayon-3: 28px;
   --rayon-rond: 999px;
 
-  /* ---- Ombres : toujours décalées, toujours floues ---- */
+  /* Ombres */
   --ombre-2: 0 24px 60px -28px rgba(8, 18, 36, .5);
   --ombre-3: 0 48px 120px -40px rgba(4, 10, 24, .65);
 
-  /* ---- Mouvement ---- */
+  /* Mouvement */
   --e-sortie: cubic-bezier(.22, 1, .36, 1);
   --e-doux: cubic-bezier(.65, 0, .35, 1);
   --d-2: .32s;
   --d-3: .6s;
 }
 
-/* =========================================================================================
-   TONALITÉS ET SCÈNES
-   Une scène pose ses surfaces, ses textes et ses accents. Les contrastes sont mesurés sur
-   la surface la plus sombre ou la plus claire de la scène.
-   ========================================================================================= */
+/* Tonalités et scènes */
 [data-tonalite="sombre"] {
   --texte: #f3f5f2;
   --texte-2: rgba(243, 245, 242, .68);
@@ -149,9 +135,7 @@
 [data-scene="or-blanc"] { --surface: var(--jaune-pale); --fond-scene: var(--degrade-or-blanc); --accent: var(--vert); --accent-2: var(--jaune-profond); --accent-or: var(--jaune-profond); --lueur: rgba(226, 179, 54, .3); }
 [data-scene="vert-pale"] { --surface: var(--vert-pale); --fond-scene: linear-gradient(180deg, var(--vert-pale) 0%, var(--blanc-casse) 100%); --accent: var(--vert); --accent-2: var(--bleu-petrole); --accent-or: var(--jaune-profond); }
 
-/* =========================================================================================
-   SOCLE
-   ========================================================================================= */
+/* Socle */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -188,7 +172,7 @@ hr { border: 0; border-top: 1px solid var(--filet); }
 :focus-visible { outline: 2px solid var(--accent-or); outline-offset: 4px; border-radius: 2px; }
 ::placeholder { color: var(--texte-2); opacity: 1; }
 
-/* Barre de défilement dessinée dans la palette. */
+/* Barre de défilement */
 html { scrollbar-color: var(--gris) transparent; scrollbar-width: thin; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: rgba(95, 107, 116, .55); border-radius: var(--rayon-rond); border: 2px solid transparent; background-clip: content-box; }
@@ -210,9 +194,7 @@ html { scrollbar-color: var(--gris) transparent; scrollbar-width: thin; }
 .cadre { width: min(100%, var(--cadre)); margin-inline: auto; padding-inline: var(--marge); }
 .cadre--etroit { width: min(100%, 980px); }
 
-/* =========================================================================================
-   TYPOGRAPHIE
-   ========================================================================================= */
+/* Typographie */
 h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; letter-spacing: -.03em; text-wrap: balance; color: var(--texte); }
 .titre-1 { font-size: var(--t-7); font-weight: 800; letter-spacing: -.04em; line-height: .96; font-variation-settings: "wdth" 108; }
 .titre-2 { font-size: var(--t-6); font-weight: 750; letter-spacing: -.035em; line-height: 1; font-variation-settings: "wdth" 104; }
@@ -227,11 +209,9 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; 
 .tabulaire { font-variant-numeric: tabular-nums; }
 .grand-mot { font-family: var(--sans); font-weight: 900; font-variation-settings: "wdth" 120; letter-spacing: -.02em; text-transform: uppercase; }
 
-/* =========================================================================================
-   PRIMITIVES
-   ========================================================================================= */
+/* Primitives */
 
-/* ---- Boutons ---- */
+/* Boutons */
 .bouton {
   position: relative; isolation: isolate;
   display: inline-flex; align-items: center; justify-content: center; gap: .7rem;
@@ -265,7 +245,7 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; 
 
 .bouton--petit { min-height: 2.5rem; padding-inline: 1.1rem; font-size: var(--t-1); }
 
-/* ---- Lien fléché : le filet s'allonge, la flèche part ---- */
+/* Lien fléché */
 .lien {
   display: inline-flex; align-items: center; gap: .6rem; min-height: 2.5rem;
   font-weight: 600; font-size: var(--t-2); color: var(--texte);
@@ -281,23 +261,22 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; 
 .lien:hover .icone { transform: translate(3px, -3px); }
 .lien--simple::after { display: none; }
 
-/* ---- Icônes : un seul trait, une seule graisse ---- */
+/* Icônes */
 .icone { width: 1.25rem; height: 1.25rem; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 
-/* ---- Badges ---- */
+/* Badges */
 .badge {
   display: inline-flex; align-items: center; gap: .4rem; min-height: 1.75rem; padding: 0 .75rem;
   border-radius: var(--rayon-rond); font-size: var(--t-0); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
   background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent);
 }
 .badge--or { background: color-mix(in srgb, var(--accent-or) 16%, transparent); color: var(--accent-or); }
-/* Sur fond clair, le texte d'un badge est assombri : la teinte d'accent seule, posée sur sa
-   propre teinte diluée, n'atteint pas 4,5:1. */
+/* Sur clair, l'accent seul ne passe pas 4.5:1 sur sa teinte diluée */
 [data-tonalite="clair"] .badge { color: color-mix(in srgb, var(--accent) 72%, #000); }
 [data-tonalite="clair"] .badge--or { color: color-mix(in srgb, var(--accent-or) 78%, #000); }
 .badge--neutre { background: var(--surface-2); color: var(--texte-2); box-shadow: inset 0 0 0 1px var(--filet-2); }
 
-/* ---- Cartes ---- */
+/* Cartes */
 .carte {
   position: relative; display: flex; flex-direction: column; gap: 1rem;
   padding: clamp(1.4rem, 2.6vw, 2.2rem); border-radius: var(--rayon-2);
@@ -307,7 +286,7 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; 
 .carte--lien:hover, .carte--lien:focus-within { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--filet), var(--ombre-2); }
 [data-tonalite="clair"] .carte--lien:hover { background: var(--blanc); }
 
-/* ---- Champs ---- */
+/* Champs */
 .champ { display: grid; gap: .5rem; }
 .champ label { font-size: var(--t-1); font-weight: 600; letter-spacing: .02em; color: var(--texte-2); }
 .champ input, .champ select, .champ textarea {
@@ -316,6 +295,7 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; 
   border: 1px solid var(--filet); border-radius: var(--rayon-2);
   transition: border-color var(--d-2) var(--e-sortie), box-shadow var(--d-2) var(--e-sortie), background var(--d-2);
 }
+.champ input { text-overflow: ellipsis; }
 .champ textarea { min-height: 9rem; resize: vertical; line-height: 1.5; }
 .champ input:hover, .champ select:hover, .champ textarea:hover { border-color: color-mix(in srgb, var(--texte) 35%, transparent); }
 .champ input:focus, .champ select:focus, .champ textarea:focus { outline: 0; border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
@@ -327,10 +307,18 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; 
 .champ--piege { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
 .recherche { position: relative; }
-.recherche input { padding-left: 3.1rem; border-radius: var(--rayon-rond); }
+.recherche input { padding-left: 3.1rem; border-radius: var(--rayon-rond); text-overflow: ellipsis; }
+/* Recherche simple (actualités, questions fréquentes) : même habillage que .champ */
+.recherche:not(.recherche--grande) input {
+  width: 100%; min-width: 0; min-height: 3.25rem; padding-block: .8rem; padding-right: 1.1rem;
+  background: var(--surface-2); color: var(--texte); border: 1px solid var(--filet);
+  transition: border-color var(--d-2) var(--e-sortie), box-shadow var(--d-2) var(--e-sortie);
+}
+.recherche:not(.recherche--grande) input:hover { border-color: color-mix(in srgb, var(--texte) 35%, transparent); }
+.recherche:not(.recherche--grande) input:focus { outline: 0; border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
 .recherche .icone { position: absolute; left: 1.15rem; top: 50%; transform: translateY(-50%); color: var(--texte-2); pointer-events: none; }
 
-/* ---- Filtres (pastilles) ---- */
+/* Filtres */
 .filtres { display: flex; flex-wrap: wrap; gap: .5rem; }
 .filtres a, .filtres button {
   display: inline-flex; align-items: center; gap: .5rem; min-height: 2.5rem; padding: 0 1rem;
@@ -342,14 +330,14 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; 
 .filtres [aria-current="true"], .filtres [aria-pressed="true"] { background: var(--texte); color: var(--surface); box-shadow: none; }
 .filtres .compte { font-family: var(--mono); font-size: var(--t-0); opacity: .7; }
 
-/* ---- Tableaux ---- */
+/* Tableaux */
 .table { width: 100%; border-collapse: collapse; font-size: var(--t-2); }
 .table th, .table td { text-align: left; padding: .9rem 1rem; border-bottom: 1px solid var(--filet-2); vertical-align: top; }
 .table th { font-size: var(--t-0); text-transform: uppercase; letter-spacing: .1em; color: var(--texte-2); font-weight: 600; }
 .table tbody tr { transition: background var(--d-2); }
 .table tbody tr:hover { background: color-mix(in srgb, var(--texte) 4%, transparent); }
 
-/* ---- Messages d'état : un mot nomme l'état, jamais la seule couleur ---- */
+/* Messages d'état */
 .message { display: grid; gap: .3rem; padding: 1rem 1.2rem; border-radius: var(--rayon-2); font-size: var(--t-2); border: 1px solid; }
 .message::before { font-size: var(--t-0); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .message--ok { border-color: color-mix(in srgb, var(--vert-vif) 50%, transparent); background: color-mix(in srgb, var(--vert-vif) 12%, transparent); }
@@ -359,7 +347,7 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; 
 .message--erreur::before { content: "Erreur"; color: #c2412d; }
 [data-tonalite="sombre"] .message--erreur::before { color: #f0917f; }
 
-/* ---- Accordéon ---- */
+/* Accordéon */
 .accordeon { border-top: 1px solid var(--filet); }
 .accordeon details { border-bottom: 1px solid var(--filet); }
 .accordeon summary {
@@ -373,7 +361,7 @@ h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.02; 
 .accordeon details[open] summary .icone { transform: rotate(45deg); }
 .accordeon .accordeon-corps { padding: 0 .2rem 1.5rem; font-family: var(--serif); line-height: 1.65; color: var(--texte-2); max-width: 70ch; }
 
-/* ---- Dialogue ---- */
+/* Dialogue */
 dialog.dialogue {
   position: fixed; inset: 0; margin: auto; width: min(92vw, 820px); max-height: min(88vh, 900px);
   padding: 0; border: 0; border-radius: var(--rayon-3); background: var(--surface-2); color: var(--texte);
@@ -384,7 +372,7 @@ dialog.dialogue::backdrop { background: rgba(6, 12, 24, .62); backdrop-filter: b
 .dialogue-fermer { position: absolute; top: 1rem; right: 1rem; width: 2.75rem; height: 2.75rem; border-radius: var(--rayon-rond); display: grid; place-items: center; background: color-mix(in srgb, var(--texte) 6%, transparent); transition: background var(--d-2), transform var(--d-2) var(--e-sortie); }
 .dialogue-fermer:hover { background: color-mix(in srgb, var(--texte) 12%, transparent); transform: rotate(90deg); }
 
-/* ---- Lecteur de documents ---- */
+/* Lecteur de documents */
 dialog.dialogue--document { width: min(96vw, 1180px); height: min(92vh, 1100px); max-height: none; border-radius: var(--rayon-2); }
 .lecteur { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100%; }
 .lecteur-tete { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem 1rem .8rem 1.4rem; border-bottom: 1px solid var(--filet-2); }
@@ -398,7 +386,7 @@ dialog.dialogue--document { width: min(96vw, 1180px); height: min(92vh, 1100px);
   .lecteur-actions .bouton span, .lecteur-actions [data-telecharger] { display: none; }
 }
 
-/* ---- Infobulle (title accessible rendu en attribut) ---- */
+/* Infobulle */
 [data-infobulle] { position: relative; }
 [data-infobulle]::after {
   content: attr(data-infobulle); position: absolute; left: 50%; bottom: calc(100% + .5rem); transform: translate(-50%, 4px);
@@ -406,9 +394,11 @@ dialog.dialogue--document { width: min(96vw, 1180px); height: min(92vh, 1100px);
   white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity var(--d-2), transform var(--d-2) var(--e-sortie);
 }
 [data-infobulle]:hover::after, [data-infobulle]:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
+/* Au doigt, pas de survol : l'intitulé reste porté par aria-label */
+@media (hover: none) { [data-infobulle]::after { display: none; } }
 
 
-/* ---- Trame de coordonnées et lueurs ---- */
+/* Trame de coordonnées et lueurs */
 .trame {
   position: absolute; inset: 0; pointer-events: none; opacity: .07;
   background-image: linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px);
@@ -422,9 +412,7 @@ dialog.dialogue--document { width: min(96vw, 1180px); height: min(92vh, 1100px);
 }
 .lueur--2 { --lueur: rgba(226, 179, 54, .18); }
 
-/* =========================================================================================
-   HABILLAGE : EN-TÊTE
-   ========================================================================================= */
+/* En-tête */
 .chrome {
   position: fixed; top: 0; left: 0; right: 0; z-index: 500;
   display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2.5rem);
@@ -442,6 +430,7 @@ dialog.dialogue--document { width: min(96vw, 1180px); height: min(92vh, 1100px);
 .chrome-progression { position: absolute; left: 0; top: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--vert-vif), var(--bleu-electrique), var(--jaune)); transform: scaleX(0); transform-origin: left center; }
 
 .marque { position: relative; display: block; height: 2.1rem; margin-right: auto; }
+.marque::after { content: ""; position: absolute; inset: -.6rem -.4rem; }
 .marque img { height: 100%; width: auto; transition: opacity var(--d-3) var(--e-sortie); }
 .marque img + img { position: absolute; inset: 0; }
 .chrome[data-etat="sombre"] .marque-couleur { opacity: 0; }
@@ -469,9 +458,7 @@ dialog.dialogue--document { width: min(96vw, 1180px); height: min(92vh, 1100px);
 .chrome-menu[aria-expanded="true"] i::before { transform: translateY(2.75px) rotate(45deg); }
 .chrome-menu[aria-expanded="true"] i::after { transform: translateY(-2.75px) rotate(-45deg); }
 
-/* =========================================================================================
-   MENU IMMERSIF
-   ========================================================================================= */
+/* Menu immersif */
 .menu {
   position: fixed; inset: 0; z-index: 490; overflow: hidden;
   color: #f3f5f2; --texte: #f3f5f2; --texte-2: rgba(243, 245, 242, .66); --filet: rgba(243, 245, 242, .16); --accent: var(--jaune-chaud);
@@ -490,14 +477,14 @@ dialog.dialogue--document { width: min(96vw, 1180px); height: min(92vh, 1100px);
 }
 .menu-liste { display: grid; align-content: center; gap: .1rem; }
 .menu-liste a {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1.5rem;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 1.5rem;
   padding: .55rem 0; border-bottom: 1px solid var(--filet);
 }
 .menu-liste .nom {
-  display: block; font-size: clamp(2rem, 5vw, 4rem); font-weight: 750; letter-spacing: -.035em; line-height: 1.05;
+  display: block; font-size: clamp(2rem, min(5vw, 11.6vh - 44px), 4rem); font-weight: 750; letter-spacing: -.035em; line-height: 1.05;
   font-variation-settings: "wdth" 104; transition: transform var(--d-3) var(--e-sortie), color var(--d-2);
 }
-.menu-liste .tenue { display: block; font-family: var(--serif); font-size: var(--t-2); color: var(--texte-2); max-width: 28ch; text-align: right; opacity: 0; transform: translateX(-8px); transition: opacity var(--d-3), transform var(--d-3) var(--e-sortie); }
+.menu-liste .tenue { display: block; justify-self: end; font-family: var(--serif); font-size: var(--t-2); line-height: 1.3; color: var(--texte-2); max-width: 28ch; text-align: right; opacity: 0; transform: translateX(-8px); transition: opacity var(--d-3), transform var(--d-3) var(--e-sortie); }
 .menu-liste a:hover .nom, .menu-liste a:focus-visible .nom { transform: translateX(14px); color: var(--jaune-chaud); }
 .menu-liste a:hover .tenue, .menu-liste a:focus-visible .tenue { opacity: 1; transform: none; }
 .menu-liste a[aria-current="page"] .nom { color: var(--jaune-chaud); }
@@ -510,9 +497,7 @@ dialog.dialogue--document { width: min(96vw, 1180px); height: min(92vh, 1100px);
 .menu-cote address a { color: var(--texte); }
 .menu-pied { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-self: end; font-family: var(--mono); font-size: var(--t-0); letter-spacing: .1em; text-transform: uppercase; color: var(--texte-2); }
 
-/* =========================================================================================
-   CURSEUR
-   ========================================================================================= */
+/* Curseur */
 .curseur { display: none; }
 html.curseur-actif .curseur {
   display: block; position: fixed; left: 0; top: 0; z-index: 800; pointer-events: none;
@@ -537,9 +522,7 @@ html.curseur-actif, html.curseur-actif a, html.curseur-actif button, html.curseu
 .curseur[data-ton="clair"] { --curseur: var(--encre); }
 .curseur[data-ton="sombre"] { --curseur: #f3f5f2; }
 
-/* =========================================================================================
-   VOILE DE TRANSITION ENTRE PAGES
-   ========================================================================================= */
+/* Voile de transition entre pages */
 .voile {
   position: fixed; inset: 0; z-index: 600; pointer-events: none;
   background: linear-gradient(160deg, var(--vert-foret), var(--bleu-profond));
@@ -550,23 +533,18 @@ html.curseur-actif, html.curseur-actif a, html.curseur-actif button, html.curseu
 @keyframes voile-retrait { from { transform: translateY(0); } to { transform: translateY(-101%); } }
 @keyframes voile-fermeture { from { transform: translateY(101%); } to { transform: translateY(0); } }
 
-/* =========================================================================================
-   SECTIONS ET COUTURES
-   ========================================================================================= */
-/* La couleur de surface est posée sous le dégradé : un outil de mesure comme un navigateur
-   sans dégradé lisent la même teinte. */
+/* Sections et coutures */
+/* background-color sous le dégradé : getComputedStyle et les navigateurs sans dégradé lisent la même teinte */
 .section { position: relative; overflow: hidden; padding-block: var(--section); background-color: var(--surface); background-image: var(--fond-scene, none); color: var(--texte); }
 .section > .cadre { position: relative; z-index: 2; }
 .section-tete { display: grid; gap: 1.2rem; margin-bottom: clamp(2.4rem, 5vw, 4rem); max-width: 56rem; }
 .section-tete .chapo { margin-top: .2rem; }
 .section-tete--ligne { grid-template-columns: minmax(0, 1fr) auto; align-items: end; max-width: none; }
 
-/* La couture : une bande qui fond une scène dans la suivante, sans bord. */
+/* Couture entre deux scènes */
 .couture { position: relative; height: clamp(4rem, 14vh, 10rem); margin-top: calc(-1 * clamp(4rem, 14vh, 10rem)); z-index: 3; pointer-events: none; background: linear-gradient(180deg, transparent 0%, var(--vers) 100%); }
 
-/* =========================================================================================
-   PIED DE PAGE
-   ========================================================================================= */
+/* Pied de page */
 main { position: relative; z-index: 1; }
 .pied {
   position: relative; z-index: 0; overflow: hidden;
@@ -598,9 +576,7 @@ main { position: relative; z-index: 1; }
 .pied-bas a { color: var(--texte-2); transition: color var(--d-2); }
 .pied-bas a:hover { color: var(--texte); }
 
-/* =========================================================================================
-   ÉTATS D'ENTRÉE (conditionnés à la classe js, posée avant le premier rendu)
-   ========================================================================================= */
+/* États d'entrée (sous .js, posée par avant.js) */
 .js [data-reveler] { opacity: 0; }
 .js [data-reveler].vu, .js [data-reveler].pret { opacity: 1; }
 .js [data-serie] > * { opacity: 0; }
@@ -608,12 +584,9 @@ main { position: relative; z-index: 1; }
 .js [data-reveler="masque"] > img, .js [data-reveler="masque"] > video, .js [data-reveler="masque"] > .visuel-interieur { clip-path: inset(0 0 100% 0); }
 .js [data-reveler="masque"].vu > img, .js [data-reveler="masque"].vu > video, .js [data-reveler="masque"].vu > .visuel-interieur { clip-path: inset(0 0 0 0); }
 
-/* =========================================================================================
-   MODE ÉCRAN (rendu à l'intérieur de l'iPhone)
-   ========================================================================================= */
+/* Mode écran (?ecran=1) */
 html[data-ecran] .curseur, html[data-ecran] .voile { display: none !important; }
-/* La barre d'état du téléphone occupe le haut de l'écran : le site commence dessous, comme
-   dans un navigateur mobile, sur un fond de la couleur du hero. */
+/* Réserve pour la barre d'état du téléphone */
 html[data-ecran] { scrollbar-width: none; --barre-etat: 62px; }
 html[data-ecran] body { padding-top: var(--barre-etat); background: var(--vert-foret); }
 html[data-ecran] .chrome { top: var(--barre-etat); }
@@ -621,9 +594,7 @@ html[data-ecran]::-webkit-scrollbar { display: none; }
 html[data-ecran] .pied { position: static !important; }
 html[data-ecran] .chrome { position: absolute; }
 
-/* =========================================================================================
-   RÉDUCTION DU MOUVEMENT
-   ========================================================================================= */
+/* Réduction du mouvement */
 @media (prefers-reduced-motion: reduce) {
   html, html:focus-within { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -633,11 +604,10 @@ html[data-ecran] .chrome { position: absolute; }
   .lueur { filter: none; }
 }
 
-/* =========================================================================================
-   RESPONSIVE COMMUN
-   ========================================================================================= */
+/* Responsive commun */
 @media (max-width: 1100px) {
   .chrome-nav { display: none; }
+  .menu-liste .tenue { display: none; }
   .pied-grille { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 860px) {

@@ -2,13 +2,13 @@
 
 Le site est un serveur Node : l'administration écrit des contenus et des fichiers sur le
 disque. Il lui faut donc **un hébergement qui exécute Node 20 ou plus récent et conserve
-un disque** — pas un hébergement de fichiers statiques.
+un disque**, pas un hébergement de fichiers statiques.
 
 Aucune installation : pas de `npm install`, pas de base de données. La commande de
 démarrage est `npm start` (ou `node serveur/index.mjs`). Le processus lit `PORT` si la
 plateforme l'impose, sinon `ARCEP_PORT` (4310).
 
-## Option A — Render
+## Option A : Render
 
 Le dépôt contient `render.yaml` : Render y lit le service, la variable d'environnement et
 le disque persistant. Render n'attache qu'un disque par service ; au démarrage,
@@ -27,7 +27,7 @@ l'historique, les demandes et les fichiers téléversés, puis lance le serveur.
 5. Chaque `git push` redéploie le site ; les contenus et fichiers sur le disque sont
    conservés.
 
-## Option B — serveur virtuel (OVH, Hetzner, Scaleway…)
+## Option B : serveur virtuel (OVH, Hetzner, Scaleway…)
 
 1. Installer Node 20+, copier le dossier dans `/srv/arcep`, créer un utilisateur `arcep`.
 2. Service système `/etc/systemd/system/arcep.service` :

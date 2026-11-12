@@ -1,12 +1,6 @@
-/* ARCEP Gabon — démarrage sur Render.
-
-   Render n'attache qu'un disque persistant par service. Ce script, lancé à la place du
-   serveur, relie sur ce disque tout ce que l'administration écrit — le document de
-   contenus, les comptes, l'historique, les demandes, les visuels et les PDF téléversés —
-   puis démarre le serveur. Au premier démarrage, les contenus livrés sont copiés sur le
-   disque ; ensuite, ils y vivent et survivent aux redéploiements.
-
-   ARCEP_DISQUE : le point de montage du disque (défaut /var/data). */
+// Démarrage sur Render : un seul disque persistant par service (ARCEP_DISQUE, défaut /var/data).
+// Les dossiers écrits par l'administration (donnees, medias, documents) y sont reliés par lien symbolique,
+// les contenus livrés y sont copiés au premier démarrage, puis le serveur est lancé.
 import { existsSync, mkdirSync, cpSync, rmSync, symlinkSync, lstatSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -1,7 +1,4 @@
-/* ARCEP Gabon — les données animées.
-   Les compteurs montent jusqu'à leur valeur puis la chaîne exacte rendue par le serveur
-   est remise en place ; les jauges, les barres et la couverture se remplissent à l'entrée
-   dans le champ. Aucune valeur n'est calculée ici : tout vient du document. */
+// Compteurs, jauges et barres animés à l'entrée dans le viewport
 import { QSA, gsap, pret, reduit, auChamp } from './socle.mjs';
 
 export function demarrerDonnees() {

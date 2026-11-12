@@ -1,7 +1,5 @@
-/* ARCEP Gabon — révélations et profondeur.
-   Ce qui entre dans le champ se lève une fois ; les calques décoratifs dérivent avec le
-   défilement. Les états de départ vivent dans la feuille de style sous la classe « js » :
-   sans ce module, rien n'est caché. */
+// Révélations à l'entrée dans le viewport, parallaxe, vidéos décoratives.
+// Les états initiaux sont dans le CSS sous .js : sans ce module rien n'est masqué.
 import { QSA, gsap, SplitText, pret, reduit, mobile, auChamp } from './socle.mjs';
 
 export function demarrerRevelations() {
@@ -50,7 +48,6 @@ export function demarrerRevelations() {
   videos();
 }
 
-/* Les vidéos décoratives ne jouent que dans le champ. */
 function videos() {
   const liste = QSA('video[data-video]');
   if (!liste.length) return;

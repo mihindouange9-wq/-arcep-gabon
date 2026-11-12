@@ -1,10 +1,12 @@
-/* Exporte charte/index.html en PDF 16:9 (une planche par page) via Chrome headless.
-   node outils/charte/pdf-charte.mjs [sortie] */
+// Exporte charte/index.html en PDF 16:9, une planche par page, via Chrome headless.
+// node outils/charte/pdf-charte.mjs [sortie]
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const out = process.argv[2] ?? 'charte/ARCEP_Gabon_Charte_de_Marque.pdf';
 const port = 9333 + Math.floor(Math.random() * 500);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--disable-gpu', '--allow-file-access-from-files', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=C:/Users/mihin/AppData/Local/Temp/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
+const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--allow-file-access-from-files', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let wsUrl; for (let i = 0; i < 40 && !wsUrl; i++) { await sleep(250); try { const l = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); wsUrl = l.find((t) => t.type === 'page')?.webSocketDebuggerUrl; } catch {} }
 const ws = new WebSocket(wsUrl); await new Promise((r) => (ws.onopen = r));
@@ -14,7 +16,7 @@ const send = (method, params = {}) => new Promise((res) => { const i = ++id; pen
 const ev = async (expression) => (await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result?.result?.value;
 await send('Page.enable');
 await send('Emulation.setDeviceMetricsOverride', { width: 1232, height: 900, deviceScaleFactor: 1, mobile: false });
-await send('Page.navigate', { url: 'file:///C:/Users/mihin/Documents/geek/arcep/charte/index.html' });
+await send('Page.navigate', { url: new URL('../../charte/index.html', import.meta.url).href });
 await sleep(1500);
 await ev('document.fonts.ready.then(() => true)');
 await ev(`Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; })))`);

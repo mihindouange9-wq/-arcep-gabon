@@ -1,16 +1,18 @@
-/* Rapatrie les visuels d'actualité du site officiel et les allège (largeur max 1400, JPEG 82) dans public/assets/actus/.
-   Met à jour donnees/arcep.json pour pointer vers les fichiers locaux. node outils/contenu/fetch-images.mjs */
+// Rapatrie les visuels d'actualité de l'ancien site, les allège (largeur max 1400, JPEG 82) dans public/assets/actus/
+// et met à jour donnees/arcep.json. node outils/contenu/fetch-images.mjs
+import { tmpdir } from 'node:os';
 import { spawn, execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { lireDonnees, ecrireDonnees } from './donnees.mjs';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const run = promisify(execFile);
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36';
 
 const data = lireDonnees();
 mkdirSync('public/assets/actus', { recursive: true });
 
-/* 1. Téléchargement */
+// 1. Téléchargement
 const aTraiter = [];
 for (const a of data.actualites) {
   if (!a.image || /^\/?assets\//.test(a.image)) continue;
@@ -24,9 +26,9 @@ for (const a of data.actualites) {
 }
 console.log('téléchargées :', aTraiter.length);
 
-/* 2. Conversion par un canvas de Chrome */
+// 2. Conversion par un canvas de Chrome
 const port = 9333 + Math.floor(Math.random() * 500);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=C:/Users/mihin/AppData/Local/Temp/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
+const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let wsUrl; for (let i = 0; i < 40 && !wsUrl; i++) { await sleep(250); try { const l = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); wsUrl = l.find((t) => t.type === 'page')?.webSocketDebuggerUrl; } catch {} }
 const ws = new WebSocket(wsUrl); await new Promise((r) => (ws.onopen = r));
@@ -50,7 +52,7 @@ for (const { id: num, brut } of aTraiter) {
 ws.close(); chrome.kill();
 console.log('images :', (avant / 1048576).toFixed(1), 'Mo →', (apres / 1048576).toFixed(1), 'Mo');
 
-/* 3. Mise à jour des chemins + nettoyage des fichiers bruts */
+// 3. Mise à jour des chemins et nettoyage des fichiers bruts
 for (const a of data.actualites) if (existsSync(`public/assets/actus/${a.id}.jpg`)) a.image = `public/assets/actus/${a.id}.jpg`;
 ecrireDonnees(data);
 for (const { brut } of aTraiter) { try { readFileSync(brut); await run('cmd', ['/c', 'del', '/q', brut.replace(/\//g, '\\')]); } catch {} }

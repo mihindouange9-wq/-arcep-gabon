@@ -1,12 +1,5 @@
-/* ARCEP Gabon — HTML restreint.
-
-   Le corps d'un article peut être écrit en texte simple (une ligne vide sépare deux
-   paragraphes) ou porter un HTML restreint : paragraphes, titres, listes, gras, italique,
-   liens, images. Tout le reste est retiré, à l'écriture comme au rendu : un contenu venu
-   de l'administration ou de l'ancien site n'est jamais servi tel quel.
-
-   Ce qui est gardé : p, h2, h3, h4, ul, ol, li, strong, em, a (href http, https ou chemin
-   du site), img (src : chemin du site seulement, alt), br, blockquote. */
+// HTML restreint des corps d'article : p, h2-h4, ul, ol, li, strong, em, a (http, https ou chemin du site), img (chemin du site), br, blockquote.
+// Nettoyé à l'écriture et au rendu.
 
 const BALISES = new Set(['p', 'h2', 'h3', 'h4', 'ul', 'ol', 'li', 'strong', 'em', 'a', 'img', 'br', 'blockquote']);
 const VIDES = new Set(['img', 'br']);
@@ -23,7 +16,7 @@ const adresseSure = (v, imageSeulement = false) => {
   return '';
 };
 
-/* ======================= ENTITÉS ======================= */
+// Entités
 const ENTITES = {
   amp: '&', lt: '<', gt: '>', quot: '"', apos: '\'', nbsp: ' ',
   eacute: 'é', egrave: 'è', ecirc: 'ê', euml: 'ë', agrave: 'à', acirc: 'â', auml: 'ä', ccedil: 'ç',
@@ -39,10 +32,8 @@ export function decoderEntites(texte) {
     .replace(/&([a-zA-Z]+\d*);/g, (m, n) => (n in ENTITES ? ENTITES[n] : m));
 }
 
-/* ======================= NETTOYAGE ======================= */
-/* Rend un HTML sûr à partir d'un HTML quelconque. Les textes sont réécrits échappés, les
-   balises inconnues sont retirées (leur contenu est conservé), les attributs sont réduits
-   à href, src et alt, contrôlés. Les balises ouvertes sont refermées dans l'ordre. */
+// Nettoyage
+// Balises inconnues retirées (contenu conservé), attributs limités à href, src et alt, balises refermées dans l'ordre.
 export function nettoyer(html) {
   const source = String(html || '');
   const pile = [];
@@ -58,7 +49,7 @@ export function nettoyer(html) {
     nom = RENOMMAGES[nom] || nom;
     const fermante = bloc.startsWith('</');
     if (nom === 'script' || nom === 'style') {
-      /* Le contenu d'un script ou d'une feuille n'est pas du texte : on le saute. */
+      // contenu de script/style : sauté
       const fin = source.indexOf(`</${m[1]}`, motif.lastIndex);
       if (!fermante && fin >= 0) motif.lastIndex = source.indexOf('>', fin) + 1;
       continue;
@@ -90,15 +81,14 @@ export function nettoyer(html) {
     pile.push(nom);
   }
   while (pile.length) sortie += `</${pile.pop()}>`;
-  /* Les paragraphes vides et les espaces insécables orphelins sont retirés. */
-  /* L'espace insécable est déjà couvert par \s : l'alternative ne doit pas le répéter,
-     sinon une suite d'espaces sans </p> fait exploser le nombre de chemins essayés. */
+  // Paragraphes vides et nbsp orphelins.
+  // \s couvre déjà l'espace insécable : le répéter dans l'alternative rend la regex catastrophique.
   return sortie.replace(/<p>\s*(?:&nbsp;\s*)*<\/p>/g, '').replace(/\n{3,}/g, '\n\n').trim();
 }
 
 export const contientHtml = (texte) => /<\s*(p|ul|ol|h[1-6]|blockquote|img|strong|em|a)\b/i.test(String(texte || ''));
 
-/* Un corps d'article : HTML restreint s'il en contient, sinon texte simple en paragraphes. */
+// HTML restreint si présent, sinon texte simple en paragraphes.
 export function corpsArticle(texte, paragraphes) {
   return contientHtml(texte) ? nettoyer(texte) : paragraphes(texte);
 }

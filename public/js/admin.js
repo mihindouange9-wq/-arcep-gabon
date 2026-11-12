@@ -1,6 +1,3 @@
-/* ARCEP Gabon — administration.
-   Trois conforts, aucun indispensable : une confirmation avant suppression, l'aperçu d'un
-   visuel choisi, et le compte des caractères d'un champ borné. */
 for (const form of document.querySelectorAll('form[data-confirmer]')) {
   form.addEventListener('submit', (ev) => {
     if (!window.confirm(form.dataset.confirmer)) ev.preventDefault();
@@ -31,7 +28,7 @@ for (const zone of document.querySelectorAll('[maxlength][data-compte]')) {
   maj();
 }
 
-/* La barre latérale se replie sur petit écran. */
+// Barre latérale repliable sur petit écran
 const bouton = document.querySelector('[data-lateral]');
 const lateral = document.querySelector('.lateral');
 if (bouton && lateral) {

@@ -1,7 +1,4 @@
-/* ARCEP Gabon — les pages publiques.
-   L'accueil est un récit en scènes chromatiques, du vert de la forêt au blanc de la lumière.
-   Les pages intérieures gardent la même grammaire mais servent la lecture : une autorité
-   publique doit pouvoir être consultée par tout le monde, sur tous les écrans, sans script. */
+// Pages publiques.
 import {
   e, lien, socle, entete, sectionTete, couture, icone, paragraphes, RUBRIQUES, rubriqueDe,
   actualitesPubliees, visuelActualite, dateLisible,
@@ -18,7 +15,7 @@ const compte = (D) => ({
   actualites: actualitesPubliees(D).length,
 });
 
-/* ======================= FRAGMENTS ======================= */
+// Fragments
 function blocChiffres(D, { niveau = 3 } = {}) {
   return `<div class="chiffres" data-serie>
   ${D.chiffres.map((c) => `
@@ -59,7 +56,7 @@ function dialogueMission(mi) {
 </dialog>`;
 }
 
-/* ======================= ACCUEIL ======================= */
+// Accueil
 export function accueil(D, { ecran = false } = {}) {
   const R = reglages(D);
   const I = D.institution;
@@ -336,7 +333,7 @@ function coordonnees(D) {
 </dl>`;
 }
 
-/* ======================= L'AUTORITÉ ======================= */
+// L'autorité
 export function autorite(D, { ecran = false } = {}) {
   const I = D.institution;
   const corps = `
@@ -421,7 +418,7 @@ ${entete({ titre: T(D, 'autorite', 'heroTitre'), chapo: T(D, 'autorite', 'heroTe
     description: 'Statut, textes fondateurs, Conseil de Régulation, organisation, mot du Président et partenaires de l’ARCEP Gabon.' });
 }
 
-/* ======================= MISSIONS ======================= */
+// Missions
 export function missions(D, { ecran = false } = {}) {
   const corps = `
 ${entete({ titre: T(D, 'missions', 'heroTitre'), chapo: T(D, 'missions', 'heroTexte'), scene: 'bleu',
@@ -445,7 +442,7 @@ ${D.missions.map((mi, i) => `
     description: 'Les cinq missions de l’ARCEP Gabon : ordre général, investigation, ordre juridique, technique et économique.' });
 }
 
-/* ======================= OBSERVATOIRE ======================= */
+// Observatoire
 export function observatoire(D, { ecran = false, marche = 'tous', annee = 'toutes' } = {}) {
   const annees = Array.from(new Set(D.observatoire.flatMap((m) => m.publications.map((p) => p.annee)))).sort().reverse();
   const toutes = D.observatoire.flatMap((m) => m.publications.map((p) => ({ ...p, marche: m.cle, marcheNom: m.nom })))
@@ -519,13 +516,11 @@ ${entete({ titre: T(D, 'observatoire', 'heroTitre'), chapo: T(D, 'observatoire',
     description: 'Indicateurs du secteur et tableaux de bord trimestriels de l’internet, du fixe et du mobile au Gabon.' });
 }
 
-/* ======================= RÉGLEMENTATION ======================= */
+// Réglementation
 export function reglementation(D, { ecran = false, categorie = 'tout', annee = 'toutes', recherche = '' } = {}) {
   const terme = recherche.trim().toLowerCase();
   const annees = Array.from(new Set(D.documents.map((d) => d.annee).filter(Boolean))).sort().reverse();
-  /* La page porte toujours tous les textes ; ceux qui ne correspondent pas sont rendus
-     masqués. Sans script le tri du serveur fait foi ; avec, le même calcul est refait
-     dans la page, sans rechargement ni liste tronquée. */
+  // Tous les textes sont rendus, les non-correspondants masqués : sans script, le tri serveur fait foi.
   const retenu = (d) => (categorie === 'tout' || d.categorie === categorie)
     && (annee === 'toutes' || d.annee === annee)
     && (!terme || d.titre.toLowerCase().includes(terme) || String(d.annee).includes(terme) || String(d.description || '').toLowerCase().includes(terme));
@@ -597,7 +592,7 @@ ${entete({ titre: T(D, 'reglementation', 'heroTitre'), chapo: T(D, 'reglementati
     description: 'Lois, ordonnances, décrets, arrêtés, délibérations, décisions, barèmes et formulaires de l’ARCEP Gabon.' });
 }
 
-/* ======================= ACTUALITÉS ======================= */
+// Actualités
 export function actualites(D, { ecran = false, annee = 'toutes', recherche = '' } = {}) {
   const publiees = actualitesPubliees(D);
   const terme = recherche.trim().toLowerCase();
@@ -687,7 +682,7 @@ ${apercu ? '<p class="apercu-bandeau" role="status">Aperçu — cet article est 
     } });
 }
 
-/* ======================= CONSOMMATEURS ======================= */
+// Consommateurs
 export function consommateurs(D, { ecran = false, recherche = '' } = {}) {
   const I = D.institution;
   const droits = L(D, 'droits');
@@ -756,7 +751,7 @@ ${entete({ titre: T(D, 'consommateurs', 'heroTitre'), chapo: T(D, 'consommateurs
       mainEntity: D.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.r } })) } });
 }
 
-/* ======================= CONTACT ======================= */
+// Contact
 export function contact(D, { ecran = false, envoye = false, erreur = '', champs = {}, direction = '' } = {}) {
   const I = D.institution;
   const corps = `
@@ -768,10 +763,10 @@ ${entete({ titre: T(D, 'contact', 'heroTitre'), chapo: T(D, 'contact', 'heroText
       ${coordonnees(D)}
       <p class="contact-page-note" data-reveler>Les demandes reçues par ce formulaire sont enregistrées par le secrétariat de l’Autorité et orientées vers la direction compétente.</p>
     </div>
-    <div class="contact-page-formulaire">
+    <div class="contact-page-formulaire" id="demande">
       <h2 class="titre-3" data-reveler="lignes">${e(T(D, 'contact', 'formulaireTitre'))}</h2>
       ${envoye ? `<p class="message message--ok" role="status">${e(T(D, 'contact', 'confirmation'))}</p>` : `
-      <form class="formulaire" method="post" action="/contact#formulaire" data-reveler novalidate>
+      <form class="formulaire" method="post" action="/contact#demande" data-reveler novalidate>
         ${erreur ? `<p class="message message--erreur" role="alert">${e(erreur)}</p>` : ''}
         <div class="formulaire-ligne">
           <p class="champ">
@@ -817,7 +812,7 @@ ${entete({ titre: T(D, 'contact', 'heroTitre'), chapo: T(D, 'contact', 'heroText
     description: `Contacter l’ARCEP Gabon : ${I.adresse}, ${I.telephones.join(', ')}, ${I.email}, numéro consommateurs ${I.numeroCourt}.` });
 }
 
-/* ======================= PAGES LÉGALES ======================= */
+// Pages légales
 export function mentionsLegales(D, { ecran = false } = {}) {
   const I = D.institution;
   const corps = `
@@ -856,7 +851,7 @@ ${entete({ titre: 'Confidentialité', scene: 'graphite' })}
     description: 'Ce que le site de l’ARCEP Gabon enregistre, et pourquoi.' });
 }
 
-/* ======================= PAGE INTROUVABLE ======================= */
+// Page introuvable
 export function introuvable(D, { ecran = false } = {}) {
   const corps = `
 ${entete({ titre: 'Page introuvable', chapo: 'L’adresse demandée ne correspond à aucune page du site. Les rubriques ci-dessous vous remettront sur la bonne voie.', scene: 'graphite' })}

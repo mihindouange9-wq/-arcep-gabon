@@ -1,6 +1,4 @@
-/* ARCEP Gabon — les missions.
-   Sur l'accueil, chaque mission s'ouvre dans un dialogue ; sans script, le lien mène à la
-   page des missions. */
+// Missions de l'accueil en <dialog> ; sans JS, le lien mène à /missions
 import { QS, QSA, gsap, pret, reduit, bloquer } from './socle.mjs';
 
 export function demarrerMissions() {

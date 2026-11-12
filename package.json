@@ -2,7 +2,7 @@
   "name": "arcep-gabon",
   "version": "3.0.0",
   "private": true,
-  "description": "Site institutionnel de l’ARCEP Gabon : pages publiques, interface de données et administration, servis par un seul processus Node sans dépendance.",
+  "description": "Site institutionnel de l’ARCEP Gabon : pages publiques, API et administration, un seul processus Node sans dépendance.",
   "type": "module",
   "engines": {
     "node": ">=20"
@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node serveur/index.mjs",
     "verif": "node outils/controle/verif.mjs",
-    "verif:admin": "node outils/controle/verif-admin.mjs",
-    "start:render": "node outils/deploiement/render.mjs"
+    "start:render": "node outils/deploiement/render.mjs",
+    "verif:admin": "node outils/controle/verif-admin.mjs"
   }
 }

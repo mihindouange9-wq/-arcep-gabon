@@ -1,7 +1,4 @@
-/* ARCEP Gabon — routes de l'espace d'administration.
-   Toute écriture exige une session valide et un jeton anti-rejeu. Les réponses d'écriture
-   redirigent (303) pour qu'un rafraîchissement ne rejoue jamais l'action. Les écrans
-   d'organisation et de configuration sont réservés aux administrateurs. */
+// Routes de l'administration : session et jeton CSRF sur toute écriture, 303 après POST, écrans de configuration réservés aux administrateurs.
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { lire, modifier, ecrire, historique, identifiant, chemin as chemins } from './base.mjs';
@@ -27,7 +24,7 @@ const versLa = (reponse, url, entetes = {}) => {
   reponse.end();
 };
 
-/* Les adresses acceptées dans les contenus : http, https, ou un chemin du site. */
+// http, https ou chemin du site.
 const adresseValide = (v) => {
   const s = String(v || '').trim();
   if (!s) return true;
@@ -45,7 +42,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
   const methode = requete.method;
   const message = url.searchParams.get('message') || '';
 
-  /* ---------- Premier démarrage : création du compte initial ---------- */
+  // Premier démarrage : création du compte initial
   if (await aucunCompte()) {
     if (chemin === '/admin/creation' && methode === 'POST') {
       try {
@@ -60,7 +57,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return html(reponse, V.connexion({ premier: true }));
   }
 
-  /* ---------- Connexion ---------- */
+  // Connexion
   if (chemin === '/admin/connexion' && methode === 'POST') {
     const resultat = await verifier(champ(corpsForm, 'identifiant', 60), String(corpsForm.motdepasse || ''), adresse);
     if (!resultat.ok) return html(reponse, V.connexion({ erreur: resultat.raison }), 401);
@@ -72,26 +69,26 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, '/admin', { 'set-cookie': cookieEfface(securise) });
   }
 
-  /* ---------- Au-delà, une session est exigée ---------- */
+  // Au-delà, une session est exigée
   if (!s) return html(reponse, V.connexion({}), chemin === '/admin' ? 200 : 401);
   const compte = s.compte;
   const csrf = s.csrf;
   const admin = compte.role === 'administrateur';
   const base = { compte, csrf };
 
-  /* Toute écriture porte un jeton anti-rejeu. */
+  // Jeton CSRF sur toute écriture.
   if (methode === 'POST' && !csrfValide(s, corpsForm.csrf)) {
     return html(reponse, V.connexion({ erreur: 'Session expirée. Reconnectez-vous puis recommencez.' }), 403);
   }
   const reserve = () => html(reponse, V.refus({ ...base }), 403);
 
-  /* ---------- Tableau de bord ---------- */
+  // Tableau de bord
   if (chemin === '/admin') {
     const D = await lire();
     return html(reponse, V.tableau({ ...base, D, versions: await historique(12), message }));
   }
 
-  /* ---------- Restauration d'une version ---------- */
+  // Restauration d'une version
   if (chemin === '/admin/restaurer' && methode === 'POST') {
     if (!admin) return reserve();
     const nom = champ(corpsForm, 'version', 120);
@@ -105,7 +102,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     }
   }
 
-  /* ---------- Mon compte ---------- */
+  // Mon compte
   if (chemin === '/admin/compte') {
     if (methode === 'GET') return html(reponse, V.monCompte({ ...base, message }));
     try {
@@ -116,7 +113,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     } catch (err) { return html(reponse, V.monCompte({ ...base, erreur: err.message }), 400); }
   }
 
-  /* ---------- Pages ---------- */
+  // Pages
   if (chemin === '/admin/pages') return html(reponse, V.listePages({ ...base, D: await lire(), message }));
   let m = chemin.match(/^\/admin\/pages\/([a-z]+)$/);
   if (m && PAGES[m[1]]) {
@@ -131,7 +128,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, `/admin/pages/${cle}?message=` + encodeURIComponent('Textes enregistrés.'));
   }
 
-  /* ---------- Actualités ---------- */
+  // Actualités
   if (chemin === '/admin/actualites' && methode === 'GET') {
     return html(reponse, V.listeActualites({ ...base, D: await lire(), message, filtre: url.searchParams.get('filtre') || 'toutes' }));
   }
@@ -171,7 +168,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, `/admin/actualites/${encodeURIComponent(id)}?message=` + encodeURIComponent('Actualité enregistrée.'));
   }
 
-  /* ---------- Réglementation : documents ---------- */
+  // Réglementation : documents
   if (chemin === '/admin/documents' && methode === 'GET') {
     return html(reponse, V.listeDocuments({ ...base, D: await lire(), message, categorie: url.searchParams.get('categorie') || 'tout' }));
   }
@@ -209,7 +206,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, `/admin/documents/${encodeURIComponent(id)}?message=` + encodeURIComponent('Texte enregistré.'));
   }
 
-  /* ---------- Réglementation : catégories ---------- */
+  // Réglementation : catégories
   if (chemin === '/admin/categories') {
     if (!admin) return reserve();
     const D = await lire();
@@ -244,7 +241,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, '/admin/categories?message=' + encodeURIComponent('Catégorie enregistrée.'));
   }
 
-  /* ---------- Observatoire ---------- */
+  // Observatoire
   if (chemin === '/admin/observatoire' && methode === 'GET') {
     return html(reponse, V.listeObservatoire({ ...base, D: await lire(), message, marche: url.searchParams.get('marche') || 'tous' }));
   }
@@ -289,7 +286,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, '/admin/observatoire?message=' + encodeURIComponent('Tableau de bord enregistré.'));
   }
 
-  /* ---------- FAQ ---------- */
+  // FAQ
   if (chemin === '/admin/faq' && methode === 'GET') return html(reponse, V.listeFaq({ ...base, D: await lire(), message }));
   if (chemin === '/admin/faq/nouvelle') {
     const D = await lire();
@@ -326,7 +323,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, `/admin/faq/${encodeURIComponent(id)}?message=` + encodeURIComponent('Question enregistrée.'));
   }
 
-  /* ---------- Chiffres clés ---------- */
+  // Chiffres clés
   if (chemin === '/admin/chiffres') {
     const D = await lire();
     if (methode === 'GET') return html(reponse, V.listeChiffres({ ...base, D, message }));
@@ -366,7 +363,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, '/admin/chiffres?message=' + encodeURIComponent('Indicateur enregistré.'));
   }
 
-  /* ---------- Médiathèque ---------- */
+  // Médiathèque
   if (chemin === '/admin/medias') {
     const D = await lire();
     if (methode === 'GET') return html(reponse, V.mediatheque({ ...base, groupes: await Medias.inventaire(D), message }));
@@ -384,7 +381,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, '/admin/medias?message=' + encodeURIComponent('Fichier supprimé.'));
   }
 
-  /* ---------- Listes (droits, démarches) ---------- */
+  // Listes (droits, démarches)
   m = chemin.match(/^\/admin\/listes\/([a-z]+)$/);
   if (m && LISTES[m[1]]) {
     if (!admin) return reserve();
@@ -404,7 +401,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     return versLa(reponse, `/admin/listes/${cle}?message=` + encodeURIComponent('Liste enregistrée.'));
   }
 
-  /* ---------- Utilisateurs ---------- */
+  // Utilisateurs
   if (chemin === '/admin/utilisateurs') {
     if (!admin) return reserve();
     if (methode === 'GET') return html(reponse, V.utilisateurs({ ...base, comptes: await listerComptes(), message }));
@@ -431,7 +428,7 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
     } catch (err) { return html(reponse, V.utilisateurs({ ...base, comptes: await listerComptes(), erreur: err.message }), 400); }
   }
 
-  /* ---------- Réglages et SEO ---------- */
+  // Réglages et SEO
   if (chemin === '/admin/reglages') {
     if (!admin) return reserve();
     const D = await lire();
@@ -470,9 +467,8 @@ export async function servirAdmin({ chemin, url, requete, reponse, corpsForm, fi
   return html(reponse, V.introuvable({ ...base }), 404);
 }
 
-/* ======================= VALIDATION ======================= */
-/* Le champ fichier est facultatif : s'il est rempli, le fichier est enregistré et son
-   chemin remplace celui saisi ; s'il est vide, le fichier en place est conservé. */
+// Validation
+// Fichier facultatif : téléversé, il remplace le chemin saisi ; vide, le fichier en place reste.
 async function visuelTeleverse(fichiers, champNom, genres = ['image']) {
   const f = fichiers.find((x) => x.champ === champNom);
   if (!f) return {};

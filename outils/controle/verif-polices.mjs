@@ -1,14 +1,5 @@
-/* ARCEP Gabon — couverture des caractères.
-
-   Depuis que les fontes sont auto-hébergées, le site ne livre que les sous-ensembles
-   latin et latin-ext. Un caractère hors de ces plages ne disparaîtrait pas : il serait
-   rendu par la fonte de repli du système, dans un dessin différent, au milieu d'une phrase.
-   C'est discret et c'est laid, et cela ne se voit pas sur la machine qui a produit le site.
-
-   Cet outil relève donc tous les caractères réellement publiés, page par page, et vérifie
-   que chacun tombe dans une plage livrée.
-
-   node outils/controle/verif-polices.mjs [base]   (le serveur doit tourner) */
+// Vérifie que chaque caractère publié sur les pages listées tombe dans les plages unicode-range de polices.css.
+// Serveur lancé. node outils/controle/verif-polices.mjs [base]
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
@@ -19,7 +10,7 @@ const BASE = process.argv[2] && process.argv[2].startsWith('http') ? process.arg
 const PAGES = ['/', '/autorite', '/missions', '/observatoire', '/reglementation',
   '/actualites', '/consommateurs', '/page-inexistante', '/admin'];
 
-/* ---------- les plages livrées ---------- */
+// les plages livrées
 const feuille = readFileSync(join(RACINE, 'public', 'css', 'polices.css'), 'utf8');
 
 const plagesParFamille = new Map();
@@ -39,7 +30,7 @@ for (const bloc of feuille.matchAll(/@font-face\s*\{([^}]*)\}/g)) {
 
 const couvert = (plages, code) => plages.some(([a, b]) => code >= a && code <= b);
 
-/* ---------- le texte réellement publié ---------- */
+// le texte réellement publié
 const ENTITES = { amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'", nbsp: ' ' };
 
 function texteVisible(html) {
@@ -49,7 +40,7 @@ function texteVisible(html) {
     .replace(/&(#?\w+);/g, (tout, nom) => ENTITES[nom] ?? tout);
 }
 
-/* ---------- déroulé ---------- */
+// déroulé
 const familles = [...plagesParFamille.keys()];
 console.log(`\nPolices livrées : ${familles.join(', ')}`);
 for (const [famille, plages] of plagesParFamille) {

@@ -52,7 +52,7 @@ La date de l'actualité est saisie au format ISO ; le site l'affiche en françai
 ## Les fichiers
 
 Ce qui est accepté : **JPEG, PNG, WebP (cinq mégaoctets)** et **PDF (vingt mégaoctets)**.
-Le format est vérifié sur les premiers octets du fichier — un JPEG renommé en `.pdf` est
+Le format est vérifié sur les premiers octets du fichier : un JPEG renommé en `.pdf` est
 refusé. Le nom d'origine est réduit à des caractères sûrs et complété par six caractères
 aléatoires.
 
@@ -78,7 +78,7 @@ Les copies sont conservées trente jours.
 
 Le formulaire de contact enregistre chaque demande dans `donnees/demandes.jsonl` : date,
 nom, courriel, objet, direction destinataire, message, adresse d'origine. **Aucun courriel
-n'est envoyé** : l'Autorité branchera son propre relais le moment venu.
+n'est envoyé** : le relais SMTP reste à brancher par l'Autorité.
 
 ## Sauvegarde
 

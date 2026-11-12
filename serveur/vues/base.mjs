@@ -1,14 +1,12 @@
-/* ARCEP Gabon — socle des pages publiques.
-   Tout ce qui sort d'ici est échappé : les contenus peuvent être modifiés depuis
-   l'administration, ils sont donc traités comme des entrées non fiables. */
+// Socle des vues publiques. Tout ce qui sort d'ici est échappé.
 import { reglages as lireReglages } from '../schema.mjs';
 
-/* ======================= ÉCHAPPEMENT ======================= */
+// Échappement
 export const e = (v) => String(v == null ? '' : v)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-/* Seuls http, https, mailto, tel et les chemins relatifs sont acceptés dans un href. */
+// href : http, https, mailto, tel ou chemin relatif.
 const PROTOCOLES = /^(https?:|mailto:|tel:)/i;
 export const lien = (u) => {
   const v = String(u == null ? '' : u).trim();
@@ -18,19 +16,18 @@ export const lien = (u) => {
   return e(v);
 };
 
-/* Un texte long saisi dans l'administration : les lignes vides séparent les paragraphes. */
+// Texte long : les lignes vides séparent les paragraphes.
 export const paragraphes = (texte, classe = '') =>
   String(texte || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
     .map((p) => `<p${classe ? ` class="${classe}"` : ''}>${e(p).replace(/\n/g, '<br>')}</p>`).join('');
 
-/* ======================= VERSIONS DES FICHIERS ======================= */
-/* Le serveur pose ici l'empreinte de chaque feuille et de chaque script au démarrage :
-   l'adresse change quand le contenu change, et le fichier peut être mis en cache un an. */
+// Versions des fichiers
+// Empreintes des feuilles et scripts, posées par le serveur au démarrage.
 let VERSIONS = {};
 export const poserVersions = (v) => { VERSIONS = v; };
 export const ressource = (chemin) => VERSIONS[chemin] ? `${chemin}?v=${VERSIONS[chemin]}` : chemin;
 
-/* ======================= NAVIGATION ======================= */
+// Navigation
 export const RUBRIQUES = [
   { cle: 'autorite', nom: 'L’ARCEP', chemin: '/autorite', tenue: 'Statut, Conseil de Régulation, organisation, mot du Président.', scene: 'vert-bleu' },
   { cle: 'missions', nom: 'Missions', chemin: '/missions', tenue: 'Les cinq missions confiées à l’Autorité par les textes.', scene: 'bleu' },
@@ -42,9 +39,8 @@ export const RUBRIQUES = [
 ];
 export const rubriqueDe = (cle) => RUBRIQUES.find((r) => r.cle === cle) || null;
 
-/* ======================= ICÔNES ======================= */
-/* Un seul trait, une seule graisse : les symboles sont déclarés une fois et référencés
-   par <use>. */
+// Icônes
+// Icônes déclarées une fois, référencées par <use>.
 const ICONES = {
   fleche: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   diag: '<path d="M7 17 17 7M8 7h9v9"/>',
@@ -69,10 +65,8 @@ export const icone = (nom, classe = 'icone') => `<svg class="${classe}" aria-hid
 const symboles = () => `<svg hidden aria-hidden="true">${Object.entries(ICONES).map(([n, d]) =>
   `<symbol id="i-${n}" viewBox="0 0 24 24">${d}</symbol>`).join('')}</svg>`;
 
-/* ======================= LE SOCLE ======================= */
-/* ecran : la page est rendue à l'intérieur de l'iPhone de l'accueil. Le rendu est le même,
-   mais sans curseur, sans défilement lissé, sans séquence lourde, et les liens gardent
-   le mode d'un clic à l'autre. */
+// Le socle
+// ecran : rendu dans l'iPhone de l'accueil (sans curseur, ni lissage, ni séquence d'entrée) ; les liens gardent le mode.
 export function socle({ D, titre, description, cle = '', corps, scene = 'foret', tonalite = 'sombre',
   chemin = '/', image = '', jsonld = null, ecran = false, canonique = '' }) {
   const R = lireReglages(D);
@@ -180,7 +174,7 @@ ${ecran ? '' : `<script defer src="${ressource('/js/vendor/gsap.min.js')}"></scr
 `;
 }
 
-/* ======================= LE PIED ======================= */
+// Le pied
 function pied(D, R) {
   const I = D.institution;
   const annee = new Date().getFullYear();
@@ -229,8 +223,8 @@ function pied(D, R) {
 </footer>`;
 }
 
-/* ======================= FRAGMENTS PARTAGÉS ======================= */
-/* L'en-tête d'une page intérieure : un titre, une phrase, une scène. */
+// Fragments partagés
+// En-tête d'une page intérieure.
 export function entete({ titre, chapo, scene = 'vert-bleu', complement = '' }) {
   return `<section class="entete section" data-scene="${e(scene)}" data-tonalite="sombre">
   <span class="trame" aria-hidden="true"></span>
@@ -256,7 +250,7 @@ export function sectionTete({ titre, chapo, action = '', niveau = 2, classe = ''
 
 export const couture = (vers) => `<div class="couture" aria-hidden="true" style="--vers:${vers}"></div>`;
 
-/* Une date française ("vendredi 21 août 2026") vers ISO, pour trier et pour les métadonnées. */
+// Date française vers ISO.
 const MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
 export function dateIso(texte) {
   const m = /(\d{1,2})\s+([a-zéû]+)\s+(\d{4})/i.exec(String(texte || '').toLowerCase());
@@ -272,7 +266,7 @@ export function dateLisible(iso) {
   return `${j} ${MOIS[m - 1]} ${a}`;
 }
 
-/* Les actualités visibles du public : publiées, et dont la date de publication est passée. */
+// Publiées, date de publication passée.
 export function actualitesPubliees(D, maintenant = new Date()) {
   const now = maintenant.toISOString().slice(0, 10);
   return D.actualites

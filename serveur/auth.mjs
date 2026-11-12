@@ -1,15 +1,5 @@
-/* ARCEP Gabon — authentification de l'espace d'administration.
-   Aucune dépendance : scrypt et randomBytes viennent de node:crypto.
-
-   Ce qui est en place :
-   — mots de passe dérivés par scrypt, sel unique par compte, comparaison à temps constant ;
-   — sessions en mémoire, cookie httpOnly, SameSite=Strict, expiration glissante ;
-   — jeton anti-rejeu (CSRF) lié à la session, exigé sur toute écriture ;
-   — limitation des tentatives par identifiant et par adresse ;
-   — deux rôles : administrateur (tout) et rédacteur (les contenus).
-
-   Les sessions vivent en mémoire : un redémarrage du serveur déconnecte les administrateurs.
-   C'est assumé pour un back-office à quelques comptes, et cela évite de stocker des jetons. */
+// Authentification de l'administration : scrypt, sessions en mémoire, jeton CSRF, limitation des tentatives, rôles.
+// Sessions en mémoire : un redémarrage déconnecte tous les comptes.
 import { randomBytes, scrypt as scryptRappel, timingSafeEqual } from 'node:crypto';
 import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -30,11 +20,11 @@ export const REGLAGES = {
 
 export const ROLES = ['administrateur', 'redacteur'];
 
-/* ======================= COMPTES ======================= */
+// Comptes
 async function chargerComptes() {
   if (!existsSync(COMPTES)) return [];
   const comptes = JSON.parse(await readFile(COMPTES, 'utf8'));
-  /* Les comptes créés avant l'arrivée des rôles sont administrateurs. */
+  // Comptes antérieurs aux rôles : administrateurs.
   for (const c of comptes) if (!ROLES.includes(c.role)) c.role = 'administrateur';
   return comptes;
 }
@@ -100,7 +90,7 @@ export async function changerMotDePasse(identifiant, actuel, nouveau) {
   await enregistrerComptes(comptes);
 }
 
-/* Un administrateur peut réinitialiser le mot de passe d'un autre compte sans connaître l'ancien. */
+// Réinitialisation par un administrateur, sans l'ancien mot de passe.
 export async function reinitialiserMotDePasse(identifiant, nouveau) {
   if (nouveau.length < REGLAGES.motDePasseMin) throw new Error(`Le mot de passe doit faire au moins ${REGLAGES.motDePasseMin} caractères.`);
   const comptes = await chargerComptes();
@@ -115,7 +105,7 @@ export async function aucunCompte() {
   return (await chargerComptes()).length === 0;
 }
 
-/* ======================= TENTATIVES ======================= */
+// Tentatives
 const tentatives = new Map();
 
 function tropDeTentatives(cle) {
@@ -134,7 +124,7 @@ function noterEchec(cle) {
   }
 }
 
-/* ======================= VÉRIFICATION ======================= */
+// Vérification
 export async function verifier(identifiant, motDePasse, adresse = '') {
   const cle = identifiant + '|' + adresse;
   if (tropDeTentatives(cle)) {
@@ -143,8 +133,7 @@ export async function verifier(identifiant, motDePasse, adresse = '') {
   const comptes = await chargerComptes();
   const compte = comptes.find((c) => c.identifiant === identifiant);
 
-  /* On dérive même sans compte trouvé : le temps de réponse ne révèle pas l'existence
-     d'un identifiant. */
+  // Dériver même sans compte trouvé : temps de réponse constant.
   const sel = compte ? compte.sel : randomBytes(16).toString('hex');
   const candidat = await deriver(motDePasse, sel);
   const attendu = compte ? Buffer.from(compte.empreinte, 'hex') : randomBytes(64);
@@ -155,7 +144,7 @@ export async function verifier(identifiant, motDePasse, adresse = '') {
   return { ok: true, compte: { identifiant: compte.identifiant, nom: compte.nom, role: compte.role } };
 }
 
-/* ======================= SESSIONS ======================= */
+// Sessions
 const sessions = new Map();
 
 export function ouvrirSession(compte) {
@@ -179,19 +168,19 @@ export function session(jeton) {
 
 export function fermerSession(jeton) { sessions.delete(jeton); }
 
-/* Après un changement de rôle ou une suppression, les sessions du compte sont closes. */
+// Changement de rôle ou suppression : sessions du compte closes.
 export function fermerSessionsDe(identifiant) {
   for (const [jeton, s] of sessions) if (s.compte.identifiant === identifiant) sessions.delete(jeton);
 }
 
-/* Ménage périodique des sessions expirées et des tentatives anciennes. */
+// Purge des sessions expirées et des tentatives anciennes.
 setInterval(() => {
   const maintenant = Date.now();
   for (const [jeton, s] of sessions) if (maintenant > s.expire) sessions.delete(jeton);
   for (const [cle, t] of tentatives) if (maintenant - t.depuis > REGLAGES.fenetreTentatives) tentatives.delete(cle);
 }, 15 * 60 * 1000).unref();
 
-/* ======================= COOKIES ======================= */
+// Cookies
 export function lireCookies(entete = '') {
   const sortie = {};
   for (const part of entete.split(';')) {
@@ -202,8 +191,7 @@ export function lireCookies(entete = '') {
   return sortie;
 }
 
-/* Derrière un HTTPS, le cookie porte le préfixe __Host- : le navigateur refuse alors qu'il
-   soit posé par un autre hôte ou sans l'attribut Secure. */
+// Derrière HTTPS : préfixe __Host- (Secure obligatoire, sans Domain, Path=/).
 export const nomCookie = (securise) => (securise ? '__Host-' : '') + REGLAGES.cookie;
 
 export function cookieSession(jeton, securise) {
@@ -224,7 +212,7 @@ export function cookieEfface(securise) {
   return parts.join('; ');
 }
 
-/* Le jeton anti-rejeu est comparé à temps constant, comme le mot de passe. */
+// Comparaison à temps constant.
 export function csrfValide(s, fourni) {
   if (!s || !fourni) return false;
   const a = Buffer.from(String(s.csrf));

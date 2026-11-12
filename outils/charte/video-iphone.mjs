@@ -1,12 +1,8 @@
-/* ARCEP Gabon — la vidéo de l'iPhone.
-   Enregistre le site mobile qui défile lentement, page après page, au format réel de
-   l'écran du 17 Pro Max (440 × 956 points, ici rendus à 1,5 pixel par point), sans barre
-   de défilement, puis l'encode en WebM (VP9) dans Chrome par WebCodecs. Écrit :
-     public/assets/iphone-defilement.webm   la vidéo
-     public/assets/iphone-affiche.jpg       la première image, affichée avant lecture
-     public/assets/iphone-defilement.json   le début de chaque page, en secondes
-
-   Le serveur doit tourner. node outils/charte/video-iphone.mjs [base] [--vitesse 260] [--ips 24] */
+// Vidéo du site mobile pour l'écran de l'iPhone de l'accueil : pages capturées en mode ?ecran=1 à 440 x 956 (1,5 px par point),
+// défilement lent, encodage VP9/WebM par WebCodecs. Écrit public/assets/iphone-defilement.webm, iphone-affiche.jpg
+// (première image) et iphone-defilement.json (début de chaque page en secondes). Serveur lancé.
+// node outils/charte/video-iphone.mjs [base] [--vitesse 300] [--ips 24] [--debit 950]
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { mkdir, writeFile, rm, readdir } from 'node:fs/promises';
 import { setTimeout as attendre } from 'node:timers/promises';
@@ -19,10 +15,9 @@ const IPS = option('ips', 24);
 const ECHELLE = 1.5;
 const L = 440, H = 956;
 const DEBIT = option('debit', 950) * 1000;  // bits par seconde
-const DOSSIER = `${process.env.TEMP || 'C:/Temp'}/arcep-video-${Date.now()}`;
+const DOSSIER = `${tmpdir()}/arcep-video-${Date.now()}`;
 
-/* Les pages, et la hauteur de défilement retenue pour chacune : l'accueil en entier,
-   les autres jusqu'à un plafond, pour que la vidéo reste courte. */
+// hauteur de défilement par page, plafonnée pour garder la vidéo courte
 const PAGES = [
   { route: '/', plafond: Infinity, pause: 1.6 },
   { route: '/missions', plafond: 1800, pause: 1.2 },
@@ -32,10 +27,10 @@ const PAGES = [
   { route: '/contact', plafond: Infinity, pause: 1.6 },
 ];
 
-/* ======================= CHROME ======================= */
+// Chrome
 async function ouvrirChrome(taille) {
   const port = 9400 + Math.floor(Math.random() * 400);
-  const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
+  const chrome = spawn(CHROME, [
     '--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', '--no-default-browser-check', '--disable-extensions',
     '--allow-file-access-from-files', '--autoplay-policy=no-user-gesture-required',
     `--remote-debugging-port=${port}`, `--user-data-dir=${DOSSIER}/profil-${port}`, `--window-size=${taille}`, 'about:blank',
@@ -56,7 +51,7 @@ async function ouvrirChrome(taille) {
   return { envoyer, evaluer, fermer: () => { try { ws.close(); } catch { /* fermé */ } chrome.kill(); } };
 }
 
-/* ======================= 1. CAPTURE ======================= */
+// 1. Capture
 await mkdir(DOSSIER, { recursive: true });
 const cdp = await ouvrirChrome(`${L},${H}`);
 await cdp.envoyer('Page.enable'); await cdp.envoyer('Runtime.enable');
@@ -69,7 +64,7 @@ const capturer = async () => {
   const { data } = (await cdp.envoyer('Page.captureScreenshot', { format: 'jpeg', quality: 92 })).result;
   await writeFile(`${DOSSIER}/i${String(numero++).padStart(5, '0')}.jpg`, Buffer.from(data, 'base64'));
 };
-/* Un déplacement de défilement suit une courbe douce au départ et à l'arrivée. */
+// easing au départ et à l'arrivée
 const doux = (t) => (t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 
 console.log(`\nARCEP — vidéo de l'iPhone · ${L}×${H} à ${ECHELLE}x · ${IPS} i/s · ${VITESSE} px/s\n${'='.repeat(52)}`);
@@ -79,7 +74,7 @@ for (const page of PAGES) {
   await attendre(1500);
   await cdp.envoyer('Page.captureScreenshot', { format: 'jpeg', quality: 50 });
   await attendre(800);
-  /* Les visuels paresseux sont chargés d'avance : on descend, on remonte. */
+  // précharge les images paresseuses
   const total = await cdp.evaluer('document.documentElement.scrollHeight - window.innerHeight');
   for (let y = 0; y < total; y += 700) { await cdp.evaluer(`window.scrollTo(0, ${y})`); await attendre(60); }
   await cdp.evaluer('window.scrollTo(0, 0)');
@@ -89,7 +84,7 @@ for (const page of PAGES) {
   const pauseImages = Math.round(page.pause * IPS);
   for (let i = 0; i < pauseImages; i++) await capturer();
   for (let i = 1; i <= images; i++) {
-    /* Une légère douceur aux extrémités, une vitesse constante entre les deux. */
+    // accélération et freinage aux extrémités, vitesse constante entre les deux
     const p = i / images;
     const y = course * (p < .08 ? doux(p / .16) * .08 : p > .92 ? .92 + doux(.5 + (p - .92) / .16) * .08 : p);
     await cdp.evaluer(`window.scrollTo(0, ${Math.round(y)})`);
@@ -102,11 +97,11 @@ cdp.fermer();
 const total = numero;
 console.log(`  ${total} images · ${(total / IPS).toFixed(1)} s`);
 
-/* ======================= 2. ENCODAGE ======================= */
-/* Une page vierge, ouverte depuis le disque, charge les images une à une, les encode en
-   VP9 par WebCodecs et les assemble en WebM avec webm-muxer, qui écrit durée et index. */
+// 2. Encodage
+// page locale : décode les images, encode en VP9 (WebCodecs), muxe en WebM (webm-muxer)
 const pageEncodeur = `<!doctype html><meta charset="utf-8"><script type="module">
 import { Muxer, ArrayBufferTarget } from 'https://cdn.jsdelivr.net/npm/webm-muxer@5.0.3/build/webm-muxer.mjs';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 window.encoder = async (dossier, total, ips, largeur, hauteur, debit) => {
   const muxer = new Muxer({ target: new ArrayBufferTarget(), video: { codec: 'V_VP9', width: largeur, height: hauteur, frameRate: ips } });
   const encodeur = new VideoEncoder({ output: (morceau, meta) => muxer.addVideoChunk(morceau, meta), error: (e) => { window.erreur = String(e); } });
@@ -147,7 +142,7 @@ enc.fermer();
 if (erreur || !base64) { console.error('échec de l’encodage :', erreur); process.exit(1); }
 await writeFile('public/assets/iphone-defilement.webm', Buffer.from(base64, 'base64'));
 
-/* L'affiche : la première image, telle quelle. */
+// affiche = première image
 const premiere = (await readdir(DOSSIER)).find((f) => f === 'i00000.jpg');
 if (premiere) await writeFile('public/assets/iphone-affiche.jpg', await (await import('node:fs/promises')).readFile(`${DOSSIER}/${premiere}`));
 await writeFile('public/assets/iphone-defilement.json', JSON.stringify(segments), 'utf8');

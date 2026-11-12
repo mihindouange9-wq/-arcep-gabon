@@ -1,29 +1,16 @@
-/* ARCEP Gabon — hygiène des feuilles de style.
-
-   Deux contrôles, tous deux statiques :
-     1. les classes déclarées dans public/css/ que plus aucune vue ni aucun script
-        n'emploie — du poids mort après chaque remaniement ;
-     2. les variables déclarées dans :root que plus aucune règle ne consomme.
-
-   node outils/controle/verif-css.mjs
-
-   La lecture des sources est volontairement littérale : on cherche le nom de classe dans
-   le code des vues. Une classe composée à l'exécution échapperait au contrôle ; elles sont
-   donc listées ci-dessous, à la main, avec la raison. */
+// Classes déclarées dans public/css/ et jamais employées dans les vues ni les scripts ; variables :root jamais consommées.
+// Les classes composées à l'exécution sont listées dans POSEES. node outils/controle/verif-css.mjs
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-/* polices.css est volontairement hors périmètre : il ne déclare ni classe ni variable, et
-   les « .woff2 » de ses url() seraient relevés comme des classes orphelines. */
+// polices.css exclu : ni classe ni variable, et les .woff2 des url() ressortiraient comme des classes
 const FEUILLES = ['public/css/systeme.css', 'public/css/site.css', 'public/css/admin.css'];
 
-/* Les sources qui peuvent nommer une classe : les vues rendues par le serveur et les
-   scripts du navigateur. */
+// sources pouvant nommer une classe
 const fichiers = (d) => readdirSync(d).map((f) => join(d, f)).filter((f) => statSync(f).isFile());
 const SOURCES = [...fichiers('serveur/vues'), 'serveur/schema.mjs', ...fichiers('public/js'), ...fichiers('public/js/modules')];
 
-/* Classes posées à l'exécution ou produites par le découpage des titres : elles
-   n'apparaissent pas telles quelles dans les sources. */
+// classes posées à l'exécution ou créées par SplitText
 const POSEES = new Map([
   ['vu', 'posée à l’entrée dans le champ par revelations.mjs et donnees.mjs'],
   ['pret', 'posée par revelations.mjs et hero.mjs une fois les états de départ appliqués'],
@@ -58,13 +45,11 @@ const POSEES = new Map([
 const source = SOURCES.map((f) => readFileSync(f, 'utf8')).join('\n');
 const css = FEUILLES.map((f) => readFileSync(f, 'utf8')).join('\n');
 
-/* ---------- 1. classes orphelines ---------- */
+// 1. classes orphelines
 const classes = new Set();
 for (const trouve of css.matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)) classes.add(trouve[1]);
 
-/* On ne cherche pas le nom n'importe où dans la source : on relève les jetons réellement
-   posés dans un attribut class, puis ceux manipulés par les scripts. Sans cela, « page »
-   serait déclaré employé parce que le mot apparaît dans un commentaire. */
+// jetons des attributs class et des appels classList / querySelector, pas une recherche libre dans la source
 const employesParLesVues = new Set();
 for (const attribut of source.matchAll(/class="([^"]*)"/g)) {
   for (const jeton of attribut[1].split(/[\s${}`'"()]+/)) if (jeton) employesParLesVues.add(jeton);
@@ -77,14 +62,14 @@ const orphelines = [...classes]
   .filter((c) => !POSEES.has(c) && !employesParLesVues.has(c))
   .sort();
 
-/* ---------- 2. variables orphelines ---------- */
+// 2. variables orphelines
 const declarees = new Set();
 for (const trouve of css.matchAll(/^\s*(--[\w-]+)\s*:/gm)) declarees.add(trouve[1]);
 const employees = new Set();
 for (const trouve of css.matchAll(/var\(\s*(--[\w-]+)/g)) employees.add(trouve[1]);
 const jetonsOrphelins = [...declarees].filter((v) => !employees.has(v)).sort();
 
-/* ---------- rapport ---------- */
+// rapport
 let anomalies = 0;
 
 console.log('\nClasses déclarées : ' + classes.size);

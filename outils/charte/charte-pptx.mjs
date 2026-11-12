@@ -1,7 +1,6 @@
-/* Charte au format PowerPoint : une planche par diapositive (16:9, 12,5 × 7,03 pouces).
-   Les planches sont d'abord capturées par outils/charte/charte-shots.mjs (outils/captures/charte/pNN.jpg).
-   node outils/charte/charte-pptx.mjs [sortie.pptx]
-   Le fichier est écrit à la main (archive ZIP sans compression + OOXML minimal) : aucune dépendance. */
+// Charte au format PowerPoint : une planche capturée (outils/captures/charte/pNN.jpg, voir charte-shots.mjs) par diapositive 16:9.
+// Archive ZIP et OOXML écrits à la main, sans dépendance.
+// node outils/charte/charte-pptx.mjs [sortie.pptx]
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 
 const OUT = process.argv[2] || 'charte/ARCEP_Gabon_Charte_de_Marque.pptx';
@@ -9,7 +8,7 @@ const DIR = 'outils/captures/charte';
 const pages = readdirSync(DIR).filter((f) => /^p\d\d\.jpg$/.test(f)).sort();
 if (!pages.length) { console.error('aucune planche dans ' + DIR + ' : lancer d’abord node outils/charte/charte-shots.mjs 1'); process.exit(1); }
 
-/* ---------- Archive ZIP (méthode « stockage », sans compression) ---------- */
+// Archive ZIP (méthode stockage, sans compression)
 const table = (() => { const t = new Int32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c; } return t; })();
 const crc32 = (buf) => { let c = -1; for (let i = 0; i < buf.length; i++) c = table[(c ^ buf[i]) & 0xff] ^ (c >>> 8); return (c ^ -1) >>> 0; };
 const zip = (entries) => {
@@ -38,7 +37,7 @@ const zip = (entries) => {
   return Buffer.concat([...chunks, centralBuf, end]);
 };
 
-/* ---------- Dimensions : 1200 × 675 px CSS = 12,5 × 7,03125 pouces = EMU ---------- */
+// 1200 x 675 px CSS = 12,5 x 7,03125 pouces, en EMU
 const EMU = 914400;
 const W = Math.round(12.5 * EMU), H = Math.round(7.03125 * EMU);
 const x = (s) => s.replace(/\n\s+/g, '');
@@ -103,12 +102,12 @@ const slideLayoutRels = x(`<?xml version="1.0" encoding="UTF-8" standalone="yes"
 
 const couleur = (n, v) => `<a:${n}><a:srgbClr val="${v}"/></a:${n}>`;
 const theme = x(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="LBV Production">
+<a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="ARCEP Gabon">
 <a:themeElements>
-<a:clrScheme name="LBV"><a:dk1><a:srgbClr val="0A0A0A"/></a:dk1><a:lt1><a:srgbClr val="E7E3DA"/></a:lt1><a:dk2><a:srgbClr val="161616"/></a:dk2><a:lt2><a:srgbClr val="CFCAC0"/></a:lt2>
+<a:clrScheme name="ARCEP"><a:dk1><a:srgbClr val="0A0A0A"/></a:dk1><a:lt1><a:srgbClr val="E7E3DA"/></a:lt1><a:dk2><a:srgbClr val="161616"/></a:dk2><a:lt2><a:srgbClr val="CFCAC0"/></a:lt2>
 ${couleur('accent1', '7A0A0A')}${couleur('accent2', 'D8261E')}${couleur('accent3', '1C0505')}${couleur('accent4', '8C8A85')}${couleur('accent5', '1E1E1E')}${couleur('accent6', 'F2A03D')}${couleur('hlink', 'D8261E')}${couleur('folHlink', '7A0A0A')}</a:clrScheme>
-<a:fontScheme name="LBV"><a:majorFont><a:latin typeface="Stack Sans Headline"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="Stack Sans Headline"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme>
-<a:fmtScheme name="LBV">
+<a:fontScheme name="ARCEP"><a:majorFont><a:latin typeface="Archivo"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="Archivo"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme>
+<a:fmtScheme name="ARCEP">
 <a:fillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:fillStyleLst>
 <a:lnStyleLst><a:ln w="9525"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="15875"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="25400"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln></a:lnStyleLst>
 <a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle></a:effectStyleLst>

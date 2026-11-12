@@ -1,10 +1,6 @@
-/* ARCEP Gabon — les pages.
-   L'accueil est un récit en scènes chromatiques ; les pages intérieures servent la lecture
-   avec la même grammaire. Les jetons, primitives et l'habillage sont dans systeme.css. */
+/* Pages. Jetons et primitives dans systeme.css. */
 
-/* =========================================================================================
-   HERO
-   ========================================================================================= */
+/* Hero */
 .hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--chrome) + 2.5rem) 0 clamp(1.5rem, 4vh, 3rem); }
 .hero-reseau { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.4s var(--e-sortie); }
 .hero.pret .hero-reseau { opacity: 1; }
@@ -35,9 +31,7 @@
 .js [data-hero] { opacity: 0; }
 .js .hero.pret [data-hero] { opacity: 1; }
 
-/* =========================================================================================
-   IDENTITÉ
-   ========================================================================================= */
+/* Identité */
 .identite-cadre { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(2.5rem, 6vw, 6rem); align-items: center; }
 .identite-texte { display: grid; gap: 1.6rem; }
 .identite-media { display: grid; gap: 1.5rem; }
@@ -57,9 +51,7 @@
 .duo > div { display: grid; gap: 1.5rem; align-content: start; }
 .duo--inverse { align-items: center; }
 
-/* =========================================================================================
-   MISSIONS (accueil)
-   ========================================================================================= */
+/* Missions de l'accueil */
 .missions { border-top: 1px solid var(--filet); }
 .mission { border-bottom: 1px solid var(--filet); }
 .mission-ouvrir {
@@ -85,9 +77,7 @@ dialog.dialogue .badge { margin-bottom: 1rem; }
 dialog.dialogue .chapo { margin-top: .8rem; }
 dialog.dialogue .points { margin-block: 1.6rem; }
 
-/* =========================================================================================
-   MOTS-CLÉS
-   ========================================================================================= */
+/* Mots-clés */
 .mots { padding: 0; }
 .mots-onde { position: absolute; inset: -4%; opacity: .5; }
 .onde path { fill: none; stroke: var(--vert-lumineux); vector-effect: non-scaling-stroke; }
@@ -99,7 +89,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .js .onde.vu path { animation: onde-tracer 2.4s var(--e-doux) forwards calc(var(--rang) * 160ms); }
 @keyframes onde-tracer { to { stroke-dashoffset: 0; } }
 .mots-scene { position: relative; min-height: 100svh; display: grid; place-items: center; padding-block: var(--section); }
-/* « clip » rogne sans créer de conteneur de défilement : la scène collante reste collante. */
+/* overflow: clip et non hidden, sinon le sticky de la scène est annulé */
 .mots--cinema { min-height: calc(100vh + var(--etapes, 4) * 70vh); overflow: clip; }
 .mots--cinema .mots-scene { position: sticky; top: 0; height: 100vh; padding-block: 0; }
 .mots-cadre { display: grid; gap: 3rem; text-align: center; justify-items: center; }
@@ -112,9 +102,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .js .mots--statique .mots-mot { position: static; transform: none; opacity: 1; white-space: normal; }
 .mots-texte { text-align: center; max-width: 48ch; }
 
-/* =========================================================================================
-   CHIFFRES ET GRAPHIQUES
-   ========================================================================================= */
+/* Chiffres et graphiques */
 .chiffres { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--filet-2); border-radius: var(--rayon-3); overflow: hidden; }
 .chiffre { display: grid; gap: .5rem; align-content: start; padding: clamp(1.4rem, 2.6vw, 2.2rem); background: var(--surface); position: relative; }
 [data-tonalite="sombre"] .chiffre { background: color-mix(in srgb, var(--surface) 82%, #000); }
@@ -135,7 +123,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .graphique figcaption { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1rem; }
 
 .barres { display: grid; gap: .55rem; }
-.barre { display: grid; grid-template-columns: 9rem minmax(0, 1fr) 2.5rem; gap: 1rem; align-items: center; font-size: var(--t-2); }
+.barre { display: grid; grid-template-columns: 11rem minmax(0, 1fr) 2.5rem; gap: 1rem; align-items: center; font-size: var(--t-2); }
 .barre-nom { color: var(--texte-2); transition: color var(--d-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .barre:hover .barre-nom { color: var(--accent); }
 .barre-piste { display: block; height: 10px; border-radius: 5px; background: var(--filet-2); overflow: hidden; }
@@ -146,7 +134,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 
 .couverture { display: grid; gap: 4px; font-size: var(--t-1); }
 .couverture-annees, .couverture-trimestres, .couverture-ligne { display: grid; grid-template-columns: 6.5rem; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; align-items: center; }
-.couverture-annee { grid-column: span var(--n); font-family: var(--mono); font-size: var(--t-0); letter-spacing: .08em; color: var(--texte); padding-bottom: .2rem; border-bottom: 1px solid var(--filet); margin-inline: 2px; }
+.couverture-annee { grid-column: span var(--n); font-family: var(--mono); font-size: var(--t-0); letter-spacing: .08em; color: var(--texte); padding-bottom: .2rem; border-bottom: 1px solid var(--filet); margin-inline: 2px; white-space: nowrap; }
 .couverture-trimestre { font-family: var(--mono); font-size: .65rem; text-align: center; color: var(--texte-2); }
 .couverture-marche { font-weight: 600; }
 .couverture-case { display: block; aspect-ratio: 1; border-radius: 6px; background: color-mix(in srgb, var(--accent) 22%, transparent); position: relative; transition: transform var(--d-2) var(--e-sortie), background var(--d-2); }
@@ -157,19 +145,19 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .js .couverture:not(.vu) .couverture-case i { transform: scale(0); }
 .js .couverture.vu .couverture-case i { transition: transform .8s var(--e-sortie) calc(var(--rang, 0) * 25ms); }
 .couverture-legende { margin-top: .6rem; }
+/* Infobulles des colonnes de bord : ancrées sur la case, sinon la section les rogne */
+.couverture-case:nth-child(-n+4)::after { left: 0; transform: translate(0, 4px); }
+.couverture-case:nth-last-child(-n+4)::after { left: auto; right: 0; transform: translate(0, 4px); }
+.couverture-case:nth-child(-n+4):hover::after, .couverture-case:nth-child(-n+4):focus-visible::after, .couverture-case:nth-last-child(-n+4):hover::after, .couverture-case:nth-last-child(-n+4):focus-visible::after { transform: translate(0, 0); }
 
-/* =========================================================================================
-   OBSERVATOIRE (accueil) ET MARCHÉS
-   ========================================================================================= */
+/* Observatoire et marchés */
 .marches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
 .marche { gap: .6rem; min-height: 15rem; }
 .marche-icone { width: 3rem; height: 3rem; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); margin-bottom: auto; }
 .marche-icone .icone { width: 1.4rem; height: 1.4rem; }
 .marche-dernier { display: inline-flex; align-items: center; gap: .6rem; font-size: var(--t-2); color: var(--texte); }
 
-/* =========================================================================================
-   RÉGLEMENTATION (accueil) ET CATÉGORIES
-   ========================================================================================= */
+/* Réglementation et catégories */
 .recherche--grande { display: flex; align-items: center; gap: .5rem; max-width: 46rem; padding: .35rem .35rem .35rem 0; border-radius: var(--rayon-rond); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--filet); margin-bottom: clamp(2rem, 4vw, 3rem); transition: box-shadow var(--d-2); }
 .recherche--grande:focus-within { box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
 .recherche--grande input { flex: 1; min-width: 0; min-height: 3.25rem; padding-left: 3.4rem; background: transparent; border: 0; color: var(--texte); font-size: var(--t-3); }
@@ -184,9 +172,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .categorie-nom { font-weight: 600; font-size: var(--t-2); }
 .categorie-nombre { font-family: var(--mono); font-size: var(--t-1); color: var(--accent-or); }
 
-/* =========================================================================================
-   ÉCRAN — iPHONE 17 PRO MAX
-   ========================================================================================= */
+/* Écran (TÉLÉPHONE) */
 .ecran { --a: var(--vert-foret); --b: var(--vert-profond); padding: 0; background: linear-gradient(165deg, var(--a) 0%, var(--b) 100%); }
 .ecran-fond { position: absolute; inset: 0; pointer-events: none; }
 .ecran-lueur { top: -20vmax; left: -10vmax; --lueur: rgba(63, 169, 245, .25); }
@@ -223,8 +209,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .iphone-ecran { position: absolute; inset: calc(var(--l) * .03); border-radius: calc(var(--r) - var(--l) * .03); overflow: hidden; background: #0a2a1a; isolation: isolate; }
 .iphone-ilot { position: absolute; left: 50%; top: calc(var(--l) * .035); width: calc(var(--l) * .29); height: calc(var(--l) * .082); transform: translateX(-50%); border-radius: var(--rayon-rond); background: #000; z-index: 3; box-shadow: 0 0 0 1px rgba(255, 255, 255, .06); }
 .iphone-ilot::after { content: ""; position: absolute; right: 9%; top: 50%; width: 22%; aspect-ratio: 1; border-radius: 50%; transform: translateY(-50%); background: radial-gradient(circle at 40% 35%, #1e2a44, #050810 70%); }
-/* L'écran joue une vidéo du site mobile, enregistrée au format réel du 17 Pro Max
-   (440 × 956 points) et qui défile lentement : ce que l'on voit est le vrai site. */
+/* Vidéo du site mobile (440 x 956) */
 .iphone-vue { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; border: 0; background: #0a2a1a; z-index: 1; pointer-events: none; }
 .iphone-statut { position: absolute; z-index: 3; left: calc(var(--l) * .1); right: calc(var(--l) * .08); top: calc(var(--l) * .045); display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: calc(var(--l) * .047); font-weight: 600; letter-spacing: -.01em; pointer-events: none; }
 .iphone-statut-icones { display: flex; align-items: center; gap: calc(var(--l) * .015); }
@@ -238,9 +223,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .iphone-ombre { position: absolute; left: 8%; right: 8%; bottom: -8%; height: 12%; border-radius: 50%; background: radial-gradient(ellipse, rgba(0, 0, 0, .55), transparent 70%); filter: blur(12px); z-index: -1; }
 .js .iphone { transform-origin: center center; }
 
-/* =========================================================================================
-   ACTUALITÉS
-   ========================================================================================= */
+/* Actualités */
 .visuel { display: block; position: relative; overflow: hidden; border-radius: var(--rayon-2); background: var(--gris-chaud); aspect-ratio: 16 / 10; }
 [data-tonalite="sombre"] .visuel { background: rgba(255, 255, 255, .06); }
 .visuel img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--e-sortie); }
@@ -286,9 +269,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .apercu-bandeau { position: fixed; left: 50%; bottom: 1rem; transform: translateX(-50%); z-index: 650; max-width: calc(100% - 2rem); padding: .7rem 1.1rem; border-radius: var(--rayon-rond); background: var(--jaune); color: var(--encre); font-size: var(--t-1); font-weight: 600; box-shadow: var(--ombre-2); }
 .articles--trois { margin-top: 0; }
 
-/* =========================================================================================
-   CONSOMMATEURS
-   ========================================================================================= */
+/* Consommateurs */
 .consommateurs-cadre { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr); gap: clamp(2.5rem, 6vw, 6rem); align-items: start; }
 .consommateurs-texte { display: grid; gap: 1.5rem; }
 .numero { display: grid; gap: 1rem; padding: clamp(1.6rem, 3vw, 2.6rem); border-radius: var(--rayon-3); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--filet-2), var(--ombre-2); position: sticky; top: calc(var(--chrome) + 1.5rem); }
@@ -320,9 +301,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .faq details[hidden] { display: none; }
 .faq .vide { padding: 2rem 0; }
 
-/* =========================================================================================
-   CONTACT
-   ========================================================================================= */
+/* Contact */
 .contact-cadre { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2.5rem, 6vw, 6rem); align-items: start; }
 .contact-cadre > div { display: grid; gap: 1.5rem; }
 .coordonnees { display: grid; }
@@ -336,19 +315,17 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .contact-page { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.3fr); gap: clamp(2.5rem, 6vw, 6rem); align-items: start; }
 .contact-page-cote { display: grid; gap: 1.5rem; }
 .contact-page-note { font-family: var(--serif); color: var(--texte-2); line-height: 1.55; }
-.contact-page-formulaire { display: grid; gap: 1.6rem; padding: clamp(1.6rem, 3.5vw, 3rem); border-radius: var(--rayon-3); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--filet-2), var(--ombre-2); }
+.contact-page-formulaire { scroll-margin-top: calc(var(--chrome) + 1rem); display: grid; gap: 1.6rem; padding: clamp(1.6rem, 3.5vw, 3rem); border-radius: var(--rayon-3); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--filet-2), var(--ombre-2); }
 .formulaire { display: grid; gap: 1.2rem; }
 .formulaire-ligne { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
 .formulaire-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: .4rem; }
 .formulaire-actions .aide { font-size: var(--t-1); color: var(--texte-2); max-width: 28ch; }
 
-/* =========================================================================================
-   EN-TÊTES DE PAGE ET SOMMAIRES
-   ========================================================================================= */
+/* En-têtes de page et sommaires */
 .entete-lueur { top: -30vmax; right: -10vmax; }
 .entete-lueur-2 { bottom: -40vmax; left: -20vmax; }
 .entete { padding-top: calc(var(--chrome) + clamp(3rem, 8vh, 6rem)); padding-bottom: clamp(3rem, 6vw, 5rem); }
-.entete-cadre { display: grid; gap: 1.4rem; }
+.entete-cadre { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
 .entete .titre-1 { max-width: 16ch; }
 .entete .chapo { max-width: 52ch; }
 .sommaire { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
@@ -359,9 +336,7 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .sommaire--grand a span:last-child { font-family: var(--serif); color: var(--texte-2); }
 .sommaire--grand a:hover { background: var(--surface-2); color: var(--texte); box-shadow: inset 0 0 0 1px var(--filet), var(--ombre-2); }
 
-/* =========================================================================================
-   PAGES INTÉRIEURES
-   ========================================================================================= */
+/* Pages intérieures */
 .directions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--gap); }
 .direction { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 1rem; padding: 1rem 0; border-top: 1px solid var(--filet-2); font-size: var(--t-3); font-weight: 500; align-items: baseline; transition: color var(--d-2); }
 .direction:hover { color: var(--accent); }
@@ -410,13 +385,13 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 .texte-action { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.5rem; padding: 0 .8rem; border-radius: var(--rayon-rond); font-size: var(--t-1); font-weight: 600; color: var(--accent); box-shadow: inset 0 0 0 1px var(--filet-2); transition: background var(--d-2), color var(--d-2), box-shadow var(--d-2); }
 .texte-action:hover { background: var(--accent); color: var(--blanc); box-shadow: none; }
 .texte-action--vide { color: var(--texte-2); box-shadow: none; }
+.texte-action[data-infobulle]::after { left: auto; right: 0; transform: translate(0, 4px); }
+.texte-action[data-infobulle]:hover::after, .texte-action[data-infobulle]:focus-visible::after { transform: translate(0, 0); }
 .vide { padding: 2rem 0; font-family: var(--serif); color: var(--texte-2); }
 .vide[hidden] { display: none; }
 .badge { align-self: start; justify-self: start; }
 
-/* =========================================================================================
-   RESPONSIVE
-   ========================================================================================= */
+/* Responsive */
 @media (max-width: 1180px) {
   .chiffres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .graphiques { grid-template-columns: minmax(0, 1fr); }
@@ -445,12 +420,14 @@ dialog.dialogue .points { margin-block: 1.6rem; }
 }
 @media (max-width: 720px) {
   .hero { padding-top: calc(var(--chrome) + 2rem); justify-content: flex-start; }
-  .hero-titre { font-size: clamp(2.4rem, 11vw, 3.4rem); max-width: none; }
+  .hero-titre { font-size: clamp(2rem, 10vw, 3.4rem); max-width: none; }
+  .entete .titre-1 { font-size: clamp(2rem, 10.4vw, 3.4rem); }
   .chiffres, .marches, .articles, .categories, .partenaires, .droits, .demarches--grille, .sommaire--grand, .formulaire-ligne { grid-template-columns: minmax(0, 1fr); }
   .chiffres { border-radius: var(--rayon-2); }
-  .recherche--grande { flex-wrap: wrap; padding: .5rem; }
+  .recherche--grande { flex-wrap: wrap; padding: .5rem; border-radius: var(--rayon-3); }
   .recherche--grande input { padding-left: 3rem; width: 100%; }
   .recherche--grande .bouton { width: 100%; }
+  .recherche--grande .icone { top: 2.125rem; }
   .publication-lien, .texte { grid-template-columns: minmax(0, 1fr); gap: .5rem; }
   .publication-periode, .texte-periode { display: flex; gap: .8rem; }
   .fiche > div, .coordonnees > div { grid-template-columns: minmax(0, 1fr); gap: .3rem; }

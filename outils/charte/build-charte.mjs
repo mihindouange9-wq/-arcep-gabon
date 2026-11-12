@@ -1,10 +1,9 @@
-/* Compose charte/index.html : la charte de marque de l'ARCEP Gabon, une planche 16:9 par page.
-   Les couleurs proviennent de la mesure du logo officiel (charte/palette-logo.json), produite
-   par outils/charte/palette-logo.mjs. Rien n'est estimé à l'œil.
-   node outils/charte/build-charte.mjs */
+// Compose charte/index.html, la charte de marque : une planche 16:9 par page.
+// Les couleurs viennent de charte/palette-logo.json (mesure du logo par palette-logo.mjs).
+// node outils/charte/build-charte.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 
-/* ---------- Palette mesurée sur le logo ---------- */
+// Palette mesurée sur le logo
 const mesures = JSON.parse(readFileSync('charte/palette-logo.json', 'utf8'));
 const trouver = (hex) => mesures.find((m) => m.hex.toLowerCase() === hex.toLowerCase()) || null;
 
@@ -41,7 +40,7 @@ const SOMMAIRE = [
 
 const e = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-/* ---------- Contraste, calculé ---------- */
+// Contraste
 const lum = (hex) => {
   const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
     .map((v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
@@ -62,7 +61,7 @@ const cmjn = (hex) => {
 };
 const rvb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ');
 
-/* ---------- Le motif d'onde, dérivé de l'arc du logo ---------- */
+// Motif d'onde dérivé de l'arc du logo
 const onde = (opacite = 1, couleur = '#5fbf65') => `
       <svg viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
         ${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M-120 ${700 + i * 26} C 220 ${420 - i * 52} 620 ${330 - i * 46} 1320 ${120 - i * 30}" stroke="${couleur}" stroke-width="${1.4 - i * 0.12}" opacity="${(opacite * (1 - i * 0.13)).toFixed(2)}"/>`).join('\n        ')}
@@ -89,7 +88,7 @@ ${corps}
 
 const planches = [];
 
-/* 01 — Couverture */
+// 01 Couverture
 numero++;
 planches.push(`
   <section class="page couverture">
@@ -104,7 +103,7 @@ planches.push(`
     <p class="coin coin--d">Septembre 2026<br>Version 1</p>
   </section>`);
 
-/* 02 — Sommaire */
+// 02 Sommaire
 planches.push(planche({
   titre: 'Sommaire',
   corps: `
@@ -122,7 +121,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 03 — Cadre */
+// 03 Cadre
 planches.push(planche({
   titre: 'Le cadre',
   corps: `
@@ -141,7 +140,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 04 — Principes */
+// 04 Principes
 planches.push(planche({
   titre: 'Les principes',
   sombre: true,
@@ -172,7 +171,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 05 — Signature */
+// 05 Signature
 planches.push(planche({
   titre: 'La signature',
   corps: `
@@ -190,7 +189,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 06 — Construction */
+// 06 Construction
 planches.push(planche({
   titre: 'Construction',
   corps: `
@@ -213,7 +212,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 07 — Tailles */
+// 07 Tailles
 planches.push(planche({
   titre: 'Tailles minimales',
   corps: `
@@ -228,7 +227,7 @@ planches.push(planche({
       <p style="margin-top:24px">En dessous de ces seuils, la mention « GABON » se ferme et l’arc se brouille. Pour les très petits formats — favicon, avatar, badge — utiliser l’icône carrée fournie, jamais la signature réduite.</p>`,
 }));
 
-/* 08 — Monochromes */
+// 08 Monochromes
 planches.push(planche({
   titre: 'Déclinaisons',
   corps: `
@@ -258,7 +257,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 09 — Fonds */
+// 09 Fonds
 planches.push(planche({
   titre: 'Fonds autorisés',
   corps: `
@@ -285,7 +284,7 @@ planches.push(planche({
       <p style="margin-top:22px">Sur photographie, la version blanche s’emploie uniquement sur une zone calme et suffisamment sombre. Si la zone ne l’est pas, poser un aplat vert régulation derrière la signature plutôt que d’assombrir l’image.</p>`,
 }));
 
-/* 10 — Interdits */
+// 10 Interdits
 planches.push(planche({
   titre: 'Usages à proscrire',
   corps: `
@@ -315,7 +314,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 11 — Cosignature */
+// 11 Cosignature
 planches.push(planche({
   titre: 'Cosignature',
   corps: `
@@ -337,7 +336,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 12 — Palette */
+// 12 Palette
 planches.push(planche({
   titre: 'Palette',
   corps: `
@@ -363,7 +362,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 13 — Impression */
+// 13 Impression
 planches.push(planche({
   titre: 'Références',
   corps: `
@@ -383,7 +382,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 14 — Répartition */
+// 14 Répartition
 planches.push(planche({
   titre: 'Répartition',
   corps: `
@@ -414,7 +413,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 15 — Typographie */
+// 15 Typographie
 planches.push(planche({
   titre: 'Typographie',
   corps: `
@@ -447,7 +446,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 16 — Hiérarchie */
+// 16 Hiérarchie
 planches.push(planche({
   titre: 'Hiérarchie',
   corps: `
@@ -472,7 +471,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 17 — Règles du français */
+// 17 Règles du français
 planches.push(planche({
   titre: 'Composition',
   corps: `
@@ -496,7 +495,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 18 — Territoire graphique */
+// 18 Territoire graphique
 planches.push(planche({
   titre: 'Territoire graphique',
   sombre: true,
@@ -516,7 +515,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 19 — Iconographie */
+// 19 Iconographie
 const ICONES = [
   ['Réseau', '<circle cx="17" cy="17" r="4"/><path d="M17 3v6M17 25v6M3 17h6M25 17h6"/>'],
   ['Spectre', '<path d="M4 22c4-14 8-14 12 0s8 14 12 0"/>'],
@@ -547,7 +546,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 20 — Photographie */
+// 20 Photographie
 planches.push(planche({
   titre: 'Photographie',
   corps: `
@@ -570,7 +569,7 @@ planches.push(planche({
       <p style="margin-top:20px">Cadrages horizontaux, hauteur d’œil, aucune retouche qui modifie la réalité de la scène. Les portraits se font sur fond neutre ou dans le lieu de travail, jamais en studio blanc détouré.</p>`,
 }));
 
-/* 21 — Ton de voix */
+// 21 Ton de voix
 planches.push(planche({
   titre: 'Ton de voix',
   corps: `
@@ -594,7 +593,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 22 — Papeterie */
+// 22 Papeterie
 planches.push(planche({
   titre: 'Papeterie',
   corps: `
@@ -620,7 +619,7 @@ planches.push(planche({
       <p style="margin-top:16px">Signature en haut à gauche, à 2x du bord. Coordonnées en pied, en IBM Plex Mono, sur une seule ligne. Papier non couché, blanc naturel, 100 g pour la correspondance et 350 g pour la carte.</p>`,
 }));
 
-/* 23 — Numérique */
+// 23 Numérique
 planches.push(planche({
   titre: 'Supports numériques',
   corps: `
@@ -651,7 +650,7 @@ planches.push(planche({
       <p style="margin-top:20px">La signature de courriel se limite à la version couleur sur blanc, 180 px de large, suivie du nom, de la fonction et du téléphone en Manrope. Aucune citation, aucune image de fond, aucune couleur hors palette.</p>`,
 }));
 
-/* 24 — Signalétique */
+// 24 Signalétique
 planches.push(planche({
   titre: 'Signalétique',
   corps: `
@@ -674,7 +673,7 @@ planches.push(planche({
       <p style="margin-top:20px">À l’extérieur, la taille de la signature se calcule sur la distance de lecture : un centimètre de hauteur de capitale pour un mètre de recul. Aucun texte en réserve sur l’onde.</p>`,
 }));
 
-/* 25 — Non négociable */
+// 25 Non négociable
 planches.push(planche({
   titre: 'L’essentiel',
   sombre: true,
@@ -700,7 +699,7 @@ planches.push(planche({
       </div>`,
 }));
 
-/* 26 — Dos */
+// 26 Dos
 numero++;
 planches.push(`
   <section class="page couverture">

@@ -1,13 +1,10 @@
-/* ARCEP Gabon — image de partage.
-   Rend une carte de 1200 × 630 pixels dans Chrome sans interface et l'enregistre dans
-   public/assets/partage.png : c'est l'image que les réseaux et messageries affichent quand
-   une page du site est partagée. Elle reprend le logo, la palette et les caractères du
-   site, servis par le serveur, qui doit donc tourner.
-
-   node outils/charte/image-partage.mjs [base] */
+// Image de partage 1200 x 630 (Open Graph) rendue par Chrome headless dans public/assets/partage.png. Serveur lancé.
+// node outils/charte/image-partage.mjs [base]
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
 import { setTimeout as attendre } from 'node:timers/promises';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const BASE = process.argv[2] || 'http://127.0.0.1:4310';
 const page = `<!doctype html><html lang="fr"><head><meta charset="utf-8">
@@ -33,9 +30,9 @@ const page = `<!doctype html><html lang="fr"><head><meta charset="utf-8">
 </body></html>`;
 
 const port = 9400 + Math.floor(Math.random() * 400);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
+const chrome = spawn(CHROME, [
   '--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', '--no-default-browser-check', '--disable-extensions',
-  `--remote-debugging-port=${port}`, `--user-data-dir=${process.env.TEMP || 'C:/Temp'}/chrome-partage-${port}`, '--window-size=1200,630', 'about:blank',
+  `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-partage-${port}`, '--window-size=1200,630', 'about:blank',
 ], { stdio: 'ignore' });
 let cible = null;
 for (let i = 0; i < 60 && !cible; i++) { await attendre(250); try { cible = (await (await fetch(`http://127.0.0.1:${port}/json`)).json()).find((t) => t.type === 'page'); } catch { /* attente */ } }

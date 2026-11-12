@@ -1,6 +1,4 @@
-/* ARCEP Gabon — les mots-clés.
-   Quatre verbes se succèdent pendant que la scène reste épinglée : chacun monte, se pose,
-   puis cède la place. Au doigt ou en mouvement réduit, ils sont simplement posés. */
+// Mots-clés en scène sticky, scrubbés au défilement
 import { QS, QSA, gsap, pret, reduit, mobile } from './socle.mjs';
 
 export function demarrerMots() {
@@ -10,8 +8,7 @@ export function demarrerMots() {
   const mots = QSA('.mots-mot', section);
   if (!pret || reduit() || mobile() || mots.length < 2) { section.classList.add('mots--statique'); return; }
 
-  /* La scène reste collée par CSS (position: sticky) pendant que la section, plus haute,
-     défile : aucun élément n'est déplacé dans le document. */
+  // Pas de pin : la scène est sticky, ScrollTrigger ne fait que lire la progression
   section.classList.add('mots--cinema');
   section.style.setProperty('--etapes', mots.length);
   const tl = gsap.timeline({

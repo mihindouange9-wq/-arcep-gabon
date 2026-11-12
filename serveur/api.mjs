@@ -1,13 +1,10 @@
-/* ARCEP Gabon — interface de données publique.
-   Lecture seule et anonyme : les mêmes contenus que le site, dans un format exploitable.
-   Aucune écriture ici ; l'administration passe par ses propres routes authentifiées. */
+// API publique, lecture seule.
 import { lire } from './base.mjs';
 import { RUBRIQUES, actualitesPubliees } from './vues/base.mjs';
 
 const PAGE_MAX = 200;
 
-/* L'adresse d'origine des contenus repris (champ « source ») est une donnée de travail :
-   elle n'est pas publiée. */
+// Le champ source (origine des contenus importés) n'est pas exposé.
 const sansSource = (v) => {
   if (Array.isArray(v)) return v.map(sansSource);
   if (v && typeof v === 'object') { const o = {}; for (const [k, x] of Object.entries(v)) if (k !== 'source') o[k] = sansSource(x); return o; }
@@ -51,7 +48,7 @@ export async function servirApi(chemin, url, reponse) {
   }
 
   if (chemin === '/api/contenus') {
-    /* Les brouillons, les réglages et les textes d'habillage restent hors de l'interface. */
+    // Brouillons, réglages et textes d'habillage restent hors API.
     const { reglages, pages, listes, ...publie } = D;
     return json(reponse, { ...publie, actualites: actualitesPubliees(D) });
   }

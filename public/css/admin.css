@@ -1,9 +1,4 @@
-/* ARCEP Gabon — espace d'administration.
-
-   Feuille autonome : l'administration ne charge pas l'habillage du site. On y vient pour
-   publier un texte ou corriger une date, pas pour admirer une mise en page. Même
-   vocabulaire que le site — Archivo, verts et bleus de la charte, filets — mais densité
-   d'outil : tout visible, aucune animation d'apparition. */
+/* Administration : feuille autonome, ne charge pas systeme.css */
 
 :root {
   --vert-foret: #0a2a1a; --vert-profond: #0f3d25; --vert: #175b31; --vert-vif: #2fa864; --vert-lumineux: #6fd39a;
@@ -37,7 +32,7 @@ h1 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); font-weight: 700; letter-spac
 h2 { font-size: 1.05rem; font-weight: 650; letter-spacing: -.01em; }
 .chapo { color: var(--gris); max-width: 70ch; margin-top: .4rem; }
 
-/* ---------- Haut ---------- */
+/* Haut */
 .haut { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 1.2rem; height: 3.75rem; padding: 0 1.5rem; background: var(--vert-foret); color: var(--texte-clair); }
 .haut-marque { display: flex; align-items: center; gap: .8rem; margin-right: auto; }
 .haut-marque img { height: 1.6rem; width: auto; }
@@ -48,11 +43,11 @@ h2 { font-size: 1.05rem; font-weight: 650; letter-spacing: -.01em; }
 .haut-compte { display: grid; line-height: 1.2; color: var(--texte-clair); text-align: right; }
 .haut-compte b { font-weight: 600; font-size: .875rem; }
 .haut-compte span { font-size: .7rem; color: var(--voile-clair); text-transform: uppercase; letter-spacing: .08em; }
-.haut-sortie button { min-height: 2.25rem; padding: 0 .9rem; border-radius: 999px; background: rgba(255, 255, 255, .1); color: var(--texte-clair); font-size: .875rem; font-weight: 500; }
+.haut-sortie button { min-height: 2.25rem; padding: 0 .9rem; white-space: nowrap; border-radius: 999px; background: rgba(255, 255, 255, .1); color: var(--texte-clair); font-size: .875rem; font-weight: 500; }
 .haut-sortie button:hover { background: var(--jaune); color: var(--encre); }
 .haut-menu { display: none; width: 2.5rem; height: 2.5rem; border-radius: 8px; color: var(--texte-clair); place-items: center; }
 
-/* ---------- Structure ---------- */
+/* Structure */
 .cadre-admin { display: grid; grid-template-columns: 15rem minmax(0, 1fr); min-height: calc(100vh - 3.75rem); }
 .lateral { background: var(--surface); border-right: 1px solid var(--filet-2); padding: 1.5rem 1rem; position: sticky; top: 3.75rem; height: calc(100vh - 3.75rem); overflow: auto; }
 .lateral-titre { font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); font-weight: 600; margin: 1.2rem .75rem .4rem; }
@@ -66,7 +61,7 @@ h2 { font-size: 1.05rem; font-weight: 650; letter-spacing: -.01em; }
 .tete-actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
 .titre-bloc { margin: 2.5rem 0 1rem; display: flex; align-items: baseline; gap: .6rem; }
 
-/* ---------- Primitives ---------- */
+/* Primitives */
 .bouton { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.6rem; padding: 0 1.2rem; border-radius: 999px; background: var(--vert); color: #fff; font-weight: 600; font-size: .9rem; transition: background .15s var(--e), transform .15s var(--e); }
 .bouton:hover { background: var(--vert-profond); text-decoration: none; }
 .bouton:active { transform: translateY(1px); }
@@ -94,7 +89,7 @@ h2 { font-size: 1.05rem; font-weight: 650; letter-spacing: -.01em; }
 .filtres a[aria-current="true"] { background: var(--encre); color: #fff; box-shadow: none; }
 .filtres a span { font-family: var(--mono); font-size: .7rem; opacity: .7; }
 
-/* ---------- Tableau de bord ---------- */
+/* Tableau de bord */
 .compteurs { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: .8rem; margin-bottom: 1.5rem; }
 .compteurs a { display: grid; gap: .2rem; padding: 1.1rem 1.2rem; border-radius: var(--rayon-2); background: var(--surface); box-shadow: inset 0 0 0 1px var(--filet-2); color: var(--encre); transition: box-shadow .15s var(--e), transform .15s var(--e); }
 .compteurs a:hover { text-decoration: none; transform: translateY(-2px); box-shadow: inset 0 0 0 1px var(--filet), var(--ombre); }
@@ -110,7 +105,7 @@ h2 { font-size: 1.05rem; font-weight: 650; letter-spacing: -.01em; }
 .versions li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .4rem 0; border-top: 1px solid var(--filet-2); }
 .versions code { font-family: var(--mono); font-size: .75rem; color: var(--gris); }
 
-/* ---------- Listes et tables ---------- */
+/* Listes et tables */
 .liste-cartes { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: .8rem; }
 .liste-cartes a { display: grid; gap: .3rem; padding: 1.1rem 1.2rem; border-radius: var(--rayon-2); background: var(--surface); box-shadow: inset 0 0 0 1px var(--filet-2); color: var(--encre); }
 .liste-cartes a:hover { text-decoration: none; box-shadow: inset 0 0 0 1px var(--filet), var(--ombre); }
@@ -131,7 +126,7 @@ h2 { font-size: 1.05rem; font-weight: 650; letter-spacing: -.01em; }
 .ligne-form { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
 .ligne-form input, .ligne-form select { min-height: 2.2rem; padding: .3rem .6rem; border: 1px solid var(--filet); border-radius: 8px; background: var(--surface); flex: 1; min-width: 8rem; }
 
-/* ---------- Formulaires ---------- */
+/* Formulaires */
 .formulaire { display: grid; gap: 1rem; }
 .formulaire--deux { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: start; gap: 1.5rem; }
 .formulaire-principal, .formulaire-cote { display: grid; gap: 1rem; }
@@ -150,16 +145,16 @@ h2 { font-size: 1.05rem; font-weight: 650; letter-spacing: -.01em; }
 .apercu:empty { display: none; }
 .barre-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: .4rem; }
 
-/* ---------- Médiathèque ---------- */
+/* Médiathèque */
 .vignettes { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: .8rem; }
-.vignette { display: grid; gap: .3rem; padding: .6rem; border-radius: var(--rayon-2); background: var(--surface); box-shadow: inset 0 0 0 1px var(--filet-2); }
+.vignette { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; gap: .3rem; padding: .6rem; border-radius: var(--rayon-2); background: var(--surface); box-shadow: inset 0 0 0 1px var(--filet-2); }
 .vignette img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; background: var(--fond); }
 .vignette-doc { display: grid; place-items: center; aspect-ratio: 4 / 3; border-radius: 8px; background: var(--bleu-profond); color: #fff; font-family: var(--mono); font-weight: 500; letter-spacing: .1em; }
 .vignette-nom { font-size: .72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: .3rem; }
-.vignette-info { font-size: .75rem; color: var(--gris); }
+.vignette-info { font-size: .75rem; color: var(--gris); overflow-wrap: anywhere; }
 .vignette-info b { font-weight: 500; color: var(--encre); }
 
-/* ---------- Entrée ---------- */
+/* Entrée */
 body.entree { background: linear-gradient(160deg, var(--vert-foret), var(--bleu-profond)); display: grid; place-items: center; padding: 1.5rem; }
 .page-entree { width: 100%; display: grid; place-items: center; }
 .entree-bloc { width: min(100%, 26rem); display: grid; gap: 1rem; padding: 2.2rem; border-radius: 20px; background: var(--surface); box-shadow: 0 40px 100px -40px rgba(0, 0, 0, .6); }
@@ -168,7 +163,7 @@ body.entree { background: linear-gradient(160deg, var(--vert-foret), var(--bleu-
 .entree-bloc form { display: grid; gap: 1rem; }
 .entree-retour { font-size: .85rem; }
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 @media (max-width: 900px) {
   .cadre-admin { grid-template-columns: minmax(0, 1fr); }
   .haut { padding: 0 1rem; gap: .8rem; }

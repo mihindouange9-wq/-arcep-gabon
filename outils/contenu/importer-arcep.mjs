@@ -1,20 +1,7 @@
-/* ARCEP Gabon — import complet des contenus de l'ancien site.
-
-   Le nouveau site ne renvoie plus vers arcep.ga : tout ce qui y était consulté est
-   rapatrié ici, une fois, puis vit dans donnees/arcep.json et public/assets/.
-
-     1. Les actualités : toutes les pages de la liste, chaque article avec sa date, son
-        visuel de couverture, son corps (HTML restreint) et ses images intégrées, décodées
-        et enregistrées en fichiers.
-     2. Les textes réglementaires : chaque PDF téléchargé dans public/assets/documents/.
-     3. Les tableaux de bord de l'Observatoire : chaque PDF téléchargé de même.
-     4. Les liens vers l'ancien site (missions, catégories, partenaire FRATEL) sont retirés ;
-        l'adresse d'origine est conservée dans un champ « source », jamais affiché.
-
-   Les articles dont le titre est un essai (« Test ») ou dont le corps est vide sont
-   ignorés et listés. Rien n'est réécrit : les textes sont repris tels quels.
-
-   node outils/contenu/importer-arcep.mjs [--sans-pdf] [--sans-actus]   (serveur arrêté) */
+// Import des contenus de l'ancien site (arcep.ga) dans donnees/arcep.json et public/assets/ : actualités (corps en HTML
+// restreint, images intégrées extraites en fichiers), PDF de la réglementation et de l'observatoire. Les liens vers
+// l'ancien site sont remplacés par un champ source, jamais affiché. Les articles de test ou vides sont ignorés et listés.
+// Serveur arrêté. node outils/contenu/importer-arcep.mjs [--sans-pdf] [--sans-actus] [--forcer]
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -36,8 +23,7 @@ await mkdir(ACTUS, { recursive: true });
 await mkdir(DOCUMENTS, { recursive: true });
 const rapport = { articles: 0, ignores: [], images: 0, pdf: 0, echecs: [] };
 
-/* Chaque téléchargement est borné à quarante-cinq secondes et retenté deux fois : une
-   connexion qui reste muette ne doit pas bloquer l'import entier. */
+// timeout 45 s, deux nouvelles tentatives
 const telecharger = async (url, essais = 3) => {
   for (let i = 1; i <= essais; i++) {
     try {
@@ -57,7 +43,7 @@ const nomSur = (s) => decoderEntites(String(s)).normalize('NFD').replace(/[̀-ͯ
 const estPdf = (b) => b.subarray(0, 5).toString('latin1') === '%PDF-';
 const extensionImage = (b) => (b[0] === 0xff && b[1] === 0xd8) ? '.jpg' : (b[1] === 0x50 && b[2] === 0x4e) ? '.png' : (b.subarray(8, 12).toString('latin1') === 'WEBP') ? '.webp' : (b.subarray(0, 3).toString('latin1') === 'GIF') ? '.gif' : '';
 
-/* ======================= 1. ACTUALITÉS ======================= */
+// 1. Actualités
 if (!SANS_ACTUS) {
   console.log('\nActualités');
   const identifiants = new Map();   // id → date de la liste (jj/mm/aaaa)
@@ -75,7 +61,7 @@ if (!SANS_ACTUS) {
   const existants = new Map(D.actualites.map((a) => [String(a.id), a]));
   const importes = [];
   for (const [id, dateListe] of identifiants) {
-    /* Un article déjà rapatrié n'est pas repris, sauf demande explicite. */
+    // déjà importé : conservé, sauf --forcer
     if (!FORCER && existants.get(id)?.corps && existants.get(id)?.source) { importes.push(existants.get(id)); continue; }
     let html;
     try { html = await page(`${SITE}/pages/detail_actu/${id}`); } catch (e) { rapport.echecs.push(`article ${id} : ${e.message}`); continue; }
@@ -86,7 +72,7 @@ if (!SANS_ACTUS) {
       || /<div class="text-justify">([\s\S]*?)<p class="text-dark d-flex">/.exec(html)?.[1] || '';
     if (!titre || /^test\b/i.test(titre)) { rapport.ignores.push(`${id} · ${titre || 'sans titre'}`); continue; }
 
-    /* Les images intégrées en base64 deviennent des fichiers. */
+    // images base64 -> fichiers
     let n = 0;
     let corps = bloc;
     for (const m of bloc.matchAll(/<img[^>]*src="data:image\/(jpeg|jpg|png|gif|webp);base64,([^"]+)"[^>]*>/gi)) {
@@ -97,7 +83,7 @@ if (!SANS_ACTUS) {
       corps = corps.replace(m[0], `<img src="/assets/actus/${nom}" alt="">`);
       rapport.images++;
     }
-    /* Les images pointant vers l'ancien site sont rapatriées. */
+    // images distantes rapatriées
     for (const m of corps.matchAll(/<img[^>]*src="(https?:\/\/[^"]+)"[^>]*>/gi)) {
       try {
         const { octets } = await telecharger(decoderEntites(m[1]));
@@ -109,7 +95,7 @@ if (!SANS_ACTUS) {
       } catch { corps = corps.replace(m[0], ''); }
     }
     corps = nettoyer(corps)
-      /* Le bloc de partage de l'ancien site (WhatsApp, Facebook) suit le texte : il est retiré. */
+      // bloc de partage (WhatsApp, Facebook) retiré
       .replace(/<p>\s*<a href="https:\/\/api\.whatsapp\.com[\s\S]*$/i, '')
       .replace(/(<p>|<h[2-4]>)(<strong>)?\s*Partager\s*:?\s*(<\/strong>)?(<\/p>|<\/h[2-4]>)\s*$/i, '')
       .trim();
@@ -134,19 +120,19 @@ if (!SANS_ACTUS) {
     });
     rapport.articles++;
     process.stdout.write(`  ${id} ${titre.slice(0, 70)}\n`);
-    /* Le document est écrit après chaque article : un arrêt ne perd rien. */
+    // écriture après chaque article : l'import est reprenable
     const locales = D.actualites.filter((a) => !/^\d+$/.test(String(a.id)));
     const restants = D.actualites.filter((a) => /^\d+$/.test(String(a.id)) && !importes.some((x) => x.id === a.id));
     D.actualites = [...importes, ...restants, ...locales];
     await enregistrer();
   }
-  /* Les actualités créées dans la nouvelle administration (identifiants « act-… ») sont conservées. */
+  // les actualités créées dans l'administration (act-...) sont conservées
   const locales = D.actualites.filter((a) => !/^\d+$/.test(String(a.id)));
   D.actualites = [...importes, ...locales].sort((x, y) => String(y.dateIso).localeCompare(String(x.dateIso)));
   console.log(`  ${rapport.articles} articles importés · ${rapport.images} images · ${rapport.ignores.length} ignorés`);
 }
 
-/* ======================= 2 et 3. PDF ======================= */
+// 2 et 3. PDF
 async function rapatrier(entree, prefixe, dossierNom) {
   const url = decoderEntites(entree.lien || entree.source || '');
   if (!url) return;
@@ -178,7 +164,7 @@ if (!SANS_PDF) {
   console.log(`  ${D.observatoire.reduce((n, m) => n + m.publications.filter((p) => p.fichier).length, 0)} / ${D.observatoire.reduce((n, m) => n + m.publications.length, 0)} avec fichier`);
 }
 
-/* ======================= 4. LIENS VERS L'ANCIEN SITE ======================= */
+// 4. Liens vers l'ancien site
 for (const mi of D.missions) { if (mi.lien) { mi.source = mi.lien; mi.lien = ''; } }
 for (const c of D.categories) { if (c.lien) { c.source = c.lien; c.lien = ''; } }
 for (const p of D.partenaires) { if (/arcep\.ga/.test(p.lien || '')) { p.source = p.lien; p.lien = ''; } }

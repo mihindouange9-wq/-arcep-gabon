@@ -1,13 +1,5 @@
-/* ARCEP Gabon — la médiathèque.
-
-   Les visuels téléversés depuis l'administration vivent dans public/assets/medias/, les
-   documents (PDF) dans public/assets/documents/. Les visuels repris du site officiel
-   restent dans public/assets/actus/. Les trois dossiers sont présentés ensemble, mais
-   seuls les fichiers qu'aucun contenu n'emploie peuvent être supprimés.
-
-   Le format n'est pas déduit du nom du fichier ni de ce que le navigateur déclare — les
-   deux se falsifient — mais des premiers octets. Un fichier qui n'est pas réellement une
-   image ou un PDF est refusé avant d'être écrit. */
+// Médiathèque : visuels dans public/assets/medias/, PDF dans public/assets/documents/, visuels importés dans public/assets/actus/.
+// Le type est reconnu sur les premiers octets, jamais sur l'extension ni le Content-Type annoncé.
 import { readdir, stat, writeFile, unlink, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -23,8 +15,7 @@ const ACTUS = join(ASSETS, 'actus');
 export const TAILLE_MAX_IMAGE = 5 * 1024 * 1024;       // cinq mégaoctets par visuel
 export const TAILLE_MAX_DOCUMENT = 20 * 1024 * 1024;   // vingt mégaoctets par document
 
-/* ======================= RECONNAISSANCE ======================= */
-/* Signatures lues sur les premiers octets. */
+// Reconnaissance
 const SIGNATURES = [
   { ext: '.jpg', type: 'image/jpeg', genre: 'image', test: (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff },
   { ext: '.png', type: 'image/png', genre: 'image', test: (b) => b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) },
@@ -37,9 +28,8 @@ export function reconnaitre(octets) {
   return SIGNATURES.find((s) => s.test(octets)) || null;
 }
 
-/* ======================= DIMENSIONS ======================= */
-/* Lues dans l'en-tête du fichier, sans décoder l'image. Elles servent uniquement à
-   informer : un visuel de 300 pixels de large étiré sur une une se verrait. */
+// Dimensions
+// Dimensions lues dans l'en-tête, à titre indicatif.
 export function dimensions(octets) {
   try {
     if (octets[0] === 0xff && octets[1] === 0xd8) return dimensionsJpeg(octets);
@@ -47,7 +37,7 @@ export function dimensions(octets) {
       return { largeur: octets.readUInt32BE(16), hauteur: octets.readUInt32BE(20) };
     }
     if (octets.subarray(8, 12).toString('latin1') === 'WEBP') return dimensionsWebp(octets);
-  } catch { /* un en-tête illisible n'est pas une raison de refuser le fichier */ }
+  } catch { /* en-tête illisible : pas un motif de refus */ }
   return null;
 }
 
@@ -56,7 +46,7 @@ function dimensionsJpeg(b) {
   while (i < b.length - 9) {
     if (b[i] !== 0xff) { i += 1; continue; }
     const marqueur = b[i + 1];
-    /* Les marqueurs SOF portent la taille ; SOF4, SOF8 et SOF12 n'en sont pas. */
+    // Marqueurs SOF (taille), hors SOF4, SOF8 et SOF12.
     if (marqueur >= 0xc0 && marqueur <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marqueur)) {
       return { hauteur: b.readUInt16BE(i + 5), largeur: b.readUInt16BE(i + 7) };
     }
@@ -76,9 +66,8 @@ function dimensionsWebp(b) {
   return null;
 }
 
-/* ======================= NOMMAGE ======================= */
-/* Le nom d'origine est conservé pour que l'agent retrouve son fichier, mais réduit à des
-   caractères sûrs : il devient un segment d'URL et un nom sur le disque. */
+// Nommage
+// Nom d'origine conservé mais réduit à des caractères sûrs (URL et disque).
 function nommer(original) {
   const base = original.replace(/\.[^.]*$/, '')
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -89,7 +78,7 @@ function nommer(original) {
   return `${base}-${randomUUID().slice(0, 6)}`;
 }
 
-/* ======================= ENREGISTREMENT ======================= */
+// Enregistrement
 export async function enregistrer(fichier, { genres = ['image'] } = {}) {
   const signature = reconnaitre(fichier.octets);
   if (!signature || !genres.includes(signature.genre)) {
@@ -109,7 +98,7 @@ export async function enregistrer(fichier, { genres = ['image'] } = {}) {
   return { chemin: prefixe + nom, nom, genre: signature.genre, taille: fichier.octets.length, ...(dimensions(fichier.octets) || {}) };
 }
 
-/* ======================= INVENTAIRE ======================= */
+// Inventaire
 const DOSSIERS = [
   { cle: 'medias', titre: 'Visuels téléversés', genre: 'image', chemin: MEDIAS, prefixe: '/assets/medias/', supprimable: true },
   { cle: 'documents', titre: 'Documents PDF', genre: 'document', chemin: DOCUMENTS, prefixe: '/assets/documents/', supprimable: true },
@@ -118,7 +107,7 @@ const DOSSIERS = [
 
 const MOTIF = { image: /\.(jpe?g|png|webp)$/i, document: /\.pdf$/i };
 
-/* Tout ce qu'un contenu publié emploie, quel que soit le champ. */
+// Tout fichier référencé par un contenu.
 function employes(D) {
   const e = new Map();
   const noter = (adresse, quoi) => { if (adresse) e.set(adresse, quoi); };
@@ -151,10 +140,8 @@ export async function inventaire(D, genre = null) {
   return groupes;
 }
 
-/* ======================= SUPPRESSION ======================= */
-/* Deux verrous : le fichier doit se trouver dans un des dossiers déclarés — un nom
-   contenant une barre oblique ou deux points ne correspond à aucun —, et aucun contenu
-   publié ne doit l'employer. */
+// Suppression
+// Le fichier doit être dans un dossier déclaré et n'être référencé par aucun contenu.
 export async function supprimer(cle, nom, D) {
   const dossier = DOSSIERS.find((d) => d.cle === cle && d.supprimable);
   if (!dossier) return 'Dossier inconnu.';

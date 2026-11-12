@@ -1,8 +1,4 @@
-/* ARCEP Gabon — l'iPhone.
-   Le téléphone entre, se redresse, se rapproche jusqu'à occuper la scène, puis se retire,
-   pendant que le climat de la scène glisse du vert forêt au blanc. Son écran joue une
-   vidéo du site mobile, enregistrée au format réel de l'appareil et qui défile lentement
-   de page en page ; elle ne joue que lorsque le téléphone est dans le champ. */
+// Scène du téléphone : entrée, zoom, sortie, dégradé de fond ; vidéo lue dans le viewport seulement
 import { QS, QSA, gsap, pret, reduit, mobile } from './socle.mjs';
 import { tonalite } from './chrome.mjs';
 
@@ -20,7 +16,7 @@ export function demarrerEcran() {
   const etapes = QSA('.ecran-etapes li', section);
   if (!iphone) return;
 
-  /* ---- La vidéo : lecture dans le champ, pages marquées au fil du temps ---- */
+  // Vidéo + segments (iphone-defilement.json) pour marquer la page en cours
   if (video) {
     let segments = [];
     fetch('/assets/iphone-defilement.json').then((r) => (r.ok ? r.json() : [])).then((s) => { segments = Array.isArray(s) ? s : []; }).catch(() => {});
@@ -37,7 +33,8 @@ export function demarrerEcran() {
     });
   }
 
-  if (!pret || reduit() || mobile()) {
+  // Sous 961 px la scène passe sur une colonne, plus haute que l'écran : pas de scène collante
+  if (!pret || reduit() || mobile() || window.innerWidth < 961) {
     if (pret && !reduit()) {
       gsap.fromTo(iphone, { y: 80, opacity: 0, rotateX: 12 }, { y: 0, opacity: 1, rotateX: 0, duration: 1.4, scrollTrigger: { trigger: section, start: 'top 70%', once: true } });
     }
@@ -51,8 +48,7 @@ export function demarrerEcran() {
   };
   const echelle = () => Math.min(2.1, (window.innerHeight * .92) / base());
 
-  /* La scène reste collée par CSS (position: sticky) pendant que la section, plus haute,
-     défile : le téléphone n'est jamais déplacé dans le document. */
+  // Pas de pin ScrollTrigger ici : la scène est en position: sticky (le pin déplacerait le noeud)
   section.classList.add('ecran--cinema');
   const tl = gsap.timeline({
     scrollTrigger: {
@@ -71,7 +67,6 @@ export function demarrerEcran() {
     .to(iphone, { scale: 1, x: 0, duration: .8, ease: 'none' })
     .to(texte, { opacity: 1, y: 0, duration: .35, ease: 'none' }, '<+=.3');
 
-  /* Le climat : sept paliers, du vert forêt au blanc. */
   const climat = gsap.timeline({ scrollTrigger: { trigger: section, start: 'top top', end: 'bottom bottom', scrub: 1.2 } });
   CLIMATS.slice(1).forEach(([a, b]) => climat.to(section, { '--a': a, '--b': b, duration: 1, ease: 'none' }));
 }

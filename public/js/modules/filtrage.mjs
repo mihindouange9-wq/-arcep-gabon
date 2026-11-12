@@ -1,7 +1,4 @@
-/* ARCEP Gabon — filtrage des listes.
-   Le serveur rend la totalité des entrées et masque celles qui ne correspondent pas : sans
-   script, le tri du serveur fait foi. Ici, le même calcul est refait instantanément, et
-   l'adresse suit pour qu'un lien copié garde les filtres. */
+// Filtrage côté client des listes déjà filtrées par le serveur ; l'URL reflète l'état
 import { QS, QSA, defilerVers } from './socle.mjs';
 
 const DEFAUTS = new Set(['tout', 'toutes', 'tous', '']);
@@ -14,7 +11,8 @@ export function demarrerFiltrage() {
     const entrees = QSA(':scope > li, :scope > details', liste).filter((el) => !el.hasAttribute('data-vide'));
     const vide = QS('[data-vide]', liste);
     const compte = QS('[data-compte]', racine);
-    const champ = QS('[data-recherche]', form);
+    // Le champ peut vivre dans un autre formulaire (en-tête de la réglementation)
+    const champ = QS('[data-recherche]', form) || QSA('[data-recherche]').find((c) => !c.closest('form[data-filtrage]')) || null;
     const filtres = QSA('[data-filtre]', form);
     const une = QS('.actualites-composition--page', racine);
     const parPage = Number(liste.dataset.page) || 0;
@@ -35,14 +33,14 @@ export function demarrerFiltrage() {
           if (DEFAUTS.has(valeur)) continue;
           if ((el.dataset[cle] || '') !== valeur) garde = false;
         }
-        /* L'article à la une n'est pas répété dans la liste tant qu'aucun filtre n'agit. */
+        // Sans filtre actif, l'article à la une n'est pas répété dans la liste
         if (garde && parDefaut && uneHref && QS('a', el)?.getAttribute('href') === uneHref) garde = false;
         el.hidden = !garde;
         if (garde) retenus += 1;
       }
       if (une) une.hidden = !parDefaut;
       if (parDefaut && une) retenus += 1;
-      /* Une longue liste se dévoile par pages : les entrées au-delà de la limite attendent. */
+      // Pagination (data-page)
       if (parPage) {
         let visibles = 0;
         for (const el of entrees) { if (el.hidden) continue; visibles += 1; if (visibles > limite) el.hidden = true; }
@@ -80,10 +78,11 @@ export function demarrerFiltrage() {
     if (champ) champ.addEventListener('input', () => { clearTimeout(minuterie); limite = parPage; minuterie = setTimeout(appliquer, 120); });
     if (plus) plus.querySelector('button').addEventListener('click', () => { limite += parPage; appliquer(); });
     form.addEventListener('submit', (ev) => { ev.preventDefault(); appliquer(); });
+    if (champ && champ.form && champ.form !== form) champ.form.addEventListener('submit', (ev) => { ev.preventDefault(); clearTimeout(minuterie); limite = parPage; appliquer(); defilerVers(liste, -140); });
     appliquer();
   }
 
-  /* Un accordéon : les flèches passent d'une question à l'autre, Début et Fin aux bornes. */
+  // Navigation clavier dans les accordéons
   for (const acc of QSA('.accordeon')) {
     acc.addEventListener('keydown', (ev) => {
       if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(ev.key)) return;

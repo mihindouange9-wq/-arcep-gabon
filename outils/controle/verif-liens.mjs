@@ -1,9 +1,5 @@
-/* ARCEP Gabon — vérification des liens.
-   Parcourt le site depuis l'accueil, page après page, et vérifie chaque adresse trouvée :
-   les pages et fichiers du site doivent répondre 200, les liens vides ou vers l'ancien site
-   sont signalés, les liens externes sont listés pour relecture.
-
-   node outils/controle/verif-liens.mjs [base] */
+// Crawl du site depuis l'accueil : chaque adresse interne doit répondre 200 ; liens vides et liens vers l'ancien site
+// signalés, domaines externes listés pour relecture. node outils/controle/verif-liens.mjs [base]
 const BASE = (process.argv[2] || 'http://127.0.0.1:4310').replace(/\/+$/, '');
 const vus = new Map();          // adresse → statut
 const file = ['/'];

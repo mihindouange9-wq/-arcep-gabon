@@ -1,11 +1,4 @@
-/* ARCEP Gabon — stockage.
-   Les contenus tiennent dans un seul document JSON : à ce volume (une centaine d'entrées),
-   une base relationnelle n'apporterait rien et ajouterait une dépendance à installer sur le
-   serveur de l'Autorité. L'écriture est atomique — fichier temporaire puis renommage — et
-   sérialisée par une file, de sorte que deux enregistrements simultanés ne peuvent pas
-   se recouvrir ni laisser un fichier tronqué.
-
-   Chaque écriture dépose une copie horodatée dans donnees/historique/, conservée trente jours. */
+// Stockage : un document JSON, écriture atomique et sérialisée, copie horodatée avant chaque écriture (30 jours).
 import { readFile, writeFile, rename, mkdir, readdir, stat, unlink } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -22,7 +15,7 @@ let cache = null;
 let empreinte = 0;
 let file = Promise.resolve();
 
-/* Sérialise les écritures : chaque tâche attend la précédente. */
+// File d'écriture : chaque tâche attend la précédente.
 const enFile = (tache) => {
   const suite = file.then(tache, tache);
   file = suite.then(() => undefined, () => undefined);
@@ -31,7 +24,7 @@ const enFile = (tache) => {
 
 export const chemin = { RACINE, DOSSIER, FICHIER, HISTORIQUE };
 
-/* ---------- Lecture ---------- */
+// Lecture
 export async function lire() {
   const info = await stat(FICHIER);
   if (cache && info.mtimeMs === empreinte) return cache;
@@ -41,12 +34,12 @@ export async function lire() {
   return cache;
 }
 
-/* Copie profonde : les appelants ne peuvent pas modifier le cache par inadvertance. */
+// Copie profonde : le cache ne doit pas être modifié par un appelant.
 export async function lireCopie() {
   return structuredClone(await lire());
 }
 
-/* ---------- Écriture ---------- */
+// Écriture
 export async function ecrire(donnees, motif = 'modification') {
   return enFile(async () => {
     await mkdir(HISTORIQUE, { recursive: true });
@@ -69,7 +62,7 @@ export async function ecrire(donnees, motif = 'modification') {
   });
 }
 
-/* Modifie une partie du document sous verrou, sans que l'appelant ait à relire. */
+// Modification d'une partie du document sous verrou.
 export async function modifier(transformation, motif = 'modification') {
   return enFile(async () => {
     const brut = await readFile(FICHIER, 'utf8');
@@ -91,7 +84,7 @@ export async function modifier(transformation, motif = 'modification') {
   });
 }
 
-/* ---------- Historique ---------- */
+// Historique
 async function purgerHistorique() {
   try {
     const limite = Date.now() - RETENTION;
@@ -100,7 +93,7 @@ async function purgerHistorique() {
       const info = await stat(f);
       if (info.mtimeMs < limite) await unlink(f);
     }
-  } catch (e) { /* l'historique est un confort, jamais un point de rupture */ }
+  } catch (e) { /* l'historique ne doit pas faire échouer l'écriture */ }
 }
 
 export async function historique(limite = 20) {
@@ -110,8 +103,7 @@ export async function historique(limite = 20) {
   } catch (e) { return []; }
 }
 
-/* ---------- Identifiants ---------- */
-/* Les entrées créées par l'administration reçoivent un identifiant stable et lisible. */
+// Identifiants
 export function identifiant(prefixe) {
   return prefixe + '-' + Date.now().toString(36) + randomUUID().slice(0, 4);
 }

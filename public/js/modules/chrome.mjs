@@ -1,6 +1,4 @@
-/* ARCEP Gabon — l'en-tête.
-   Il suit la scène qu'il survole : clair sur les scènes claires, blanc sur les sombres.
-   Il s'efface quand on descend, revient dès qu'on remonte, et porte la progression. */
+// En-tête : tonalité selon la scène survolée, masquage à la descente, barre de progression
 import { QS, QSA, gsap, ScrollTrigger, pret, reduit } from './socle.mjs';
 
 const chrome = QS('#chrome');
@@ -41,7 +39,6 @@ export function demarrerChrome() {
     gsap.to(progression, { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: .3 } });
   }
 
-  /* Chaque scène annonce sa tonalité quand elle passe sous l'en-tête. */
   const scenes = QSA('[data-tonalite]').filter((s) => s.closest('main'));
   if (pret) {
     for (const s of scenes) {

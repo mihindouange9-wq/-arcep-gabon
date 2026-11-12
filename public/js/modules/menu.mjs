@@ -1,6 +1,4 @@
-/* ARCEP Gabon — le menu immersif.
-   Un rideau qui descend, des rubriques qui montent l'une après l'autre. Le focus reste
-   dans le menu, Échap le ferme, et la page derrière est rendue inerte. */
+// Menu plein écran : focus trap, Échap, main/footer inertes
 import { QS, QSA, gsap, pret, reduit, bloquer } from './socle.mjs';
 
 export function demarrerMenu() {
@@ -64,7 +62,7 @@ export function demarrerMenu() {
     if (ev.shiftKey && document.activeElement === premier) { ev.preventDefault(); dernier.focus(); }
     else if (!ev.shiftKey && document.activeElement === dernier) { ev.preventDefault(); premier.focus(); }
   });
-  /* Un lien vers la page courante ferme simplement le menu. */
+  // Lien vers la page courante : on ferme sans naviguer
   for (const a of liens) a.addEventListener('click', (ev) => {
     const u = new URL(a.href, window.location.href);
     if (u.pathname === window.location.pathname && u.search === window.location.search) { ev.preventDefault(); fermer(); }

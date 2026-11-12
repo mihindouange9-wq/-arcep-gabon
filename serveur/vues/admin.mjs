@@ -1,6 +1,4 @@
-/* ARCEP Gabon — écrans de l'espace d'administration.
-   Rendu entièrement côté serveur, formulaires classiques : l'administration reste
-   utilisable sans JavaScript et sans dépendance. Chaque écriture porte un jeton anti-rejeu. */
+// Écrans de l'administration, rendus côté serveur, formulaires classiques.
 import { e, lien, ressource, icone, dateLisible } from './base.mjs';
 import { PAGES, LISTES, ROLES as DESCRIPTIONS_ROLES, liste as lireListe, reglages as lireReglages } from '../schema.mjs';
 const ROLES = Object.keys(DESCRIPTIONS_ROLES);
@@ -43,7 +41,7 @@ ${compte ? `
 <header class="haut">
   <button class="haut-menu" type="button" data-lateral aria-expanded="false" aria-controls="lateral"><svg class="icone"><use href="#i-menu"/></svg><span class="sr-only">Navigation</span></button>
   <p class="haut-marque"><img src="/assets/logo-arcep-blanc.png" alt="ARCEP Gabon"><span>Administration</span></p>
-  <a class="haut-site" href="/" target="_blank" rel="noopener">Voir le site <svg class="icone"><use href="#i-diag"/></svg></a>
+  <a class="haut-site" href="/" target="_blank" rel="noopener" aria-label="Voir le site"><span>Voir le site</span> <svg class="icone" aria-hidden="true"><use href="#i-diag"/></svg></a>
   <form class="haut-sortie" method="post" action="/admin/deconnexion">
     <input type="hidden" name="csrf" value="${e(csrf)}">
     <a href="/admin/compte" class="haut-compte"><b>${e(compte.nom)}</b><span>${e(compte.role)}</span></a>
@@ -81,7 +79,7 @@ const choixMedias = (nom, medias, valeur, libelle) => medias.length ? `
   <span class="aide">Sans effet si un fichier est téléversé ci-dessus.</span>
 </p>` : `<input type="hidden" name="${nom}" value="${e(valeur || '')}">`;
 
-/* ======================= CONNEXION ======================= */
+// Connexion
 export function connexion({ erreur = '', premier = false } = {}) {
   const corps = `
 <div class="entree-bloc">
@@ -105,7 +103,7 @@ export function connexion({ erreur = '', premier = false } = {}) {
 export const refus = ({ compte, csrf }) => socle({ titre: 'Accès réservé', compte, csrf, corps: `${tete('Accès réservé')}<p class="chapo">Cet écran est réservé aux administrateurs. Votre rôle est « ${e(compte.role)} ».</p>` });
 export const introuvable = ({ compte, csrf }) => socle({ titre: 'Écran introuvable', compte, csrf, corps: `${tete('Écran introuvable')}<p class="chapo">Aucun écran ne répond à cette adresse. <a href="/admin">Revenir au tableau de bord</a>.</p>` });
 
-/* ======================= TABLEAU DE BORD ======================= */
+// Tableau de bord
 export function tableau({ compte, csrf, D, versions, message = '' }) {
   const publications = D.observatoire.reduce((n, m) => n + m.publications.length, 0);
   const brouillons = D.actualites.filter((a) => a.statut === 'brouillon');
@@ -139,7 +137,7 @@ ${messages(message)}
   return socle({ titre: 'Tableau de bord', corps, compte, csrf, actif: 'tableau' });
 }
 
-/* ======================= MON COMPTE ======================= */
+// Mon compte
 export function monCompte({ compte, csrf, message = '', erreur = '' }) {
   const corps = `
 ${tete('Mon mot de passe', '', `Compte « ${compte.identifiant} », rôle ${compte.role}.`)}
@@ -154,7 +152,7 @@ ${messages(message, erreur)}
   return socle({ titre: 'Mon mot de passe', corps, compte, csrf, actif: 'compte' });
 }
 
-/* ======================= PAGES ======================= */
+// Pages
 export function listePages({ compte, csrf, D, message = '' }) {
   const corps = `
 ${tete('Pages', '', 'Les titres et textes d’habillage de chaque page. Les faits — statut, missions, chiffres, coordonnées — se modifient dans leurs propres écrans.')}
@@ -188,7 +186,7 @@ ${messages(message, erreur)}
   return socle({ titre: p.nom, corps, compte, csrf, actif: 'pages' });
 }
 
-/* ======================= ACTUALITÉS ======================= */
+// Actualités
 export function listeActualites({ compte, csrf, D, message = '', filtre = 'toutes' }) {
   const aujourdhui = new Date().toISOString().slice(0, 10);
   const etat = (a) => a.statut === 'brouillon' ? 'brouillon' : (a.publierLe && a.publierLe > aujourdhui) ? 'programme' : 'publie';
@@ -254,7 +252,7 @@ ${messages(message, erreur)}
   return socle({ titre: nouvelle ? 'Nouvelle actualité' : 'Modifier', corps, compte, csrf, actif: 'actualites', large: true });
 }
 
-/* ======================= DOCUMENTS ======================= */
+// Documents
 export function listeDocuments({ compte, csrf, D, message = '', categorie = 'tout' }) {
   const docs = categorie === 'tout' ? D.documents : D.documents.filter((d) => d.categorie === categorie);
   const corps = `
@@ -311,7 +309,7 @@ ${messages(message, erreur)}
   return socle({ titre: nouveau ? 'Nouveau texte' : 'Modifier', corps, compte, csrf, actif: 'documents', large: true });
 }
 
-/* ======================= CATÉGORIES ======================= */
+// Catégories
 export function categories({ compte, csrf, D, message = '', erreur = '' }) {
   const corps = `
 ${tete('Catégories de la réglementation', '', 'Une catégorie employée par des textes ne peut pas être supprimée.')}
@@ -343,7 +341,7 @@ ${messages(message, erreur)}
   return socle({ titre: 'Catégories', corps, compte, csrf, actif: 'categories', large: true });
 }
 
-/* ======================= OBSERVATOIRE ======================= */
+// Observatoire
 export function listeObservatoire({ compte, csrf, D, message = '', marche = 'tous' }) {
   const toutes = D.observatoire.flatMap((m) => m.publications.map((p) => ({ ...p, marche: m.cle, marcheNom: m.nom })))
     .filter((p) => marche === 'tous' || p.marche === marche)
@@ -397,7 +395,7 @@ ${messages(message, erreur)}
   return socle({ titre: nouveau ? 'Nouveau tableau de bord' : 'Modifier', corps, compte, csrf, actif: 'observatoire' });
 }
 
-/* ======================= FAQ ======================= */
+// FAQ
 export function listeFaq({ compte, csrf, D, message = '' }) {
   const corps = `
 ${tete('Questions fréquentes', `<a class="bouton" href="/admin/faq/nouvelle"><svg class="icone"><use href="#i-plus"/></svg> Nouvelle question</a>`, 'L’ordre affiché est celui du site.')}
@@ -437,7 +435,7 @@ ${messages(message, erreur)}
   return socle({ titre: nouvelle ? 'Nouvelle question' : 'Modifier', corps, compte, csrf, actif: 'faq' });
 }
 
-/* ======================= CHIFFRES CLÉS ======================= */
+// Chiffres clés
 export function listeChiffres({ compte, csrf, D, message = '', erreur = '' }) {
   const corps = `
 ${tete('Chiffres clés', `<a class="bouton" href="/admin/chiffres/nouveau"><svg class="icone"><use href="#i-plus"/></svg> Nouvel indicateur</a>`, 'Les indicateurs affichés sur l’accueil et dans l’Observatoire. La valeur sert au compteur animé ; l’affichage est le texte présenté au visiteur.')}
@@ -491,7 +489,7 @@ ${messages(message, erreur)}
   return socle({ titre: nouveau ? 'Nouvel indicateur' : 'Modifier', corps, compte, csrf, actif: 'chiffres' });
 }
 
-/* ======================= MÉDIATHÈQUE ======================= */
+// Médiathèque
 export function mediatheque({ compte, csrf, groupes, message = '', erreur = '' }) {
   const octets = (n) => n > 1048576 ? (n / 1048576).toFixed(1) + ' Mo' : Math.round(n / 1024) + ' Ko';
   const total = groupes.reduce((n, g) => n + g.entrees.length, 0);
@@ -517,7 +515,7 @@ ${groupes.map((g) => `
   return socle({ titre: 'Médiathèque', corps, compte, csrf, actif: 'medias', large: true });
 }
 
-/* ======================= LISTES ======================= */
+// Listes
 export function formListe({ compte, csrf, D, cle, message = '', erreur = '' }) {
   const entrees = lireListe(D, cle);
   const lignes = [...entrees, ...Array.from({ length: Math.max(0, 8 - entrees.length) }, () => ({ titre: '', texte: '', lien: '' }))];
@@ -538,7 +536,7 @@ ${messages(message, erreur)}
   return socle({ titre: LISTES[cle].nom, corps, compte, csrf, actif: 'listes' });
 }
 
-/* ======================= UTILISATEURS ======================= */
+// Utilisateurs
 export function utilisateurs({ compte, csrf, comptes, message = '', erreur = '' }) {
   const corps = `
 ${tete('Utilisateurs', '', Object.values(DESCRIPTIONS_ROLES).join(' · ') + '. Il doit toujours rester au moins un administrateur.')}
@@ -574,7 +572,7 @@ ${messages(message, erreur)}
   return socle({ titre: 'Utilisateurs', corps, compte, csrf, actif: 'utilisateurs', large: true });
 }
 
-/* ======================= RÉGLAGES ======================= */
+// Réglages
 export function reglages({ compte, csrf, D, medias = [], message = '', erreur = '' }) {
   const R = lireReglages(D);
   const I = D.institution;

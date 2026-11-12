@@ -1,7 +1,4 @@
-/* ARCEP Gabon — le curseur.
-   Un point et un anneau qui rattrapent la souris ; l'anneau s'ouvre sur ce qui se
-   survole et nomme l'action quand l'élément la déclare. Souris seulement, jamais au doigt,
-   jamais si le visiteur a demandé moins de mouvement. */
+// Curseur personnalisé (souris uniquement)
 import { QS, mobile, reduit } from './socle.mjs';
 import { surTonalite } from './chrome.mjs';
 

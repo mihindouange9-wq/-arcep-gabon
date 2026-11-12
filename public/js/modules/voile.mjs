@@ -1,5 +1,4 @@
-/* ARCEP Gabon — le voile entre les pages.
-   L'entrée est jouée par la feuille de style seule ; ce module ne gère que la sortie. */
+// Transition de sortie entre pages (l'entrée est en CSS pur)
 import { QS, reduit } from './socle.mjs';
 
 export function demarrerVoile() {

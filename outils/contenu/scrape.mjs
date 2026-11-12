@@ -1,10 +1,12 @@
-/* Relevé du contenu réel du site ARCEP : texte, titres, liens, images, pour servir de source.
-   node outils/contenu/scrape.mjs <url> <nom>  → recherche/<nom>.json */
+// Relevé d'une page de l'ancien site (texte, titres, liens, images, couleurs, polices) vers recherche/<nom>.json.
+// node outils/contenu/scrape.mjs <url> <nom>
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { writeFile, mkdir } from 'node:fs/promises';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const [URL_ = 'https://www.arcep.ga/', NOM = 'accueil'] = process.argv.slice(2);
 const port = 9333 + Math.floor(Math.random() * 500);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=C:/Users/mihin/AppData/Local/Temp/chrome-cdp-${port}`, '--window-size=1440,900', 'about:blank'], { stdio: 'ignore' });
+const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-cdp-${port}`, '--window-size=1440,900', 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let wsUrl; for (let i = 0; i < 60 && !wsUrl; i++) { await sleep(250); try { const l = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); wsUrl = l.find((t) => t.type === 'page')?.webSocketDebuggerUrl; } catch {} }
 const ws = new WebSocket(wsUrl); await new Promise((r) => (ws.onopen = r));

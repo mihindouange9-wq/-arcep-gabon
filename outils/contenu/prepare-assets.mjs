@@ -1,15 +1,16 @@
-/* Prépare les ressources du projet : logo détouré (fond blanc rendu transparent), version blanche pour fonds sombres,
-   version carrée pour favicon, et première image de la vidéo. Tout passe par un canvas de Chrome (aucune dépendance).
-   node outils/contenu/prepare-assets.mjs */
+// Ressources de départ : logo détouré (fond blanc rendu transparent), version blanche, icône carrée, première image de la vidéo.
+// Tout passe par un canvas de Chrome. node outils/contenu/prepare-assets.mjs
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const LOGO = 'logo arcep.png';
 const VIDEO = 'Animate_ARCEP_GABON_logo_20260918010633.mp4';
 const b64 = (await readFile(LOGO)).toString('base64');
 
 const port = 9333 + Math.floor(Math.random() * 500);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--disable-gpu', '--allow-file-access-from-files', '--autoplay-policy=no-user-gesture-required', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=C:/Users/mihin/AppData/Local/Temp/chrome-cdp-${port}`, '--window-size=1280,720', 'about:blank'], { stdio: 'ignore' });
+const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--allow-file-access-from-files', '--autoplay-policy=no-user-gesture-required', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-cdp-${port}`, '--window-size=1280,720', 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let wsUrl; for (let i = 0; i < 40 && !wsUrl; i++) { await sleep(250); try { const l = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); wsUrl = l.find((t) => t.type === 'page')?.webSocketDebuggerUrl; } catch {} }
 const ws = new WebSocket(wsUrl); await new Promise((r) => (ws.onopen = r));
@@ -23,7 +24,7 @@ await sleep(700);
 await mkdir('assets', { recursive: true });
 await mkdir('recherche', { recursive: true });
 
-/* 1. Logo détouré : les pixels quasi blancs deviennent transparents, l'image est rognée au contenu */
+// 1. Logo détouré : pixels quasi blancs rendus transparents, image rognée au contenu
 const traite = await ev(`new Promise((res) => {
   const img = new Image();
   img.onload = () => {
@@ -61,10 +62,10 @@ await writeFile('public/assets/logo-arcep-blanc.png', Buffer.from(o.blanc, 'base
 await writeFile('public/assets/icone-arcep.png', Buffer.from(o.carre, 'base64'));
 console.log('logo détouré', o.w + '×' + o.h, '· version blanche · icône 512');
 
-/* 2. Vidéo : dimensions, durée, image de référence */
+// 2. Vidéo : dimensions, durée, image de référence
 await send('Page.navigate', { url: 'data:text/html,<body style="margin:0;background:%230b0b0b"><video id=v muted autoplay playsinline></video>' });
 await sleep(800);
-await ev(`document.getElementById('v').src = ${JSON.stringify('file:///C:/Users/mihin/Documents/geek/arcep/' + VIDEO)}; true`);
+await ev(`document.getElementById('v').src = ${JSON.stringify(new URL('../../' + VIDEO, import.meta.url).href)}; true`);
 await sleep(2500);
 const info = await ev(`new Promise((r) => { const v = document.getElementById('v'); const go = () => r(JSON.stringify({ w: v.videoWidth, h: v.videoHeight, duree: Math.round(v.duration * 10) / 10 })); v.readyState >= 1 ? go() : (v.onloadedmetadata = go); })`);
 console.log('vidéo :', info);

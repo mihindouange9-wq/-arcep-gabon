@@ -1,9 +1,5 @@
-/* ARCEP Gabon — serveur.
-   Un seul processus Node, aucune dépendance installée : le site, l'interface de données et
-   l'espace d'administration tiennent dans la bibliothèque standard.
-
-   node serveur/index.mjs [port]
-   Variables d'environnement : ARCEP_PORT, ARCEP_HOTE, ARCEP_SECURISE=1 derrière un HTTPS. */
+// Serveur HTTP : site public, API de lecture et administration. Node 20+, sans dépendance.
+// node serveur/index.mjs [port] ; ARCEP_PORT, ARCEP_HOTE, ARCEP_SECURISE=1 derrière HTTPS.
 import { createServer } from 'node:http';
 import { readFile, stat, mkdir, appendFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
@@ -20,13 +16,13 @@ import * as Pages from './vues/pages.mjs';
 const RACINE = fileURLToPath(new URL('..', import.meta.url));
 const PUBLIC = join(RACINE, 'public');
 const PORT = Number(process.argv[2] || process.env.ARCEP_PORT || process.env.PORT || 4310);
-/* Sur une plateforme d'hébergement, le processus doit écouter sur toutes les interfaces. */
+// PaaS : écouter sur toutes les interfaces.
 const HOTE = process.env.ARCEP_HOTE || (process.env.PORT ? '0.0.0.0' : '127.0.0.1');
 const SECURISE = process.env.ARCEP_SECURISE === '1';
 const CORPS_MAX = 64 * 1024;           // un formulaire de contact n'a pas besoin de plus
 const CORPS_MEDIA = 26 * 1024 * 1024;  // un téléversement de fichiers, et lui seul
 
-/* ======================= TYPES SERVIS ======================= */
+// Types servis
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -40,13 +36,10 @@ const TYPES = {
   '.woff2': 'font/woff2', '.ico': 'image/x-icon', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8',
 };
 
-/* ======================= EN-TÊTES DE SÉCURITÉ ======================= */
-/* Le site ne charge rien d'extérieur : caractères et bibliothèques sont auto-hébergés,
-   aucun script n'est en ligne. La politique se referme donc sur « self ».
-   'unsafe-inline' ne subsiste que pour les styles, parce que les vues posent des variables
-   dans des attributs style — un attribut, jamais une balise.
-   L'accueil affiche le site lui-même dans un téléphone : la page est donc encadrable par
-   sa propre origine, et par elle seule. */
+// En-têtes de sécurité
+// Tout est auto-hébergé et aucun script n'est inline : CSP fermée sur 'self'.
+// 'unsafe-inline' reste pour les styles (variables posées en attribut style).
+// frame-ancestors 'self' : la page reste encadrable par sa propre origine.
 const csp = (encadrable) => [
   "default-src 'self'",
   "script-src 'self'",
@@ -73,9 +66,7 @@ const securite = (encadrable = false) => ({
   ...(SECURISE ? { 'strict-transport-security': 'max-age=31536000; includeSubDomains' } : {}),
 });
 
-/* Derrière un serveur frontal, l'adresse du visiteur est dans l'en-tête que ce frontal pose ;
-   on ne la lit que si l'exploitant le déclare (ARCEP_PROXY=1), sinon n'importe qui pourrait
-   la forger pour contourner les limitations. */
+// X-Forwarded-For n'est lu que si ARCEP_PROXY=1 ; sinon l'en-tête est forgeable.
 const PROXY = process.env.ARCEP_PROXY === '1';
 const adresseDe = (requete) => {
   if (PROXY) {
@@ -85,7 +76,7 @@ const adresseDe = (requete) => {
   return requete.socket.remoteAddress || '';
 };
 
-/* ======================= OUTILS ======================= */
+// Outils
 const html = (reponse, corps, statut = 200, { cache = 'no-cache', encadrable = false, indexable = false } = {}) => {
   reponse.writeHead(statut, {
     'content-type': 'text/html; charset=utf-8',
@@ -101,8 +92,7 @@ const texte = (reponse, corps, type = 'text/plain; charset=utf-8', statut = 200)
   reponse.end(corps);
 };
 
-/* Lit un corps de formulaire, borné en taille : une requête trop longue est refusée
-   avant d'être mise en mémoire. */
+// Corps borné : refusé avant d'être mis en mémoire.
 function lireCorps(requete) {
   return new Promise((resoudre, rejeter) => {
     let total = 0;
@@ -123,10 +113,8 @@ const formulaire = (brut) => {
   return sortie;
 };
 
-/* ======================= VERSIONS ======================= */
-/* Chaque feuille et chaque script reçoit une empreinte de son contenu. Les vues l'ajoutent
-   à l'adresse ; un fichier demandé avec son empreinte est mis en cache un an, puisque son
-   adresse changera avec son contenu. */
+// Versions
+// Empreinte de contenu des feuilles et scripts : cache un an quand l'URL la porte.
 const VERSIONS = {};
 async function calculerVersions() {
   for (const dossier of ['css', 'js', 'js/vendor', 'js/modules']) {
@@ -141,7 +129,7 @@ async function calculerVersions() {
   poserVersions(VERSIONS);
 }
 
-/* ======================= FICHIERS STATIQUES ======================= */
+// Fichiers statiques
 async function servirFichier(cheminUrl, url, reponse, tete) {
   let decode;
   try { decode = decodeURIComponent(cheminUrl); } catch { return false; }   // adresse mal formée : introuvable
@@ -155,9 +143,7 @@ async function servirFichier(cheminUrl, url, reponse, tete) {
   const type = TYPES[extname(cible).toLowerCase()];
   if (!type) return false;                                       // extension non servie
 
-  /* Les médias ne changent jamais sous le même nom : un an de cache. Les feuilles et les
-     scripts sont mis en cache un an si l'adresse porte l'empreinte du fichier, et sont
-     revalidés à chaque visite sinon. */
+  // Médias : cache un an. CSS/JS : un an avec empreinte, revalidation sinon.
   const media = /^\/assets\//.test(cheminUrl);
   const versionne = url.searchParams.get('v') && url.searchParams.get('v') === VERSIONS[cheminUrl];
   const immuable = media || versionne;
@@ -169,7 +155,7 @@ async function servirFichier(cheminUrl, url, reponse, tete) {
     'last-modified': info.mtime.toUTCString(),
     ...(SECURISE ? { 'strict-transport-security': 'max-age=31536000; includeSubDomains' } : {}),
   };
-  /* Un PDF ou un SVG servi tel quel ne doit pas pouvoir exécuter de script dans l'origine. */
+  // PDF et SVG : CSP dédiée, rien ne s'exécute dans l'origine du site.
   if (type === 'application/pdf' || type === 'image/svg+xml') entetes['content-security-policy'] = "default-src 'none'; style-src 'unsafe-inline'";
   if (type === 'application/pdf') entetes['content-disposition'] = 'inline';
   reponse.writeHead(200, entetes);
@@ -178,9 +164,8 @@ async function servirFichier(cheminUrl, url, reponse, tete) {
   return true;
 }
 
-/* ======================= DEMANDES DES USAGERS ======================= */
-/* Le formulaire de contact enregistre la demande dans donnees/demandes.jsonl.
-   Aucun envoi de courriel : l'Autorité branchera son propre relais le moment venu. */
+// Demandes des usagers
+// Demandes journalisées dans donnees/demandes.jsonl ; pas d'envoi de courriel.
 async function enregistrerDemande(champs, adresse) {
   await mkdir(chemins.DOSSIER, { recursive: true });
   const ligne = JSON.stringify({
@@ -193,7 +178,7 @@ async function enregistrerDemande(champs, adresse) {
 }
 
 const demandesRecentes = new Map();
-/* Ménage périodique : les adresses qui n'ont plus rien envoyé depuis une heure sont oubliées. */
+// Purge des adresses sans envoi depuis une heure.
 setInterval(() => {
   const maintenant = Date.now();
   for (const [adresse, liste] of demandesRecentes) if (!liste.some((t) => maintenant - t < 3600_000)) demandesRecentes.delete(adresse);
@@ -222,7 +207,7 @@ function validerDemande(c) {
   return '';
 }
 
-/* ======================= PLAN DU SITE ======================= */
+// Plan du site
 function planDuSite(D) {
   const R = reglages(D);
   const base = (R.adressePublique || `http://${HOTE}:${PORT}`).replace(/\/+$/, '');
@@ -235,7 +220,7 @@ ${pages.map((p) => `  <url><loc>${base}${p}</loc></url>`).join('\n')}
 `;
 }
 
-/* ======================= ROUTAGE ======================= */
+// Routage
 async function router(requete, reponse) {
   const url = new URL(requete.url, `http://${requete.headers.host || 'localhost'}`);
   const chemin = url.pathname.replace(/\/+$/, '') || '/';
@@ -247,13 +232,13 @@ async function router(requete, reponse) {
     return reponse.end('Méthode non autorisée');
   }
 
-  /* --- interface de données --- */
+  // interface de données
   if (chemin === '/api' || chemin.startsWith('/api/')) {
     if (methode === 'POST') { reponse.writeHead(405, { allow: 'GET' }); return reponse.end(); }
     return servirApi(chemin, url, reponse);
   }
 
-  /* --- administration --- */
+  // administration
   if (chemin === '/admin' || chemin.startsWith('/admin/')) {
     let corpsForm = {};
     let fichiers = [];
@@ -283,7 +268,10 @@ async function router(requete, reponse) {
     return servirAdmin({ chemin, url, requete, reponse, corpsForm, fichiers, securise: SECURISE, entetes: securite(), adresse: adresseDe(requete) });
   }
 
-  /* --- fichiers du site --- */
+  // /favicon.ico est demandé d'office par les navigateurs (pages JSON, PDF) : l'icône du site répond
+  if (chemin === '/favicon.ico' && methode !== 'POST' && await servirFichier('/assets/icone-arcep.png', url, reponse, tete)) return;
+
+  // fichiers du site
   if (methode !== 'POST' && chemin !== '/' && await servirFichier(chemin, url, reponse, tete)) return;
 
   const D = await lire();
@@ -300,15 +288,14 @@ async function router(requete, reponse) {
   }
   if (chemin === '/sitemap.xml') return texte(reponse, planDuSite(D), 'application/xml; charset=utf-8');
 
-  /* --- formulaire de contact --- */
+  // formulaire de contact
   if (chemin === '/contact' && methode === 'POST') {
     const adresse = adresseDe(requete);
     let champs = {};
     try { champs = formulaire(await lireCorps(requete)); }
     catch { reponse.writeHead(413, securite()); return reponse.end('Requête trop volumineuse'); }
 
-    /* Le champ piège n'est visible que des robots : s'il est rempli, on accuse réception
-       sans rien enregistrer. */
+    // Honeypot : champ rempli, on accuse réception sans enregistrer.
     if (String(champs.site || '').trim()) return rendre(Pages.contact(D, { envoye: true, ecran }));
     if (tropDeDemandes(adresse)) {
       return rendre(Pages.contact(D, { erreur: 'Trop de demandes envoyées depuis cet accès. Réessayez dans une heure.', champs, ecran }), 429);
@@ -322,7 +309,7 @@ async function router(requete, reponse) {
   }
   if (methode === 'POST') { reponse.writeHead(405, { allow: 'GET, HEAD', ...securite() }); return reponse.end(); }
 
-  /* --- pages publiques --- */
+  // pages publiques
   if (chemin === '/') return rendre(Pages.accueil(D, { ecran }));
   if (chemin === '/autorite') return rendre(Pages.autorite(D, { ecran }));
   if (chemin === '/missions') return rendre(Pages.missions(D, { ecran }));
@@ -357,10 +344,8 @@ async function router(requete, reponse) {
   return rendre(Pages.introuvable(D, { ecran }), 404);
 }
 
-/* ======================= MISE EN ROUTE ======================= */
-/* Les contenus repris du site officiel n'avaient ni identifiant, ni statut, ni date
-   triable : on les pose, une fois, pour que l'administration puisse les désigner et que
-   les pages puissent trier. Rien d'autre n'est touché. */
+// Mise en route
+// Contenus importés sans id, statut ni date ISO : complétés une fois au démarrage.
 async function preparerDonnees() {
   const completer = (D) => {
     let pose = 0;
@@ -376,8 +361,7 @@ async function preparerDonnees() {
     for (const cle of ['pages', 'reglages', 'listes']) if (!D[cle]) { D[cle] = {}; pose++; }
     return pose;
   };
-  /* On n'écrit — et on ne journalise — que s'il manque réellement quelque chose : un
-     simple redémarrage ne doit pas ajouter une copie à l'historique. */
+  // N'écrire que s'il manque quelque chose, sinon chaque redémarrage ajouterait une version à l'historique.
   if (!completer(structuredClone(await lire()))) return 0;
   return modifier(completer, 'preparation');
 }

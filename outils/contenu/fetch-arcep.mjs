@@ -1,5 +1,5 @@
-/* Récupère et nettoie le contenu du site officiel ARCEP (source du projet).
-   node outils/contenu/fetch-arcep.mjs → recherche/contenu.json + recherche/html/*.html */
+// Aspire les pages de l'ancien site vers recherche/html/*.html et en extrait le texte dans recherche/contenu.json.
+// node outils/contenu/fetch-arcep.mjs
 import { writeFile, mkdir } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';

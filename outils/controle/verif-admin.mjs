@@ -1,16 +1,15 @@
-/* ARCEP Gabon — vérification de l'administration.
-   Crée un compte de relecture, parcourt tous les écrans, exécute un cycle complet de
-   création, modification, aperçu et suppression sur chaque type de contenu, vérifie que
-   les données publiques reflètent chaque étape, puis supprime le compte. Le document de
-   contenus est remis dans son état de départ ; l'historique garde les copies intermédiaires.
-
-   Le serveur doit tourner : node outils/controle/verif-admin.mjs [base] [--captures] */
+// Cycle complet de l'administration avec un compte temporaire : écrans, actualité (brouillon, aperçu, programmation,
+// publication, suppression), PDF, catégorie, observatoire, FAQ, chiffres, pages, réglages, rôles, restauration.
+// Le document de contenus est remis en l'état et le compte supprimé. Serveur lancé.
+// node outils/controle/verif-admin.mjs [base] [--captures]
+import { tmpdir } from 'node:os';
 import { readFile, writeFile, mkdir, readdir, unlink } from 'node:fs/promises';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { setTimeout as attendre } from 'node:timers/promises';
 import { creerCompte, supprimerCompte, fermerSessionsDe } from '../../serveur/auth.mjs';
 import { chemin } from '../../serveur/base.mjs';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const BASE = process.argv.find((a) => a.startsWith('http')) || 'http://127.0.0.1:4310';
 const CAPTURES = process.argv.includes('--captures');
@@ -53,7 +52,7 @@ console.log(`\nARCEP — vérification de l'administration sur ${BASE}\n${'='.re
 
 await creerCompte(ID, MDP, 'Relecture', 'administrateur');
 try {
-  /* ---- connexion ---- */
+  // connexion
   let r = await appel('/admin/connexion', { corps: { identifiant: ID, motdepasse: 'mauvais' }, redirige: false });
   r.statutInitial === 401 ? ok('mot de passe incorrect refusé') : ko('mot de passe incorrect accepté');
   r = await appel('/admin/connexion', { corps: { identifiant: ID, motdepasse: MDP } });
@@ -61,7 +60,7 @@ try {
   r = await appel('/admin/actualites/nouvelle', { corps: { titre: 'x' }, redirige: false });
   r.statutInitial === 403 ? ok('écriture sans jeton anti-rejeu refusée') : ko('écriture sans jeton acceptée');
 
-  /* ---- tous les écrans ---- */
+  // tous les écrans
   const ecrans = ['/admin', '/admin/pages', '/admin/pages/accueil', '/admin/actualites', '/admin/actualites/nouvelle', '/admin/documents',
     '/admin/documents/nouveau', '/admin/categories', '/admin/observatoire', '/admin/observatoire/nouveau', '/admin/faq', '/admin/faq/nouvelle',
     '/admin/chiffres', '/admin/chiffres/nouveau', '/admin/medias', '/admin/listes/droits', '/admin/listes/demarches', '/admin/utilisateurs',
@@ -71,7 +70,7 @@ try {
     r.statut === 200 && !contient(r.html, 'Une erreur est survenue') ? ok(`écran ${ecran}`) : ko(`écran ${ecran}`, 'statut ' + r.statut);
   }
 
-  /* ---- actualité : brouillon, publication, programmation, aperçu, suppression ---- */
+  // actualité : brouillon, publication, programmation, aperçu, suppression
   const image = await readFile('public/assets/actus/119.jpg');
   r = await appel('/admin/actualites/nouvelle', { corps: { csrf, titre: 'Relecture — actualité de contrôle', dateIso: '2026-09-22', statut: 'brouillon', chapeau: 'Chapeau de contrôle', corps: 'Premier paragraphe.\n\nSecond paragraphe.', rubrique: 'Contrôle', lien: '', image: '', alt: 'Visuel', publierLe: '' },
     fichiers: { visuel: { blob: new Blob([image], { type: 'image/jpeg' }), nom: 'controle.jpg' } } });
@@ -92,7 +91,7 @@ try {
   r = await appel(`/admin/actualites/${idAct}/supprimer`, { corps: { csrf } });
   !contient(r.html, 'Relecture — actualité de contrôle') ? ok('actualité supprimée') : ko('suppression d’actualité');
 
-  /* ---- document PDF ---- */
+  // document PDF
   const pdf = Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF');
   r = await appel('/admin/documents/nouveau', { corps: { csrf, titre: 'Relecture — décision de contrôle', categorie: 'decisions', annee: '2026', date: '', description: 'Description de contrôle', lien: '', fichier: '' },
     fichiers: { pdf: { blob: new Blob([pdf], { type: 'application/pdf' }), nom: 'controle.pdf' } } });
@@ -107,7 +106,7 @@ try {
   r = await appel(`/admin/documents/${idDoc}/supprimer`, { corps: { csrf } });
   !contient(r.html, 'Relecture — décision de contrôle') ? ok('texte supprimé') : ko('suppression de texte');
 
-  /* ---- catégorie ---- */
+  // catégorie
   r = await appel('/admin/categories', { corps: { csrf, cle: 'controle', nom: 'Contrôle', lien: '' } });
   contient(r.html, 'Contrôle') ? ok('catégorie créée') : ko('création de catégorie');
   r = await appel('/admin/categories/lois/supprimer', { corps: { csrf }, redirige: false });
@@ -115,7 +114,7 @@ try {
   r = await appel('/admin/categories/controle/supprimer', { corps: { csrf } });
   !contient(r.html, '>Contrôle<') ? ok('catégorie supprimée') : ko('suppression de catégorie');
 
-  /* ---- observatoire ---- */
+  // observatoire
   r = await appel('/admin/observatoire/nouveau', { corps: { csrf, titre: 'Relecture — tableau de bord', marche: 'internet', annee: '2026', trimestre: 'T2', lien: 'https://www.arcep.ga/', fichier: '' } });
   const idObs = /\/admin\/observatoire\/(obs-[a-z0-9]+)/.exec(r.html)?.[1];
   idObs ? ok('tableau de bord créé') : ko('création de tableau de bord');
@@ -124,7 +123,7 @@ try {
   r = await appel(`/admin/observatoire/${idObs}/supprimer`, { corps: { csrf } });
   ok('tableau de bord supprimé');
 
-  /* ---- FAQ ---- */
+  // FAQ
   r = await appel('/admin/faq/nouvelle', { corps: { csrf, q: 'Question de contrôle ?', r: 'Réponse de contrôle.', categorie: 'Contrôle' } });
   const idFaq = /\/admin\/faq\/(faq-[a-z0-9]+)/.exec(r.html)?.[1];
   idFaq ? ok('question créée') : ko('création de question');
@@ -134,7 +133,7 @@ try {
   await appel(`/admin/faq/${idFaq}/supprimer`, { corps: { csrf } });
   ok('question supprimée');
 
-  /* ---- chiffres ---- */
+  // chiffres
   r = await appel('/admin/chiffres/nouveau', { corps: { csrf, libelle: 'Indicateur de contrôle', affichage: '12,5', valeur: '12,5', decimales: '1', unite: '%', periode: 'T1 2026' } });
   const idChi = /\/admin\/chiffres\/(chi-[a-z0-9]+)/.exec(r.html)?.[1];
   idChi ? ok('indicateur créé') : ko('création d’indicateur');
@@ -143,7 +142,7 @@ try {
   await appel(`/admin/chiffres/${idChi}/supprimer`, { corps: { csrf } });
   ok('indicateur supprimé');
 
-  /* ---- page, liste, réglages ---- */
+  // page, liste, réglages
   r = await appel('/admin/pages/accueil', { corps: { csrf, heroTitre: 'Titre de contrôle' } });
   pub = await publique('/');
   contient(pub, 'Titre de contrôle') ? ok('texte de page modifié') : ko('texte de page');
@@ -158,7 +157,7 @@ try {
   const plan = await publique('/sitemap.xml');
   contient(plan, '<loc>https://exemple.ga/reglementation</loc>') ? ok('sitemap.xml') : ko('sitemap.xml');
 
-  /* ---- utilisateurs et rôles ---- */
+  // utilisateurs et rôles
   r = await appel('/admin/utilisateurs', { corps: { csrf, identifiant: ID + '-redac', nom: 'Rédacteur', role: 'redacteur', motdepasse: MDP } });
   contient(r.html, ID + '-redac') ? ok('compte rédacteur créé') : ko('création de compte');
   const cookieAdmin = cookie; const csrfAdmin = csrf;
@@ -172,19 +171,19 @@ try {
   r = await appel(`/admin/utilisateurs/${encodeURIComponent(ID + '-redac')}/supprimer`, { corps: { csrf } });
   !contient(r.html, ID + '-redac') ? ok('compte rédacteur supprimé') : ko('suppression de compte');
 
-  /* ---- restauration ---- */
+  // restauration
   r = await appel('/admin');
   const version = /<code>([^<]+)<\/code>/.exec(r.html)?.[1];
   r = await appel('/admin/restaurer', { corps: { csrf, version } });
   contient(r.html, 'Version restaurée') ? ok('restauration d’une version') : ko('restauration');
 
-  /* ---- captures ---- */
+  // captures
   if (CAPTURES) await capturer(cookie);
 } finally {
   fermerSessionsDe(ID);
   await supprimerCompte(ID).catch(() => {});
   await writeFile(chemin.FICHIER, etatInitial, 'utf8');
-  /* Les fichiers téléversés pendant le cycle ne doivent pas rester dans la médiathèque. */
+  // fichiers téléversés pendant le cycle
   for (const dossier of ['public/assets/medias', 'public/assets/documents']) {
     for (const f of await readdir(dossier).catch(() => [])) if (f.startsWith('controle-')) await unlink(join(dossier, f)).catch(() => {});
   }
@@ -194,12 +193,12 @@ console.log(`\n${'='.repeat(52)}`);
 if (!anomalies.length) console.log('Aucune anomalie dans l’administration.\n');
 else { console.log(`${anomalies.length} anomalie(s) : ${anomalies.join(' · ')}\n`); process.exitCode = 1; }
 
-/* ---- captures des écrans, connecté ---- */
+// captures des écrans, connecté
 async function capturer(jeton) {
   const port = 9400 + Math.floor(Math.random() * 400);
-  const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
+  const chrome = spawn(CHROME, [
     '--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', '--no-default-browser-check', '--disable-extensions',
-    `--remote-debugging-port=${port}`, `--user-data-dir=${process.env.TEMP || 'C:/Temp'}/chrome-admin-${port}`, '--window-size=1440,900', 'about:blank',
+    `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-admin-${port}`, '--window-size=1440,900', 'about:blank',
   ], { stdio: 'ignore' });
   let cible = null;
   for (let i = 0; i < 60 && !cible; i++) { await attendre(250); try { cible = (await (await fetch(`http://127.0.0.1:${port}/json`)).json()).find((t) => t.type === 'page'); } catch { /* attente */ } }

@@ -1,8 +1,4 @@
-/* ARCEP Gabon — socle du mouvement.
-   GSAP, ScrollTrigger, SplitText et Lenis sont servis par le site (public/js/vendor/) et
-   posés sur window par leurs scripts. Ce module les met en route une fois et expose ce
-   dont les autres modules ont besoin. Rien ne bouge si le visiteur a demandé moins de
-   mouvement ; le site fonctionne entièrement sans ce fichier. */
+// Socle GSAP / ScrollTrigger / SplitText / Lenis (chargés depuis vendor/, exposés sur window)
 
 export const QS = (s, r = document) => r.querySelector(s);
 export const QSA = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -24,8 +20,7 @@ if (pret) {
   gsap.defaults({ ease: 'expo.out', duration: 1 });
   ScrollTrigger.config({ ignoreMobileResize: true });
 
-  /* Le défilement lissé ne vaut que pour la souris et la molette : au doigt, le
-     navigateur fait mieux, et un lecteur qui demande moins de mouvement n'en veut pas. */
+  // Lenis seulement à la souris et hors prefers-reduced-motion
   if (window.Lenis && !reduit() && FIN.matches) {
     lenis = new window.Lenis({
       autoRaf: false, lerp: .1, duration: 1.1, smoothWheel: true,
@@ -36,7 +31,7 @@ if (pret) {
     gsap.ticker.lagSmoothing(0);
   }
 
-  /* Les ancres passent par le défilement lissé, avec la hauteur de l'en-tête en retrait. */
+  // Ancres via Lenis, décalées de la hauteur de l'en-tête
   document.addEventListener('click', (ev) => {
     const a = ev.target instanceof Element ? ev.target.closest('a[href^="#"]') : null;
     if (!a || a.getAttribute('href') === '#') return;
@@ -62,7 +57,6 @@ export function bloquer(oui) {
   document.documentElement.style.overflow = oui ? 'hidden' : '';
 }
 
-/* Un déclencheur « une seule fois » quand l'élément entre dans le champ. */
 export function auChamp(el, fn, marge = '88%') {
   if (!pret) { fn(); return; }
   ScrollTrigger.create({ trigger: el, start: `top ${marge}`, once: true, onEnter: fn });

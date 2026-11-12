@@ -1,8 +1,4 @@
-/* ARCEP Gabon — le lecteur de documents.
-   Un PDF du site s'ouvre dans une fenêtre modale, sans quitter la page : le document est
-   affiché par le lecteur du navigateur dans un cadre, avec, à portée de main, le
-   téléchargement et l'ouverture dans un onglet pour les navigateurs qui n'affichent pas
-   les PDF intégrés. Sans script, le lien ouvre le fichier comme d'habitude. */
+// PDF du site ouverts dans un <dialog> (iframe même origine), avec repli téléchargement / onglet
 import { QS, gsap, pret, reduit, bloquer } from './socle.mjs';
 
 export function demarrerDocuments() {

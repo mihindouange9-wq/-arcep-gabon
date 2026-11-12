@@ -1,10 +1,12 @@
-/* Captures de relecture de la charte : une image par planche (outils/captures/charte/pNN.jpg) + planches-contact 2 × 3.
-   node outils/charte/charte-shots.mjs [echelle=0.5] */
+// Captures de relecture de la charte : une image par planche (outils/captures/charte/pNN.jpg) et planches-contact 2 x 3.
+// node outils/charte/charte-shots.mjs [echelle=0.5]
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { writeFile, mkdir } from 'node:fs/promises';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const scale = +(process.argv[2] || 0.5);
 const port = 9333 + Math.floor(Math.random() * 500);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--allow-file-access-from-files', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=C:/Users/mihin/AppData/Local/Temp/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
+const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--allow-file-access-from-files', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let wsUrl; for (let i = 0; i < 40 && !wsUrl; i++) { await sleep(250); try { const l = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); wsUrl = l.find((t) => t.type === 'page')?.webSocketDebuggerUrl; } catch {} }
 const ws = new WebSocket(wsUrl); await new Promise((r) => (ws.onopen = r));
@@ -14,7 +16,7 @@ const send = (method, params = {}) => new Promise((res) => { const i = ++id; pen
 const ev = async (expression) => (await send('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true })).result?.result?.value;
 await send('Page.enable'); await send('Runtime.enable'); await send('Log.enable');
 await send('Emulation.setDeviceMetricsOverride', { width: 1232, height: 900, deviceScaleFactor: 1, mobile: false });
-await send('Page.navigate', { url: 'file:///C:/Users/mihin/Documents/geek/arcep/charte/index.html' });
+await send('Page.navigate', { url: new URL('../../charte/index.html', import.meta.url).href });
 await sleep(1500); await ev('document.fonts.ready.then(() => true)');
 await ev(`Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; })))`);
 await sleep(600);

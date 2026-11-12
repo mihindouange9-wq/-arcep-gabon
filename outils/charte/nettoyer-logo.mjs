@@ -1,10 +1,10 @@
-/* Retire du logo les îlots parasites laissés par le détourage : des traits d'un ou deux
-   pixels de haut, sans rapport avec le tracé. Écrit le fichier à la même taille, pour que
-   rien ne bouge dans les mises en page, et produit en plus un master détouré au plus juste
-   pour la charte et l'impression.
-   node outils/charte/nettoyer-logo.mjs */
+// Retire du logo les îlots parasites laissés par le détourage (traits de 1 ou 2 px), sans changer la taille du fichier,
+// et produit un master détouré au plus juste pour la charte et l'impression.
+// node outils/charte/nettoyer-logo.mjs
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const FICHIERS = [
   { source: 'public/assets/logo-arcep.png', master: 'charte/img/master-logo-couleur.png' },
@@ -13,7 +13,7 @@ const FICHIERS = [
 ];
 
 const port = 9090 + Math.floor(Math.random() * 200);
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=C:/Users/mihin/AppData/Local/Temp/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
+const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', `--remote-debugging-port=${port}`, `--user-data-dir=${tmpdir()}/chrome-cdp-${port}`, 'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let wsUrl; for (let i = 0; i < 40 && !wsUrl; i++) { await sleep(250); try { const l = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); wsUrl = l.find((t) => t.type === 'page')?.webSocketDebuggerUrl; } catch {} }
 const ws = new WebSocket(wsUrl); await new Promise((r) => (ws.onopen = r));

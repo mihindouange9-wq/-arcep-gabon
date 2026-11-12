@@ -1,14 +1,11 @@
-/* Typographie française : espace fine insécable avant ? ! et à l'intérieur des guillemets.
-   S'applique aux chaînes de texte de donnees/arcep.json, jamais aux liens ni aux images.
-   node outils/contenu/typographie.mjs */
+// Typographie française sur les chaînes de donnees/arcep.json : espace fine insécable avant ? et ! et dans les guillemets.
+// Jamais sur les liens ni les images. node outils/contenu/typographie.mjs
 import { lireDonnees, ecrireDonnees } from './donnees.mjs';
 
 const FINE = ' ';
 
-/* L'aspiration du site officiel a perdu les apostrophes d'élision : « L ARCEP c est »,
-   « qu avec », « l HSPA+ ». On les rétablit — c'est un défaut d'extraction, pas le texte de
-   l'Autorité. La règle est sûre : en français, aucune de ces lettres n'est un mot à elle
-   seule, la substitution ne peut donc pas abîmer une phrase correcte. */
+// L'extraction a perdu les apostrophes d'élision ("L ARCEP c est", "qu avec") : on les rétablit.
+// Aucune de ces lettres n'est un mot seul en français, la substitution ne peut pas abîmer une phrase correcte.
 const ELISION = /(^|[^\p{L}\p{N}’'-])(l|d|n|s|c|j|t|m|qu|jusqu|lorsqu|puisqu|quoiqu) (?=[aeiouyœæàâäéèêëîïôöùûüh])/giu;
 const typo = (s) => s
   .replace(ELISION, '$1$2’')

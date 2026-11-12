@@ -1,5 +1,3 @@
-/* ARCEP Gabon — le pied de page.
-   La signature se lève quand le pied se découvre sous la page. */
 import { QS, QSA, gsap, pret, reduit, auChamp } from './socle.mjs';
 
 export function demarrerPied() {

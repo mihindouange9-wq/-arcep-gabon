@@ -1,6 +1,5 @@
-/* Compose donnees/arcep.json à partir des extraits du site officiel (recherche/extrait.json + recherche/coeur.json).
-   Les textes institutionnels sont repris tels quels ; rien n'est inventé.
-   node outils/contenu/write-data.mjs */
+// Compose donnees/arcep.json à partir des extraits de l'ancien site (recherche/extrait.json, recherche/coeur.json).
+// Les textes institutionnels sont repris tels quels. node outils/contenu/write-data.mjs
 import { ecrireDonnees } from './donnees.mjs';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 
@@ -8,7 +7,7 @@ const extrait = JSON.parse(readFileSync('recherche/extrait.json', 'utf8'));
 const coeur = JSON.parse(readFileSync('recherche/coeur.json', 'utf8'));
 const nettoie = (s) => s.replace(/repliky hodinek\s*/gi, '').replace(/\s+/g, ' ').trim();
 
-/* ---------- Institution ---------- */
+// Institution
 const institution = {
   sigle: 'ARCEP',
   pays: 'Gabon',
@@ -23,14 +22,14 @@ const institution = {
   source: 'https://www.arcep.ga/',
 };
 
-/* ---------- Conseil de régulation ---------- */
+// Conseil de régulation
 const conseil = {
   titre: 'Conseil de Régulation',
   texte: nettoie(`Le Conseil de Régulation, organe délibérant et de direction de l’Autorité, est investi de l’ensemble des prérogatives dévolues à ladite Autorité par les textes en vigueur. Il peut déléguer certaines de ses prérogatives à son Président ou au Secrétariat Exécutif.`),
   composition: nettoie(`Le Conseil de Régulation comprend sept (7) membres nommés par décret pris en Conseil des Ministres avec un mandat de quatre ans renouvelable une fois. Le Président du Conseil veille d’une part à l’application des délibérations du Conseil, et exerce les pouvoirs de représentation de l’Autorité tout en administrant les services de l’Autorité, d’autre part.`),
 };
 
-/* ---------- Mot du Président (extraits fidèles) ---------- */
+// Mot du Président
 const president = {
   titre: 'Mot du Président',
   accroche: 'Connecter le Gabon au monde.',
@@ -46,7 +45,7 @@ const president = {
   ],
 };
 
-/* ---------- Chiffres clés (Observatoire des marchés ARCEP 2024) ---------- */
+// Chiffres clés (Observatoire des marchés ARCEP 2024)
 const chiffres = [
   { valeur: 330.83, affichage: '330,83', unite: 'milliards de FCFA', libelle: 'Chiffre d’affaires global du secteur des communications électroniques', decimales: 2 },
   { valeur: 5544403, affichage: '5 544 403', unite: 'abonnements', libelle: 'Nombre d’abonnements dans le secteur des communications électroniques', decimales: 0 },
@@ -55,7 +54,7 @@ const chiffres = [
 ];
 const chiffresSource = 'Source : Observatoire des marchés ARCEP 2024';
 
-/* ---------- Missions (texte officiel, nettoyé d’un fragment parasite présent sur le site) ---------- */
+// Missions (texte officiel, fragment parasite du site retiré)
 const missions = [
   {
     num: '01', cle: 'general', titre: 'Mission d’ordre général', lien: 'https://www.arcep.ga/pages/detail_mission/1',
@@ -103,7 +102,7 @@ const missions = [
   },
 ];
 
-/* ---------- Directions (page contact du site) ---------- */
+// Directions (page contact du site)
 const directions = [
   'Secrétariat Exécutif', 'Secrétariat Exécutif Adjoint 1', 'Secrétariat Exécutif Adjoint 2',
   'Direction des Ressources Humaines et des Systèmes d’Informations', 'Direction du Budget et de la Comptabilité',
@@ -113,7 +112,7 @@ const directions = [
   'Direction des Systèmes d’Interconnexion et des Plateformes', 'Direction du Développement du Service Universel',
 ];
 
-/* ---------- Partenaires (liens du site officiel) ---------- */
+// Partenaires (liens du site officiel)
 const partenaires = [
   { sigle: 'UPU', nom: 'Union postale universelle', secteur: 'Postes', lien: 'https://www.upu.int/fr/Accueil' },
   { sigle: 'UPAP', nom: 'Union panafricaine des postes', secteur: 'Postes', lien: 'https://www.upap-papu.africa/fr/' },
@@ -123,7 +122,7 @@ const partenaires = [
   { sigle: 'FRATEL', nom: 'Réseau francophone de la régulation des télécommunications', secteur: 'Coopération', lien: 'https://www.arcep.ga/fratel/' },
 ];
 
-/* ---------- Catégories de réglementation ---------- */
+// Catégories de réglementation
 const categories = [
   { cle: 'lois', nom: 'Lois', lien: 'https://www.arcep.ga/pages/detail_reglementation/1' },
   { cle: 'ordonnances', nom: 'Ordonnances', lien: 'https://www.arcep.ga/pages/detail_reglementation/2' },

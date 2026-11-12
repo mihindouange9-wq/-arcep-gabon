@@ -1,30 +1,19 @@
-/* ARCEP Gabon — batterie de vérification du site servi.
-   Le site n'est plus une page de fichiers : il est rendu par serveur/index.mjs. Cet outil
-   attaque donc une adresse http, pas un chemin de disque.
-
-   node outils/controle/verif.mjs [base] [--captures]
-
-   Ce qu'il contrôle, page par page :
-     1. le code de réponse et l'absence d'erreur de console ou de ressource ;
-     2. le débordement horizontal, à neuf largeurs de 360 à 1920 ;
-     3. l'état final des révélations après un défilement complet — rien ne doit rester
-        invisible si le script a échoué à poser sa classe ;
-     4. le contraste de chaque texte sur son fond réel (WCAG AA).
-
-   Piège d'expérience, consigné ici pour la prochaine fois : en mode « headless », aucune
-   image n'est produite tant qu'on ne demande pas de capture. Les transitions restent donc
-   figées à leur état de départ. Chaque pas de défilement est suivi d'une capture jetée,
-   sans quoi le contrôle des révélations échoue toujours. */
+// Vérification des pages servies : réponse et console, débordement horizontal à neuf largeurs (360 à 1920),
+// état final des révélations après défilement complet, contraste WCAG AA de chaque texte sur son fond réel.
+// En headless, Chrome ne rend pas d'image tant qu'on ne capture pas : chaque pas de défilement est suivi
+// d'une capture jetée, sinon les transitions restent à leur état de départ.
+// node outils/controle/verif.mjs [base] [--captures]
+import { tmpdir } from 'node:os';
 import { spawn } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { setTimeout as attendre } from 'node:timers/promises';
+const CHROME = process.env.CHROME || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 
 const BASE = (process.argv[2] && process.argv[2].startsWith('http')) ? process.argv[2] : 'http://127.0.0.1:4310';
 const CAPTURES = process.argv.includes('--captures');
 const SORTIE = 'outils/captures';
 
-/* La dernière colonne dit le code de réponse attendu : la page d'erreur répond 404, et
-   Chrome le consigne comme une erreur de ressource. Ce n'est pas une anomalie. */
+// troisième colonne : code de réponse attendu (Chrome consigne la page 404 comme une erreur de ressource)
 const PAGES = [
   ['accueil', '/'],
   ['autorite', '/autorite'],
@@ -42,11 +31,11 @@ const PAGES = [
 
 const LARGEURS = [360, 390, 414, 768, 834, 1024, 1280, 1440, 1920];
 
-/* ======================= CLIENT CDP ======================= */
+// Client CDP
 async function ouvrirChrome() {
   const port = 9400 + Math.floor(Math.random() * 400);
-  const profil = `${process.env.TEMP || 'C:/Temp'}/chrome-arcep-${port}-${Date.now()}`;
-  const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
+  const profil = `${tmpdir()}/chrome-arcep-${port}-${Date.now()}`;
+  const chrome = spawn(CHROME, [
     '--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run',
     '--no-default-browser-check', '--disable-extensions',
     `--remote-debugging-port=${port}`, `--user-data-dir=${profil}`,
@@ -88,7 +77,7 @@ async function ouvrirChrome() {
   };
 }
 
-/* Évalue une expression dans la page et rend la valeur, ou lève si la page a jeté. */
+// Évalue une expression dans la page ; lève si la page a jeté.
 async function evaluer(cdp, expression) {
   const r = await cdp.envoyer('Runtime.evaluate', {
     expression, returnByValue: true, awaitPromise: true,
@@ -99,8 +88,7 @@ async function evaluer(cdp, expression) {
   return r.result?.result?.value;
 }
 
-/* ======================= SONDES INJECTÉES ======================= */
-/* Écrites en chaînes : elles s'exécutent dans la page, pas ici. */
+// Sondes injectées (exécutées dans la page)
 
 const SONDE_DEBORDEMENT = `(() => {
   const large = document.documentElement.scrollWidth - document.documentElement.clientWidth;
@@ -111,13 +99,10 @@ const SONDE_DEBORDEMENT = `(() => {
     if (s.display === 'none' || s.visibility === 'hidden' || s.position === 'fixed') continue;
     const r = el.getBoundingClientRect();
     if (r.width === 0) continue;
-    /* Un élément entièrement sorti par la gauche est un retrait volontaire — le champ
-       piège du formulaire de contact, par exemple — et non un débordement. */
+    // sorti entièrement par la gauche = retrait volontaire (champ piège du formulaire), pas un débordement
     if (s.position === 'absolute' && r.right < 0) continue;
     if (r.right > bord || r.left < -1) {
-      /* Un élément n'est en débordement que si rien, au-dessus de lui, ne le rogne. Il faut
-         donc remonter toute la chaîne des ancêtres : se contenter du parent immédiat
-         signalait à tort l'onde décorative du pied, rognée deux niveaux plus haut. */
+      // débordement seulement si aucun ancêtre ne rogne (le parent immédiat ne suffit pas)
       let rogne = false;
       for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
         const sa = getComputedStyle(a);
@@ -134,8 +119,7 @@ const SONDE_DEBORDEMENT = `(() => {
 
 const SONDE_REVELATIONS = `(() => {
   const restes = [];
-  /* Tout ce qui porte un état d'entrée doit avoir fini d'apparaître : opacité pleine, et
-     aucune ligne de titre encore décalée dans son masque. */
+  // opacité pleine, et aucune ligne de titre encore décalée dans son masque
   for (const el of document.querySelectorAll('[data-reveler], [data-serie] > *, [data-hero], .ligne')) {
     const r = el.getBoundingClientRect();
     if (r.height === 0 && r.width === 0) continue;
@@ -150,8 +134,7 @@ const SONDE_REVELATIONS = `(() => {
   return restes.slice(0, 8);
 })()`;
 
-/* Contraste : on remonte la pile des fonds jusqu'à trouver une couleur opaque, on calcule
-   le rapport WCAG et on ne signale que ce qui passe sous le seuil applicable. */
+// Contraste : pile des fonds remontée jusqu'à une couleur opaque, rapport WCAG contre le seuil applicable
 const SONDE_CONTRASTE = `(() => {
   const lire = (c) => {
     const m = c.match(/[\\d.]+/g);
@@ -220,7 +203,7 @@ const SONDE_CONTRASTE = `(() => {
   return echecs;
 })()`;
 
-/* ======================= DÉROULÉ ======================= */
+// Déroulé
 const anomalies = [];
 const signaler = (page, largeur, sujet, detail) => {
   anomalies.push({ page, largeur, sujet, detail });
@@ -257,7 +240,7 @@ async function aller(url, largeur, hauteur) {
   });
   await cdp.envoyer('Page.navigate', { url });
   await attendre(900);
-  /* Une capture jetée : elle force la production d'images, donc le jeu des transitions. */
+  // capture jetée : force le rendu, donc les transitions
   await cdp.envoyer('Page.captureScreenshot', { format: 'png' });
   await attendre(700);
 }
@@ -270,7 +253,7 @@ for (const [nom, chemin, statut = 200] of PAGES) {
   const url = BASE + chemin;
   console.log(`\n${nom}  ${chemin}`);
 
-  /* ---- 1. largeur de référence : console, révélations, contraste ---- */
+  // 1. largeur de référence : console, révélations, contraste
   const attendu = statut === 200 ? null : new RegExp(`status of ${statut}`);
   const propre = (ligne) => !(attendu && attendu.test(ligne));
 
@@ -278,7 +261,7 @@ for (const [nom, chemin, statut = 200] of PAGES) {
   await attendre(4200);   // la séquence d'entrée du hero
   for (const ligne of journal.filter(propre)) signaler(nom, 1440, 'console', ligne);
 
-  /* Défilement complet, une capture par palier pour que les transitions se jouent. */
+  // défilement complet, une capture par palier
   const hauteurTotale = await evaluer(cdp, 'document.documentElement.scrollHeight');
   for (let y = 0; y < hauteurTotale; y += 500) {
     await evaluer(cdp, `window.scrollTo(0, ${y})`);
@@ -299,7 +282,7 @@ for (const [nom, chemin, statut = 200] of PAGES) {
   }
   if (!restes.length && !contrastes.length && !journal.filter(propre).length) console.log('  ✓ console, révélations, contraste');
 
-  /* ---- 2. débordement à toutes les largeurs ---- */
+  // 2. débordement à toutes les largeurs
   const ennuis = [];
   for (const largeur of LARGEURS) {
     await aller(url, largeur, largeur < 820 ? 780 : 900);
@@ -311,7 +294,7 @@ for (const [nom, chemin, statut = 200] of PAGES) {
   for (const e of ennuis) signaler(nom, 0, 'débordement', e);
   if (!ennuis.length) console.log(`  ✓ aucun débordement de 360 à 1920`);
 
-  /* ---- 3. captures ---- */
+  // 3. captures
   if (CAPTURES) {
     for (const [suffixe, largeur, hauteur] of [['bureau', 1440, 900], ['mobile', 390, 780]]) {
       await aller(url, largeur, hauteur);

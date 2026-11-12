@@ -1,6 +1,4 @@
-/* ARCEP Gabon — comportements du site.
-   Le serveur rend des pages complètes ; ce script n'ajoute que le mouvement et le confort.
-   Chaque module se retire de lui-même quand la page ne le concerne pas. */
+// Point d'entrée : chaque module vérifie lui-même si la page le concerne.
 import { demarrerChrome } from './modules/chrome.mjs';
 import { demarrerMenu } from './modules/menu.mjs';
 import { demarrerCurseur } from './modules/curseur.mjs';
@@ -15,7 +13,7 @@ import { demarrerFiltrage } from './modules/filtrage.mjs';
 import { demarrerDocuments } from './modules/documents.mjs';
 import { demarrerPied } from './modules/pied.mjs';
 
-/* Les découpes typographiques mesurent les lignes : elles attendent les caractères. */
+// SplitText mesure les lignes : attendre les polices (1,2 s max).
 if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise((ok) => setTimeout(ok, 1200))]);
 
 demarrerChrome();

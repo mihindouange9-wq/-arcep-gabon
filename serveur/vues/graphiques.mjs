@@ -1,12 +1,8 @@
-/* ARCEP Gabon — graphiques rendus par le serveur.
-   Des SVG construits à partir des données publiées, jamais d'une donnée supposée. Le script
-   du site les anime à l'entrée dans le champ ; sans script, ils sont simplement dessinés. */
+// Graphiques SVG rendus côté serveur à partir des données.
 import { e, lien } from './base.mjs';
 
-/* ======================= COUVERTURE DES TABLEAUX DE BORD ======================= */
-/* Une matrice trimestres × marchés : chaque case est un tableau de bord publié, cliquable.
-   C'est la représentation la plus honnête de l'Observatoire : on voit la régularité de la
-   publication, pas une courbe fabriquée. */
+// Couverture des tableaux de bord
+// Matrice trimestres x marchés, une case par tableau de bord publié.
 export function couvertureObservatoire(D) {
   const cases = new Map();
   const periodes = new Set();
@@ -49,7 +45,7 @@ export function couvertureObservatoire(D) {
 </div>`;
 }
 
-/* ======================= TEXTES PAR CATÉGORIE ======================= */
+// Textes par catégorie
 export function repartitionDocuments(D) {
   const comptes = D.categories.map((c) => ({ ...c, n: D.documents.filter((d) => d.categorie === c.cle).length }));
   const max = Math.max(1, ...comptes.map((c) => c.n));
@@ -63,8 +59,8 @@ export function repartitionDocuments(D) {
 </ol>`;
 }
 
-/* ======================= JAUGE D'UN INDICATEUR ======================= */
-/* Pour un pourcentage : une piste graduée, un repère à 100 quand la valeur le dépasse. */
+// Jauge d'un indicateur
+// Pourcentage : piste graduée, repère à 100 si dépassé.
 export function jauge(c) {
   if (String(c.unite).trim() !== '%') return '';
   const valeur = Number(c.valeur);
@@ -77,8 +73,8 @@ export function jauge(c) {
   </span>`;
 }
 
-/* ======================= ONDE DE SIGNAL ======================= */
-/* Les courbes héritées de l'arc du logo : tracées au défilement. */
+// Onde de signal
+// Courbes tracées au défilement.
 export function onde(classe = 'onde', n = 5) {
   const chemins = Array.from({ length: n }, (_, i) => {
     const d = `M-160 ${960 + i * 34} C 280 ${580 - i * 68} 760 ${450 - i * 60} 1600 ${170 - i * 40}`;

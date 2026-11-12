@@ -1,6 +1,5 @@
-/* Met les listes dans l'ordre : tableaux de bord du plus récent au plus ancien (avec leur
-   période trimestrielle), puis bibliothèque réglementaire par catégorie et par année.
-   node outils/contenu/trier-donnees.mjs */
+// Ordonne les tableaux de bord (du plus récent au plus ancien, période trimestrielle déduite du titre)
+// et les textes réglementaires (par catégorie puis par année). node outils/contenu/trier-donnees.mjs
 import { lireDonnees, ecrireDonnees } from './donnees.mjs';
 
 const data = lireDonnees();
@@ -23,7 +22,7 @@ for (const marche of data.observatoire) {
 ecrireDonnees(data);
 console.log('tableaux ordonnés · sans période :', sans);
 
-/* Bibliothèque réglementaire : à l'intérieur de chaque catégorie, du plus récent au plus ancien. */
+// réglementation : par catégorie, puis du plus récent au plus ancien
 const ordre = data.categories.map((c) => c.cle);
 data.documents.sort((a, b) => {
   const d = ordre.indexOf(a.categorie) - ordre.indexOf(b.categorie);

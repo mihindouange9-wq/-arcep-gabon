@@ -1,9 +1,4 @@
-/* ARCEP Gabon — le hero.
-   Une séquence d'entrée — le logo, la lumière, le titre, le message, l'actualité à la une —
-   puis un réseau de nœuds et de liaisons dessiné sur un canvas : des points qui dérivent,
-   des liaisons qui se nouent à portée, un signal qui les parcourt. Tout est plafonné :
-   quatre-vingt-dix nœuds au plus, une échelle de pixels de 1,5 au plus, et rien ne se
-   calcule hors du champ. */
+// Hero : séquence d'intro puis réseau de noeuds sur canvas (90 noeuds max, dpr 1.5 max, pause hors viewport)
 import { QS, gsap, SplitText, pret, reduit, mobile } from './socle.mjs';
 
 export function demarrerHero() {
@@ -22,7 +17,7 @@ export function demarrerHero() {
   if (canvas && !mobile()) reseau(canvas, hero);
 }
 
-/* ---------- La séquence d'entrée ---------- */
+// Séquence d'entrée
 function sequence(hero, intro) {
   const titre = QS('.hero-titre', hero);
   const marque = QS('#chrome .marque');
@@ -45,7 +40,7 @@ function sequence(hero, intro) {
     if (lueur) tl.fromTo(lueur, { scale: .3, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.6 }, '-=.9');
     tl.to({}, { duration: .35 })
       .add(() => {
-        /* Le logo rejoint sa place dans l'en-tête, puis lui cède. */
+        // Le logo rejoint la marque de l'en-tête
         if (!marque) { intro.remove(); return; }
         const de = logo.getBoundingClientRect();
         const vers = marque.getBoundingClientRect();
@@ -69,7 +64,7 @@ function sequence(hero, intro) {
   tl.fromTo(suite, { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: .09 }, '-=.9');
 }
 
-/* ---------- Le réseau ---------- */
+// Réseau
 function reseau(canvas, hero) {
   const ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) return;
@@ -124,7 +119,6 @@ function reseau(canvas, hero) {
       ctx.fillStyle = `rgba(${n.c}, .75)`;
       ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
     }
-    /* Les signaux : une pulsation qui parcourt une liaison, puis s'éteint. */
     for (const s of signaux) {
       s.t += .012;
       const x = s.a.x + (s.b.x - s.a.x) * s.t, y = s.a.y + (s.b.y - s.a.y) * s.t;

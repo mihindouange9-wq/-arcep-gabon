@@ -1,12 +1,5 @@
-/* ARCEP Gabon — accès au document de contenus depuis la chaîne d'extraction.
-
-   Les outils de cette chaîne écrivaient autrefois un fichier JavaScript chargé par le
-   navigateur. Le site étant désormais rendu par un serveur, le contenu vit dans un seul
-   document JSON, que le serveur et l'administration partagent. Tous les outils passent
-   par ici : le chemin n'est écrit qu'une fois.
-
-   Le serveur possède sa propre écriture, atomique et journalisée (serveur/base.mjs). Celle
-   d'ici est directe : la chaîne d'extraction se joue hors ligne, serveur arrêté. */
+// Lecture et écriture directes de donnees/arcep.json pour les outils de la chaîne de contenu (serveur arrêté).
+// Le serveur a sa propre écriture, atomique et journalisée, dans serveur/base.mjs.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';

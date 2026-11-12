@@ -1,13 +1,5 @@
-/* ARCEP Gabon — schéma des contenus éditables.
-
-   Tout ce qui, dans les pages, n'est pas une donnée reprise du site officiel est un texte
-   d'habillage : titre d'une section, phrase d'accroche, libellé. Ces textes sont déclarés
-   ici, avec leur valeur de départ, et l'administration en fait des formulaires. Les vues
-   lisent la valeur enregistrée, sinon la valeur de départ.
-
-   Rien de ce qui suit n'est une information institutionnelle : ce sont des titres. Les
-   faits (statut, textes fondateurs, missions, chiffres, coordonnées) restent dans les
-   sections de données du document et viennent d'arcep.ga. */
+// Textes d'habillage des pages (titres, accroches, libellés) avec leur valeur par défaut, éditables dans l'administration.
+// Les données institutionnelles restent dans donnees/arcep.json.
 
 export const PAGES = {
   accueil: {
@@ -97,8 +89,7 @@ export const PAGES = {
   },
 };
 
-/* Les démarches et garanties de l'espace consommateurs : des listes courtes, issues des
-   missions de l'Autorité (mission d'investigation, mission technique), éditables. */
+// Listes de l'espace consommateurs.
 export const LISTES = {
   droits: {
     nom: 'Garanties de l’espace consommateurs',
@@ -135,7 +126,7 @@ export const ROLES = {
   redacteur: 'Rédacteur — actualités, documents, observatoire, FAQ, chiffres, médias',
 };
 
-/* Lecture d'un texte de page : la valeur enregistrée, sinon la valeur de départ. */
+// Valeur enregistrée, sinon valeur par défaut.
 export function texte(D, page, champ) {
   const declare = PAGES[page]?.champs[champ];
   const enregistre = D.pages?.[page]?.[champ];
